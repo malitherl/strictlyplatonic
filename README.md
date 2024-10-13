@@ -1,4 +1,19 @@
-# Welcome to your Expo app 👋
+# Getting started with StrictlyPlatonic 
+
+1. Install Node.js 
+
+## Go here and create an account on npm. This gives you access to the command line that you can use to download some of the dependencies for our app. 
+
+ ```bash
+   https://docs.npmjs.com/
+ ```
+
+2. After installing, be sure that you have Visual Studio Code installed, and have login information for you GitHub Account. You can log into Github through Visual Studio Code, and acquire a copy of this copy or "check out" this branch by cloning it. 
+
+3. Once you have done this, see if you can get the app running on your machine. 
+
+
+# Welcome to the Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
