@@ -9,17 +9,13 @@ export default function HomeScreen() {
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#FFFFF', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
+      headerImage={<Image
+        source={require('@/assets/images/partial-react-logo.png')}
+        style={styles.reactLogo} />}>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Strictly Platonic</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
+       </ThemedView>
+    <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
           Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
@@ -29,14 +25,12 @@ export default function HomeScreen() {
           </ThemedText>{' '}
           to open developer tools.
         </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
+      </ThemedView><ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 2: Explore</ThemedText>
         <ThemedText>
           Tap the Explore tab to learn more about what's included in this starter app.
         </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
+      </ThemedView><ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
         <ThemedText>
           When you're ready, run{' '}
@@ -54,6 +48,8 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    
     gap: 8,
   },
   stepContainer: {

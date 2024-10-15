@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   title: {
-    fontSize: 32,
+    fontFamily: 'Grandstander',
+    fontSize: 65,
     fontWeight: 'bold',
     lineHeight: 32,
   },
