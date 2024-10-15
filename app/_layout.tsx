@@ -14,6 +14,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Grandstander: require('C:/Users/jazmi/strictlyplatonic/assets/fonts/Grandstander-Light.ttf')
   });
 
   useEffect(() => {
