@@ -1,17 +1,21 @@
-import { Image, StyleSheet, Platform, View } from 'react-native';
+import { Image, StyleSheet, Platform, View, TextInput } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useState } from 'react';
 
 
 export default function HomeScreen() {
+  const [username, setUserName] = useState('');
+
+
+
   return (
     <View>
       
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Strictly Platonic</ThemedText>
        </ThemedView>
-  
     </View>
   );
 }
