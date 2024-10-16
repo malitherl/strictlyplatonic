@@ -10,8 +10,8 @@ export default function HomeScreen() {
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#FFFFF', dark: '#1D3D47' }}
       headerImage={<Image
-        source={require('@/assets/images/partial-react-logo.png')}
-        style={styles.reactLogo} />}>
+        source={require('@/assets/images/paperdolls.png')}
+        style={styles.paperdolls} />}>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Strictly Platonic</ThemedText>
        </ThemedView>
@@ -63,4 +63,12 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
+  paperdolls: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    height: 200,
+    width: 1550,
+    bottom: 35,
+    position: 'absolute',
+  }
 });
