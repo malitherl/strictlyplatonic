@@ -1,0 +1,89 @@
+
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="bio.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    
+</head>
+<body>
+    <nav>
+        <a href="index.html">
+            <button type="button">Home</button>
+            </a>
+            
+        </nav>
+<!---->
+<h1>Add a profile picture!</h1>
+    <form id="uploadForm">
+        <label for="profilePicture">Choose a profile picture:</label>
+        <input type="file" id="profilePicture" name="profilePicture" accept="image/*" required>
+        <br><br>
+        <button type="submit">Upload</button>
+    </form>
+
+    <img id="preview" alt="Profile Picture Preview">
+
+    <script>
+        const fileInput = document.getElementById('profilePicture');
+        const previewImage = document.getElementById('preview');
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    previewImage.src = event.target.result;
+                    previewImage.style.display = 'block'; 
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+
+         
+    </script>
+
+<!---->
+<div class="profile">
+    <h2>Profile Information</h2>
+    <p><strong>Name:</strong> <span id="userName"></span></p>
+    <p><strong>Email:</strong> <span id="userEmail"></span></p>
+    <p><strong>Bio:</strong> <span id="userBio"></span></p>
+</div>
+</body>
+</body>
+<h2>Edit Profile</h2>
+<form id="editForm">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" value="type your name here..."><br><br>
+    
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" value="put your email here"><br><br>
+    
+    <label for="bio">Bio:</label><br>
+    <textarea id="bio" rows="4">type your bio here...</textarea><br><br>
+    
+    <button type="submit">Save Changes</button>
+</form>
+
+<script>
+    document.getElementById('editForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const bio = document.getElementById('bio').value;
+        
+        document.getElementById('userName').innerText = name;
+        document.getElementById('userEmail').innerText = email;
+        document.getElementById('userBio').innerText = bio;
+        
+        alert('Your profile has been updated successfully!');
+    });
+</script>
+
+</body>
+</html>
