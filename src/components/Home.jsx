@@ -19,7 +19,7 @@ export const Home = () => {
         <>
         <div>
           <img src={mainImage} alt= "Main pic" style={{width: '100%', height: 'auto'}} />
-            <h1 style={{color:"#65558f"}}>Strictly Platonic</h1>
+            <h1 style={{color:"#65558f"}}>StrictlyPlatonic</h1>
               <main>
 
                 {sessionTokeValid ? <Posts/> : <Navigate to={'/login'} />}
