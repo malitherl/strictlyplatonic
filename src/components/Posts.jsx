@@ -4,7 +4,7 @@ export const Posts = () => {
 
     return(
         <>
-        <h1>Posts!</h1>
+        <h1 className="Posts"> Posts!</h1>
         
         </>
     )
