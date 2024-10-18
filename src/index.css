@@ -30,11 +30,21 @@ body {
   min-height: 100vh;
 }
 
-h1 {
+@font-face {
   font-family: 'Grandstander-Light';
-  src: url(./assets/fonts/Grandstander-Light.ttf);
-  font-size: 3.2em;
-  line-height: 1.1;
+  src: url('./assets/fonts/Grandstander-Light.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+h1 {
+  margin: 5px;
+  font-family: 'Grandstander-Light';
+  src: url("./assets/fonts/Grandstander-Light.ttf") format("ttf");
+  font-size: 4em;
+  line-height: 1.5;
+}
+.Posts {
+  font-size: 3em;
 }
 
 button {
