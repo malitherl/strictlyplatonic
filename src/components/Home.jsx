@@ -42,10 +42,11 @@ export const Home = () => {
                 <button onClick={() => handleClick("profile")}>Profile</button>
                 </nav>
               <main>
-               {current == 'Posts' && <Posts />}
 
-               {current == 'Events' && <Events />}
-               {current == 'Profile' && <Profile />}
+               {/* TO DO: refactor this. right now, this works to toggle between components. */}
+               {current == 'posts' && <Posts />}
+               {current == 'events' && <Events />}
+               {current == 'profile' && <Profile />}
 
               </main>
         </div>
