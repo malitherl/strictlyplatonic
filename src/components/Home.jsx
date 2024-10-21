@@ -36,11 +36,6 @@ export const Home = () => {
         <div>
           <img src={mainImage} alt= "Main pic" style={{width: '100%', height: 'auto'}} />
             <h1 style={{color:"#65558f"}}>Strictly Platonic</h1>
-              <nav> 
-                <button onClick={() => handleClick("posts")}>Posts</button>
-                <button onClick={() => handleClick("events")}>Events</button>
-                <button onClick={() => handleClick("profile")}>Profile</button>
-                </nav>
               <main>
 
                {/* TO DO: refactor this. right now, this works to toggle between components. */}
