@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import {BrowserRouter,Routes, Route} from 'react-router-dom'
-
 import './App.css'
 import { Login } from './components/Login'
 import { Home } from './components/Home'
@@ -14,7 +13,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element= {<Home/>} >
-          
            <Route path="events" element={<Events />} />
            <Route path="settings" element={<Settings />} />
         </Route>
