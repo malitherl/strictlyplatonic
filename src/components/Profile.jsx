@@ -7,6 +7,7 @@ export const Profile = () => {
     const [name, setName] = useState('type your name here...');
     const [email, setEmail] = useState('put your email here');
     const [bio, setBio] = useState('type your bio here...');
+    const [gallery, setGallery] = useState([]);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -19,6 +20,12 @@ export const Profile = () => {
         }
     };
 
+    const handleGalleryChange = (event) => {
+        const files = Array.from(event.target.files);
+        const newImages = files.map(file => URL.createObjectURL(file));
+        setGallery(prevGallery => [...prevGallery, ...newImages]);
+    };
+
     const handleEditSubmit = (event) => {
         event.preventDefault();
         alert('Your profile has been updated successfully!');
@@ -27,7 +34,7 @@ export const Profile = () => {
     return (
         <div>
             <nav>
-                <a href="index.html">
+                <a href="Home.jsx">
                     <button type="button">Home</button>
                 </a>
             </nav>
@@ -84,9 +91,30 @@ export const Profile = () => {
 
                 <button type="submit">Save Changes</button>
             </form>
+
+            <div className="gallery">
+                <input
+                    type="file"
+                    id="fileInput"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    multiple
+                    onChange={handleGalleryChange}
+                />
+                <button
+                    className="upload-button"
+                    onClick={() => document.getElementById('fileInput').click()}
+                >
+                    +
+                </button>
+                <div className="photos" id="photoGallery">
+                    {gallery.map((imgSrc, index) => (
+                        <img key={index} src={imgSrc} alt={`Gallery img ${index}`} />
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };
-
 
 
