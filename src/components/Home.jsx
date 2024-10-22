@@ -38,6 +38,8 @@ export const Home = () => {
     
     //if you would like to work on the Posts page, change this sessionTokeValid variable to equal true. 
     //and if you would like to work on the Login form, change this to false and the page will redirect you there :)
+    let sessionTokeValid = true;
+   
     
     return (
         <>
