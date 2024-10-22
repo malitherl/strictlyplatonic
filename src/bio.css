@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: linear-gradient(to bottom, plum, black);
+    background: linear-gradient(rgba(22, 22, 22, 0.801) 90%, rgba(115, 122, 255, 0.521) ) 20%;
     margin: 20px;
 }
 .profile {
@@ -21,6 +21,7 @@ button:hover{
     display: none; 
     border: 2px solid #ccc; 
     justify-content: center;
+    margin: 0 auto;
 }
 body {
     display: flex;
