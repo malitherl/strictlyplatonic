@@ -1,4 +1,4 @@
-import postsData from '/StrictlyPlatonic/postData.json';
+import postsData from "../assets/data/postData.json"
 
 export const Posts = () => {
 
@@ -29,3 +29,22 @@ export const Posts = () => {
     )
 
 }
+
+const styles = {
+  postContainer: {
+    border: '1px solid #ddd',
+    padding: '10px',
+    marginBottom: '20px',
+    borderRadius: '5px',
+    backgroundColor: '#f9f9f9',
+  },
+  commentsContainer: {
+    marginTop: '10px'
+  },
+  comment: {
+    backgroundColor: '#eee',
+    padding: '5px',
+    margin: '5px 0',
+    borderRadius: '3px'
+  }
+};

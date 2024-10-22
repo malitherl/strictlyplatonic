@@ -2,7 +2,6 @@ import { useState } from 'react'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import './App.css'
 import { Profile } from './components/Profile'
-import { Login } from './components/Login'
 import { Home } from './components/Home'
 import { Events } from './components/Events'
 import { Settings } from './components/Settings'
@@ -19,7 +18,6 @@ function App() {
            <Route path="settings" element= {<Settings />} />
 
         </Route>
-        <Route path="login" element= {<Login/>}/> 
         <Route path="signup" element = {<SignUp/>}/>
       </Routes>
     </BrowserRouter>
