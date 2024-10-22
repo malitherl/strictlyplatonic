@@ -11,6 +11,12 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+LoginButton.jsx
+LogoutButton.jsx
+Profile01.jsx
+
+
 
 # Editor directories and files
 .vscode/*
