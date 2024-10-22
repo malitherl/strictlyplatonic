@@ -1,0 +1,60 @@
+[
+    {
+      "id": 1,
+      "username": "adventure_seeker",
+      "interests": ["hiking", "photography", "travel"],
+      "post": "Hey everyone! I'm looking for a few people to join me on a weekend hiking trip. It’s a great way to explore nature and share some amazing photo spots! Anyone interested in joining?",
+      "date": "2024-10-21",
+      "location": "Rocky Mountain National Park",
+      "event_planned": true,
+      "comments": [
+        {
+          "username": "mountain_mike",
+          "comment": "Count me in! I’ve been wanting to go hiking there!"
+        },
+        {
+          "username": "nature_novice",
+          "comment": "I’m new to hiking but would love to tag along. Is this beginner-friendly?"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "username": "bookworm_buddy",
+      "interests": ["reading", "history", "philosophy"],
+      "post": "Anyone here a fan of historical fiction? I’ve been reading a lot of it lately and would love to chat with others who share the same interest. Maybe even start a local book club if there’s enough interest!",
+      "date": "2024-10-21",
+      "location": "Online discussion or local meetup",
+      "event_planned": false,
+      "comments": [
+        {
+          "username": "philosophy_guy",
+          "comment": "Yes! Historical fiction is my jam. Count me in for discussions!"
+        },
+        {
+          "username": "lit_lady",
+          "comment": "I’ve been looking for a book club! Let’s do it."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "username": "music_lover",
+      "interests": ["music", "concerts", "singing"],
+      "post": "Does anyone want to form a small group to attend local concerts? It would be great to meet some fellow music lovers and explore different genres together!",
+      "date": "2024-10-20",
+      "location": "New York City",
+      "event_planned": true,
+      "comments": [
+        {
+          "username": "band_fanatic",
+          "comment": "I’m totally down! What’s the next concert on your list?"
+        },
+        {
+          "username": "jazz_enthusiast",
+          "comment": "Love this idea! Let’s do jazz next."
+        }
+      ]
+    }
+  ]
+  
