@@ -2,9 +2,7 @@ import { Posts } from "./Posts"
 import { Events } from './Events'
 import { Profile } from './Profile'
 import mainImage from '../assets/images/paperdolls.png';
-
-import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { useState } from "react";
 
 
 
