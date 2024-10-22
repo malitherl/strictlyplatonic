@@ -1,7 +1,7 @@
 import { Posts } from "./Posts"
 import { Events } from './Events'
 import { Profile } from './Profile'
-import mainImage from '../assets/images/paperdolls.png';
+import mainImage from '../assets/images/mainImage.png';
 import { useState } from "react";
 
 
@@ -37,7 +37,7 @@ export const Home = () => {
     return (
         <>
         <div>
-          <img src={mainImage} alt= "Main pic" style={{width: '100%', height: 'auto'}} />
+          <img src={mainImage} alt= "Main pic" style={{width: 'auto', height: 'auto'}} />
             <h1 style={{color:"#65558f"}}>Strictly Platonic</h1>
               <nav> 
                 <button onClick={() => handleClick("posts")}>Posts</button>
