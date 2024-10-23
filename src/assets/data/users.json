@@ -1,0 +1,28 @@
+{
+    "users": {
+        "1" : {
+            "posts": 1,
+            "username": "tabbycat", 
+            "bio": "no boat like the shrimp boat",
+            "name": "Michaela",
+            "hobbies": ["reading", "writing", "drawing", "shrimping"],
+            "picture": "/src/assets/images/cat0.png"
+        },
+        "2" : {
+            "posts": 2, 
+            "username": "pinkcat",
+            "bio": "collecting the cats",
+            "name": "Sierra",
+            "hobbies": ["coding", "paint", "cat collecting"], 
+            "picture": "/src/assets/images/cat1.png"
+        }, 
+        "3" : {
+            "posts": 3, 
+            "username": "purplcat",
+            "bio": "i climb buildings :3",
+            "name": "Jazmin",
+            "hobbies": ["reading", "drawing", "walking", "climbing"],
+            "picture": "/src/assets/images/cat2.png"
+        } 
+    }
+}
