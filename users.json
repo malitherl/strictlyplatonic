@@ -5,21 +5,24 @@
             "username": "tabbycat", 
             "bio": "no boat like the shrimp boat",
             "name": "Michaela",
-            "hobbies": ["reading", "writing", "drawing", "shrimping"]
+            "hobbies": ["reading", "writing", "drawing", "shrimping"],
+            "picture": "https://pbs.twimg.com/media/CyS8zvHXgAAtZji.jpg"
         },
         "2" : {
             "posts": 2, 
             "username": "pinkcat",
             "bio": "collecting the cats",
             "name": "Sierra",
-            "hobbies": ["coding", "paint", "cat collecting"] 
+            "hobbies": ["coding", "paint", "cat collecting"], 
+            "picture": "https://i.pinimg.com/736x/4f/bb/a0/4fbba0b8ee601b66f3c88d1d2c80194e.jpg"
         }, 
         "3" : {
             "posts": 3, 
             "username": "purplcat",
             "bio": "i climb buildings :3",
             "name": "Jazmin",
-            "hobbies": ["reading", "drawing", "walking", "climbing"]
+            "hobbies": ["reading", "drawing", "walking", "climbing"],
+            "picture": "https://media.tenor.com/xw1hvKUjAswAAAAe/catty.png"
         } 
     }
 }

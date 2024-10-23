@@ -3,7 +3,7 @@ import userData from "../assets/data/users.json"
 
 const UserProfile = () => {
     console.log("Hello World!")
-    console.log(Object.values(userData.users))
+    console.log(userData.users[1].picture)
 
     return(
         <div>
