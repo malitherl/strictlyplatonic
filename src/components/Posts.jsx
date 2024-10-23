@@ -6,7 +6,7 @@ export const Posts = () => {
         <>
         <div>
         {postsData.map(post => (
-        <div key={post.id} style={styles.postContainer}>
+        <div key={post.id} className="postContainer">
           <h1 style={styles.username}>{post.username}</h1>
           <p><strong>Interests:</strong> {post.interests.join(', ')}</p>
           <p>{post.post}</p>

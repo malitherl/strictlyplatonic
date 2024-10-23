@@ -1,5 +1,5 @@
 
-import mainImage from '../assets/images/paperdolls.png';
+import mainImage from '../assets/images/mainImage.png';
 
 import { Navigation } from "./Navigation";
 

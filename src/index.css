@@ -91,7 +91,14 @@ button:focus-visible {
 .userCardContainer {
   padding: 2em;
   width: 250px;
+  background-color: #FFF;
+  border-radius: 5px;
 }
+
+.userCardContainer div h3:hover {
+  color: #747bff;
+}
+
 
 .userCard {
   margin: 0 1em 0 0 ;
@@ -99,6 +106,12 @@ button:focus-visible {
 
 .dashboardContainer {
   border-top: solid 1px #747bff ; 
-
-
 } 
+
+.postContainer {
+    border: 2px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}

@@ -56,6 +56,8 @@ const handleFileChange = (event) => {
 
     return (
         <>
+
+        <div className='postContainer'>
         <div>
             
             {profilePicture && (
@@ -103,6 +105,7 @@ const handleFileChange = (event) => {
 
                 <button type="submit">Save Changes</button>
             </form>
+        </div>
         </div>
 </>
         
