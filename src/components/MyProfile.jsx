@@ -5,7 +5,7 @@ import '../bio.css';
 export const MyProfile = ({user}) => {
     //Changing this so that if the user logs in and they have a profile picture already 
     //then this picture will the default state. 
-    const [profilePicture, setProfilePicture] = useState(user.picture);
+    const [profilePicture, setProfilePicture] = useState('');
     const [name, setName] = useState('type your name here...');
     const [bio, setBio] = useState('type your bio here...');
 
@@ -18,6 +18,8 @@ export const MyProfile = ({user}) => {
         console.log(savedName)
         const savedBio = localStorage.getItem('bio')
         if(savedPicture) {
+            console.log(savedPicture)
+            console.log("Changing to saved picture")
             setProfilePicture(savedPicture);
         } 
         if(savedName) {
@@ -61,14 +63,14 @@ const handleFileChange = (event) => {
         <div>
             
             {profilePicture && (
-                <img id="preview" src={user.picture} alt="Profile Preview" style={{ display: 'block' }} />
+                <img id="preview" src={profilePicture} alt="Profile Preview" style={{ display: 'block' }} />
             )}
-            <form id="uploadForm">
+            <form id="uploadForm" onSubmit={handleEditSubmit}>
                 <label htmlFor="profilePicture">Change profile picture:</label>
                 <input
                     type="file"
                     id="profilePicture"
-                    accept="image/*"
+                    file="image/*"
                     onChange={handleFileChange}
                     required
                 />
