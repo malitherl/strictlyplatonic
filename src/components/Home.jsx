@@ -19,7 +19,7 @@ export const Home = () => {
     return (
         <>
         <div>
-          <img src={mainImage} alt= "Main pic" style={{width: '100%', height: 'auto'}} />
+          <img src={mainImage} alt= "Main pic" style={{width: 'auto', height: 'auto'}} />
             <h1 style={{color:"#65558f"}}>Strictly Platonic</h1>
               
 

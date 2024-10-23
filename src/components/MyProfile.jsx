@@ -55,6 +55,7 @@ const handleFileChange = (event) => {
 
 
     return (
+        <>
         <div>
             
             {profilePicture && (
@@ -72,6 +73,7 @@ const handleFileChange = (event) => {
                 <br /><br />
                 <button type="submit">Upload</button>
             </form>
+            </div>
 
             <div className="profile">
                 <h2>Profile Information</h2>
@@ -80,7 +82,8 @@ const handleFileChange = (event) => {
                 <p><strong>Bio:</strong> <span>{bio}</span></p>
             </div>
 
-            <h2>Edit Profile</h2>
+            <div style={styles.postContainer}>
+            <h1 style={styles.header}>Edit Profile</h1>
             <form id="editForm" onSubmit={handleEditSubmit}>
                 <label htmlFor="name">Name:</label><br />
                 <input
@@ -101,8 +104,27 @@ const handleFileChange = (event) => {
                 <button type="submit">Save Changes</button>
             </form>
         </div>
-    );
-};
+</>
+        
+    )
+}
+
+const styles = {
+    postContainer: {
+        border: '2px solid #ddd',
+        marginBottom: '20px',
+        padding:'20px',
+        borderRadius: '5px',
+        backgroundColor: '#f9f9f9',
+     
+      },
+      header: {
+        fontSize: '35px', 
+        marginBottom: '20px',
+        fontWeight: 'bold',
+        margin: '5px 0'
+}
+}
 
 
 

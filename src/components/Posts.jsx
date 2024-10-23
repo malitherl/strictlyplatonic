@@ -7,7 +7,7 @@ export const Posts = () => {
         <div>
         {postsData.map(post => (
         <div key={post.id} style={styles.postContainer}>
-          <h3>{post.username}</h3>
+          <h1 style={styles.username}>{post.username}</h1>
           <p><strong>Interests:</strong> {post.interests.join(', ')}</p>
           <p>{post.post}</p>
           <p><strong>Date:</strong> {post.date}</p>
@@ -32,12 +32,21 @@ export const Posts = () => {
 
 const styles = {
   postContainer: {
-    border: '1px solid #ddd',
+    border: '2px solid #ddd',
     padding: '10px',
     marginBottom: '20px',
     borderRadius: '5px',
     backgroundColor: '#f9f9f9',
+ 
   },
+
+  username: {
+    fontSize: '35px',
+    fontWeight: 'bold',
+    color: '#000000',
+    
+  },
+  
   commentsContainer: {
     marginTop: '10px'
   },
@@ -47,4 +56,4 @@ const styles = {
     margin: '5px 0',
     borderRadius: '3px'
   }
-};
+}
