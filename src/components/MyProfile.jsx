@@ -55,20 +55,7 @@ const handleFileChange = (event) => {
 
 
     return (
-<<<<<<< HEAD:src/components/Profile.jsx
         <>
-         <nav>
-                <a href="index.html">
-                    <button type="button">Home</button>
-                </a>
-            </nav>
-        
-        <div style={styles.postContainer}>   
-            <h1 style={styles.header}>Add a profile picture!</h1>
-            <form id="uploadForm">
-                <label htmlFor="profilePicture">Choose a profile picture:</label>
-                <input 
-=======
         <div>
             
             {profilePicture && (
@@ -77,7 +64,6 @@ const handleFileChange = (event) => {
             <form id="uploadForm">
                 <label htmlFor="profilePicture">Change profile picture:</label>
                 <input
->>>>>>> 9b66dc614f7be052bd54527c9fdcea5dffeac747:src/components/MyProfile.jsx
                     type="file"
                     id="profilePicture"
                     accept="image/*"
@@ -89,17 +75,8 @@ const handleFileChange = (event) => {
             </form>
             </div>
 
-<<<<<<< HEAD:src/components/Profile.jsx
-            {profilePicture && (
-                <img id="preview" src={profilePicture} alt="Profile Preview" style={{ display: 'block' }} />
-            )}
-
-            <div style={styles.postContainer} className="profile">
-                <h1 style={styles.header}>Profile Information</h1>
-=======
             <div className="profile">
                 <h2>Profile Information</h2>
->>>>>>> 9b66dc614f7be052bd54527c9fdcea5dffeac747:src/components/MyProfile.jsx
                 <p><strong>Name:</strong> <span>{name}</span></p>
                 <p><strong>Email:</strong> <span>{user.email}</span></p>
                 <p><strong>Bio:</strong> <span>{bio}</span></p>
