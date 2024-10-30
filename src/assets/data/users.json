@@ -6,7 +6,40 @@
             "bio": "no boat like the shrimp boat",
             "name": "Michaela",
             "hobbies": ["reading", "writing", "drawing", "shrimping"],
-            "picture": "/src/assets/images/cat0.png"
+            "picture": "/src/assets/images/cat0.png", 
+            "friends": false, 
+            "scheduleViewable": false,
+            "schedule": [
+                {
+                  "date": "Monday",
+                  "time": "6:00 PM",
+                  "activity": "Writing",
+                  "description": "Work on short story by the shore"
+                },
+                {
+                  "date": "Wednesday",
+                  "time": "4:00 PM",
+                  "activity": "Drawing",
+                  "description": "Sketching shrimp boats at the marina"
+                },
+                {
+                  "date": "Friday",
+                  "time": "7:00 PM",
+                  "activity": "Dinner",
+                  "description": "Seafood dinner with friends"
+                },
+                {
+                  "date": "Saturday",
+                  "time": "10:00 AM",
+                  "activity": "Shrimp Boat Adventure & Picnic",
+                  "description": "Host the shrimping trip & picnic"
+                },
+                {
+                  "date": "Sunday",
+                  "time": "5:00 PM",
+                  "activity": "Reading",
+                  "description": "Book club discussion on a local novel"
+                }]
         },
         "2" : {
             "posts": 2, 
@@ -14,7 +47,41 @@
             "bio": "collecting the cats",
             "name": "Sierra",
             "hobbies": ["coding", "paint", "cat collecting"], 
-            "picture": "/src/assets/images/cat1.png"
+            "picture": "/src/assets/images/cat1.png",
+            "friends": true,
+            "scheduleViewable": true, 
+            "schedule": [
+                {
+                  "date": "Tuesday",
+                  "time": "3:00 PM",
+                  "activity": "Coding Session",
+                  "description": "Work on a cat-themed web app"
+                },
+                {
+                  "date": "Thursday",
+                  "time": "1:00 PM",
+                  "activity": "Cat Collecting",
+                  "description": "Visit local shelter to meet new cats"
+                },
+                {
+                  "date": "Friday",
+                  "time": "5:00 PM",
+                  "activity": "Paint & Code Hangout",
+                  "description": "Host event with friends for painting and coding fun"
+                },
+                {
+                  "date": "Saturday",
+                  "time": "2:00 PM",
+                  "activity": "Painting",
+                  "description": "Work on landscape art"
+                },
+                {
+                  "date": "Sunday",
+                  "time": "6:00 PM",
+                  "activity": "Coding Practice",
+                  "description": "Brush up on JavaScript skills"
+                }
+              ]
         }, 
         "3" : {
             "posts": 3, 
@@ -22,7 +89,40 @@
             "bio": "i climb buildings :3",
             "name": "Jazmin",
             "hobbies": ["reading", "drawing", "walking", "climbing"],
-            "picture": "/src/assets/images/cat2.png"
+            "picture": "/src/assets/images/cat2.png",
+            "friends": true, 
+            "scheduleViewable": false,
+            "schedule":  [
+                {
+                  "date": "Monday",
+                  "time": "8:00 AM",
+                  "activity": "Climbing",
+                  "description": "Morning climb at the local gym"
+                },
+                {
+                  "date": "Wednesday",
+                  "time": "5:00 PM",
+                  "activity": "Drawing",
+                  "description": "Practice perspective drawing"
+                },
+                {
+                  "date": "Friday",
+                  "time": "3:00 PM",
+                  "activity": "Walking",
+                  "description": "Take a walk through the nature trail"
+                },
+                {
+                  "date": "Saturday",
+                  "time": "3:00 PM",
+                  "activity": "Cozy Book & Drawing Session",
+                  "description": "Host book and drawing event at the café"
+                },
+                {
+                  "date": "Sunday",
+                  "time": "11:00 AM",
+                  "activity": "Reading",
+                  "description": "Quiet morning with a book by the park"
+                }]
         } 
     }
 }

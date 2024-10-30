@@ -24,8 +24,7 @@ export const Home = () => {
               
 
                 <LoginButton />
-               <Navigation />  
-                
+                <Navigation />  
                 <Outlet />
            
               
