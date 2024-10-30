@@ -2,8 +2,7 @@ import userData from "../assets/data/users.json"
 
 
 const UserProfile = () => {
-    console.log("Hello World!")
-    console.log(userData.users[1].picture)
+
 
     return(
         <div>
@@ -18,7 +17,30 @@ const UserProfile = () => {
             <p><strong>Bio:</strong> {user.bio}</p>
             <p><strong>Hobbies:</strong> {user.hobbies.join(', ')}</p>
             <p><strong>Friends:</strong> {user.friends ? "Yes" : "No"}</p>
+           
+
+            {
+              
+            user.scheduleViewable &&
+
+
+            
+            <div>
             <hr />
+            <h3>Weekly Schedule</h3>
+            <table>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Description</th>
+              </tr>
+            
+              { user.schedule.map((i) => <tr><td>{i.date}</td><td>{i.time}</td><td>{i.description}</td></tr>)}
+
+            </table>
+            
+            </div>
+            }
             </div>
          ))}
         </div>

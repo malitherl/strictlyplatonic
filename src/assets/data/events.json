@@ -1,0 +1,25 @@
+{
+    "events": {
+        "1" : {
+            "host": "Jazmin (@purplcat)",
+            "title" : "Cozy Book & Drawing Session",
+            "description": "Bring your favorite book and join me for a cozy reading and drawing session! We'll spend some time reading, then dive into some sketching based on what we read or just doodle whatever comes to mind. Tea and snacks provided!",
+            "location": "Local café",
+            "time": "Saturday, 3 PM"
+        },
+        "2": {
+            "host": "Sierra (@pinkcat)",
+            "title" : "Paint & Code Hangout",
+            "description": "Let's get together for a creative mix of painting and coding. Whether you're new to coding or a pro, come have fun painting a canvas or helping to code a cool project. Supplies provided for both",
+            "location": "Local art gallery",
+            "time": "Friday, 5 PM"
+        },
+        "3": {
+            "host": "Michaela (@tabbycat)",
+            "title" : "Shrimp Boat Adventure & Picnic",
+            "description": "Join me on a shrimp boat trip, followed by a fun picnic by the water! We'll spend the day enjoying the waves, catching shrimp, and hanging out. Feel free to bring snacks, sunscreen, and a sketchbook if you want to draw the scenery",
+            "location": "Local marina",
+            "time": "Sunday, 4 AM"
+        }
+    }
+}
