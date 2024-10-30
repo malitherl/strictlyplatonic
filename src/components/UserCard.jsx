@@ -1,8 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
 import LogoutButton from "./LogoutButton";
+import './UserCard.css';  
 
-const UserCard = ({handleClick, user}) => {
+    const UserCard = ({ handleClick, user }) => {
 
 
     const [profilePicture, setProfilePicture] = useState(user.picture);
@@ -56,7 +57,6 @@ const UserCard = ({handleClick, user}) => {
     )
 
 
-
 }
 
-export default UserCard; 
+    export default UserCard; 
