@@ -34,6 +34,46 @@ body {
     color: black;
     
 }
+.bio-section {
+    margin-bottom: 20px;
+}
+
+.gallery {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.upload-button {
+    background-color: plum;
+    color: black;
+    border: none;
+    border-radius: 40%;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.photos {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    background-color: black;
+}
+
+.photos img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 20px;
+    border-radius: 5px;
+}
+
+
 
 #profilePicture {
     margin: 15% 20%;
