@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import Schedule from './Schedule';
 import '../bio.css';
 
 export const MyProfile = ({user}) => {
@@ -8,6 +9,8 @@ export const MyProfile = ({user}) => {
     const [profilePicture, setProfilePicture] = useState('');
     const [name, setName] = useState('type your name here...');
     const [bio, setBio] = useState('type your bio here...');
+    const [hobbies, setHobbies] = useState('enter your hobbies here....')
+
 
     //On initial render, if there are items that have been changed, then will loaded from the localStorage. 
     useEffect(() => {
@@ -15,8 +18,8 @@ export const MyProfile = ({user}) => {
         //TO DO: replace this with a try-catch block and async call to the user-information/management database 
         const savedPicture = localStorage.getItem('profilePicture');
         const savedName = localStorage.getItem('name');
-        console.log(savedName)
         const savedBio = localStorage.getItem('bio')
+        const savedHobbies = localStorage.getItem('hobbies')
         if(savedPicture) {
             console.log(savedPicture)
             console.log("Changing to saved picture")
@@ -29,7 +32,10 @@ export const MyProfile = ({user}) => {
         if(savedBio) {
             setBio(savedBio)
         }
-    
+        
+        if (savedHobbies) {
+            setHobbies(savedHobbies)
+        } 
     }, [])
 
 const handleFileChange = (event) => {
@@ -48,6 +54,7 @@ const handleFileChange = (event) => {
         localStorage.setItem('profilePicture', profilePicture);
         localStorage.setItem('name', name)
         localStorage.setItem('bio', bio)
+        localStorage.setItem('hobbies', hobbies)
         alert('Your profile has been updated successfully!');
 
     };
@@ -78,14 +85,22 @@ const handleFileChange = (event) => {
                 <button type="submit">Upload</button>
             </form>
             </div>
-
+            
+            {/* This displays profile content as is without changes applied */}
             <div className="profile">
                 <h2>Profile Information</h2>
                 <p><strong>Name:</strong> <span>{name}</span></p>
                 <p><strong>Email:</strong> <span>{user.email}</span></p>
                 <p><strong>Bio:</strong> <span>{bio}</span></p>
+                <p><strong>Hobbies:</strong> <span>{hobbies}</span></p>
             </div>
 
+            {
+            /* This form allows the user to edit information about their profile. 
+
+                Requires: form validation and testing 
+                
+            */}
             <div style={styles.postContainer}>
             <h1 style={styles.header}>Edit Profile</h1>
             <form id="editForm" onSubmit={handleEditSubmit}>
@@ -105,9 +120,20 @@ const handleFileChange = (event) => {
                     onChange={(e) => setBio(e.target.value)}
                 /><br /><br />
 
+                <label htmlFor="hobbies">Hobbies:</label><br />
+                <textarea
+                    id="hobbies"
+                    rows="4"
+                    value={hobbies}
+                    onChange={(e) => setHobbies(e.target.value)}
+                /><br /><br />
                 <button type="submit">Save Changes</button>
             </form>
         </div>
+             {/* Create Scheduling Input Form Here  */}
+             <Schedule />
+
+
         </div>
 </>
         

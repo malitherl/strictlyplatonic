@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import { Posts } from "./Posts"
-import { Events } from './Events'
+import  Events  from './Events'
 import  UserCard  from "./UserCard";
 import { Outlet } from "react-router-dom";
 import { MyProfile } from "./MyProfile";

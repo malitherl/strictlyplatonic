@@ -4,7 +4,6 @@ import mainImage from '../assets/images/mainImage.png';
 import { Navigation } from "./Navigation";
 
 import LoginButton from "./LoginButton";
-import LogoutButton from "./LogoutButton";
 import { Outlet } from 'react-router-dom';
 
 
@@ -24,8 +23,7 @@ export const Home = () => {
               
 
                 <LoginButton />
-               <Navigation />  
-                
+                <Navigation />  
                 <Outlet />
            
               

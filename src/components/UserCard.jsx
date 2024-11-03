@@ -46,7 +46,7 @@ import './UserCard.css';
             </div>
             <hr />
             <div onClick={() => {handleClick("userprofile")}}>
-                <h3>Near You</h3>
+                <h3>Friends</h3>
             </div>
     
             <hr />
