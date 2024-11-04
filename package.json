@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.2.4",
-    "@testing-library/jest-dom": "^6.6.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0"
@@ -20,6 +19,7 @@
   "devDependencies": {
     "@eslint/js": "^9.11.1",
     "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
