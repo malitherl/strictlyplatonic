@@ -1,7 +1,43 @@
+import { useEffect } from "react"
 import userData from "../assets/data/users.json"
 
-
 const UserProfile = () => {
+
+
+
+  useEffect(() => {
+
+
+    //Call to the custom hook that will fetch the UserData 
+    //from the user management API endpoint
+
+
+
+
+  }, [])
+
+
+
+
+
+
+
+
+
+  //This function maps the social media icons of the user to the appropriate icons
+   const socialMediaIcons = (social, socialSitesObject) => {
+      //socialSitesObject will be received as a JavaScript object
+      console.log(`/images/icons/${social}.svg`)
+      if (social){
+        return <a href={socialSitesObject[social]}>
+                  <img src={`/src/assets/images/icons/${social}.svg`} style={{height: "16px", width: "16px"}} alt="" /> 
+                </a>
+
+      } 
+      
+   }
+
+
 
 
     return(
@@ -15,6 +51,15 @@ const UserProfile = () => {
             />
             <h3>{user.name} (@{user.username})</h3>
             <p><strong>Bio:</strong> {user.bio}</p>
+            
+            
+
+            
+            { 
+            user.socials && 
+            Object.keys(user.socials[0]).map(social => socialMediaIcons(social, user.socials[0]))
+            }
+            
             <p><strong>Hobbies:</strong> {user.hobbies.join(', ')}</p>
             <p><strong>Friends:</strong> {user.friends ? "Yes" : "No"}</p>
            
@@ -29,14 +74,16 @@ const UserProfile = () => {
             <hr />
             <h3>Weekly Schedule</h3>
             <table>
+              <thead>
               <tr>
                 <th>Date</th>
                 <th>Time</th>
                 <th>Description</th>
               </tr>
-            
+              </thead>
+              <tbody>
               { user.schedule.map((i) => <tr><td>{i.date}</td><td>{i.time}</td><td>{i.description}</td></tr>)}
-
+              </tbody>
             </table>
             
             </div>
