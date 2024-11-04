@@ -1,9 +1,36 @@
 
+import { useEffect } from "react"
 import eventData from "../assets/data/events.json"
 
 
 const Events = () => {
+
+  const mock_id = "auth0|35111a222b"
+
+
+  useEffect(() => {
+
+    //This will fire when the event component is initially rendered. 
+    //getEvents()
+
+
+
+
+  }, [])
+
+
+
+
+
+
+
+   const handleSignUp = (e) => {
+    //update the events in the database.
+      e.participants.push(mock_id)
   
+   }
+
+
 
     return(
         <div>
@@ -18,8 +45,9 @@ const Events = () => {
             <p><strong>Description:</strong> {event.description}</p>
             <p><strong>Location:</strong> {event.location}</p>
             <p><strong>Time:</strong> {event.time}</p>
+            <p> </p>
             <hr />
-            <button>Sign Up</button>
+            <button onClick={()=> handleSignUp(event)}>Sign Up</button>
             </div>
          ))}
         </div>
