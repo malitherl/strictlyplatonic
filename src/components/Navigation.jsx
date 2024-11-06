@@ -3,17 +3,18 @@ import { useState } from "react";
 import { Posts } from "./Posts"
 import  Events  from './Events'
 import  UserCard  from "./UserCard";
-import { Outlet } from "react-router-dom";
 import { MyProfile } from "./MyProfile";
 import UserProfile from "./UserProfile";
 
+import { useProfileData } from '../hooks/userProfileData';
 
 export const Navigation = () => {
     
 
     const {isAuthenticated, user } = useAuth0();
-    const [current, setCurrent] = useState('posts')
-
+    const [current, setCurrent] = useState('posts');
+    const userInfo = useProfileData(user);
+    console.log(userInfo)
     const handleClick = (value) => {
         if(value != current) {
           if (value == "myprofile") {
@@ -44,11 +45,11 @@ export const Navigation = () => {
               </nav>
              <main className="mainContentContainer">
                 <div className= "userCard">
-                    <UserCard handleClick={handleClick} user= {user}/>
+                    <UserCard handleClick={handleClick} user= {user} userInfo={userInfo}/>
                 </div>
                 <div>
                     {current == 'posts' && <Posts />}
-                    {current == 'events' && <Events />} 
+                    {current == 'events' && <Events user={user}/>} 
                     {current == 'myprofile' && <MyProfile user={user} />}
                     {current == 'userprofile' && <UserProfile />}
             
