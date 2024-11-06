@@ -11,7 +11,7 @@ export const MyProfile = ({ user }) => {
 
     // Changing this so that if the user logs in and they have a profile picture already 
     // then this picture will be the default state. 
-    const [profilePicture, setProfilePicture] = useState('');
+    const [profilePicture, setProfilePicture] = useState(''); 
     const [name, setName] = useState('type your name here...');
     const [bio, setBio] = useState('type your bio here...');
     const [hobbies, setHobbies] = useState('enter your hobbies here....');
