@@ -115,3 +115,59 @@ button:focus-visible {
     border-radius: 5px;
     background-color: #f9f9f9;
 }
+
+.buttons {
+  display: flex;
+  gap: 10px; /* Space between the edit and delete buttons */
+  min-width: 100px; /* Ensures enough space for horizontal alignment */
+}
+
+/* Edit button styles */
+button.edit {
+  padding: 5px 10px;
+  background-color: #9966CC; 
+  color: #9966CC;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.edit:hover {
+  background-color: #7d4dac;
+}
+
+/* Delete button styles */
+button.delete {
+  padding: 5px 10px;
+  background-color: #8b5f8f; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.delete:hover {
+  background-color: #784f7b;
+}
+
+/* Style the SVG icons */
+.icon {
+  width: 24px;  
+  height: 24px; 
+  transition: transform 0.3s ease;
+}
+
+/* Hover effect on icons */
+button:hover.icon {
+  transform: scale(1.2); 
+}
+
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px; 
+}
+li.buttons {
+  margin-left: 20px; 
+}
