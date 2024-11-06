@@ -1,20 +1,27 @@
 
-import { useEffect } from "react"
-import eventData from "../assets/data/events.json"
+import { useEffect, useState } from "react"
+import { Event } from "../services/firebase"
+import { useProfileData } from "../hooks/userProfileData";
 
+const Events = ({user}) => {
 
-const Events = () => {
-
-  const mock_id = "auth0|35111a222b"
-
+  const [events, setEvents] = useState([]);
+  const [eventsIds, setEventIds] = useState([]);
+  const eventsData = new Event();  
+  
+  const userInfo = useProfileData(user);
+  
 
   useEffect(() => {
 
-    //This will fire when the event component is initially rendered. 
-    //getEvents()
+    const fetchEvents = async() => {
+      
+      const e = await eventsData.getEventsData();
+      setEventIds(e[0]);
+      setEvents(e[1]);
+    } 
 
-
-
+    fetchEvents();
 
   }, [])
 
@@ -24,30 +31,34 @@ const Events = () => {
 
 
 
-   const handleSignUp = (e) => {
-    //update the events in the database.
-      e.participants.push(mock_id)
-  
+
+   const handleSignUp = async (e, p) => {
+    //update the events in the database, sends over the user's id to the participants field so that they now are officially signed up for the event
+    const u = await eventsData.updateEvents(e, p, userInfo[0]["user_id"]);
+
    }
 
 
 
     return(
         <div>
-        {Object.values(eventData.events).map((event) => (
-            <div key={event.title} style={styles.userCard}>
-            <img 
+        {events.map((event, i) => (
+            
+            <div key={eventsIds[i]} style={styles.userCard}>
+            {
+              
+              /* <img 
                 src={event.picture} 
                 alt={`${event.title} event preview`} 
                 style={styles.profilePicture} 
-            />
-            <h3>{event.title} by ({event.host})</h3>
-            <p><strong>Description:</strong> {event.description}</p>
-            <p><strong>Location:</strong> {event.location}</p>
-            <p><strong>Time:</strong> {event.time}</p>
-            <p> </p>
-            <hr />
-            <button onClick={()=> handleSignUp(event)}>Sign Up</button>
+            /> */}
+              <h3>{event.title} by ({event.host})</h3>
+              <p><strong>Description:</strong> {event.description}</p>
+              <p><strong>Location:</strong> {event.location}</p>
+              <p><strong>Time:</strong> {event.time}</p>
+              <p><strong>RSVP: {event.participants.length}</strong></p>
+              <hr />
+              <button onClick={()=> handleSignUp(eventsIds[i], event.participants)}>Sign Up</button>
             </div>
          ))}
         </div>

@@ -1,30 +1,66 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDoc, getDocs, updateDoc, doc } from 'firebase/firestore/lite';
 
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-   //TO DO: add these values from the firebase console.
-   //
-
-  };
+export class Event {
   
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  firebaseConfig = {
+  
+    apiKey: import.meta.env.VITE_FIREBASE_API,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSENGER,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID
+  
+  };
 
-export async function getEvents(db) {
+  app;
+  db;
+  
 
-    const eventsCol = collection(db, 'events');
-    const eventSnapshot = await getDoc(eventsCol);
-    const eventList = eventSnapshot.docs.map(e => e.data);
+  constructor () {
+    this.app = initializeApp(this.firebaseConfig);
+    this.db = getFirestore(this.app);
+  }
 
-    return eventList;
+
+  async getEventsData() {
+   
+    const eventsCol = collection(this.db, 'events');
+    const eventSnapshot = await getDocs(eventsCol);
+    const eventList = eventSnapshot.docs.map(e => e.data());
+    const eventIdList = eventSnapshot.docs.map(i => i.id);
+    console.log(eventList);
+    console.log(eventIdList);
+    return [eventIdList, eventList];
+
+} 
+
+  async updateEvents (event_id, participants, user_id) {
+
+    const docRef = doc(this.db, "events", event_id);
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    } else {
+      console.log("No such document!");
+    }
+
+    const newParticipants = [...participants, user_id];
+    const newDoc = await updateDoc(docRef, {
+      participants: newParticipants
+    });
+
+    console.log("User added to event attendees")
+
+  } 
 
 }
+
+
 
 
