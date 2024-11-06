@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import scheduleData from '../assets/data/scheduleEvents.json';
+import editIcon from '../assets/images/icons/edit.svg';
+import deleteIcon from '../assets/images/icons/delete.svg';
 
 const daysOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -11,6 +13,8 @@ const Schedule = () => {
   const [minute, setMinute] = useState('');
   const [amPm, setAmPm] = useState('');
   const [description, setDescription] = useState('');
+  const [editingEvent, setEditingEvent] = useState(null);  // To track if an event is being edited
+
   
 
 
@@ -25,12 +29,15 @@ const Schedule = () => {
           description 
         }; 
       
-      setSchedule((prevSchedule) => {
-        console.log('Previous Schedule:', prevSchedule);
-        const updatedSchedule = [...prevSchedule, newEvent];
-        console.log('Updated Schedule:', updatedSchedule);
-        return updatedSchedule;
-      });
+        if (editingEvent) {
+          const updatedSchedule = schedule.map(event =>
+            event === editingEvent ? newEvent : event
+          );
+          setSchedule(updatedSchedule);
+          setEditingEvent(null); // Clear editing state after saving
+        } else {
+          setSchedule((prevSchedule) => [...prevSchedule, newEvent]);
+        }
 
       setDate('');
       setHour('');
@@ -40,6 +47,19 @@ const Schedule = () => {
     } else {
         console.warn('Please fill in all fields before submitting.');
     }
+  };
+
+  const handleDelete = (eventToDelete) => {
+    setSchedule(schedule.filter(event => event !== eventToDelete));
+  };
+
+  const handleEdit = (eventToEdit) => {
+    setEditingEvent(eventToEdit);
+    setDate(eventToEdit.date);
+    setHour(eventToEdit.time.split(':')[0]);
+    setMinute(eventToEdit.time.split(':')[1].split(' ')[0]);
+    setAmPm(eventToEdit.time.split(' ')[1]);
+    setDescription(eventToEdit.description);
   };
 
   const getSortedSchedule = (schedule) => {
@@ -109,14 +129,28 @@ const Schedule = () => {
         />
         
         <button type="submit">Add to Schedule</button>
+        <hr />
       </form>
 
-      <h2>Scheduled Events</h2>
+      <h2>Schedule</h2>
+      
       <ul>
         {getSortedSchedule(schedule).map((event, index) => (
-          <li key={index} role="listitem">
+          <li key={index}>
+          <div>
             <strong>{event.date}</strong> at <em>{event.time}</em>: {event.description}
-          </li>
+          </div>
+        
+          <div className="buttons">
+            <button className="edit" onClick={() => handleEdit(event)}>
+              <img src={editIcon} alt="Edit" className="icon" />
+            </button>
+        
+            <button className="delete" onClick={() => handleDelete(event)}>
+              <img src={deleteIcon} alt="Delete" className="icon" />
+            </button>
+          </div>
+        </li>
         ))}
       </ul>
     </div>
