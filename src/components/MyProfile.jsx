@@ -162,7 +162,7 @@ const styles = {
     postContainer: {
         border: '2px solid #ddd',
         marginBottom: '20px',
-        padding: '20px',
+        padding: '3em',
         borderRadius: '5px',
         backgroundColor: '#f9f9f9',
     },

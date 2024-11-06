@@ -1,28 +1,30 @@
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import userData from "../assets/data/users.json"
+import { retrieveUserList } from "../services/user_services";
 
 const UserProfile = () => {
 
 
-
+  const [userList, setUserList] = useState([]);
+  //To do: make another custom hook to persist this data through the entire application and not just here. 
   useEffect(() => {
 
+    const fetchUsers = async() => {
+      const u = await retrieveUserList();
+      setUserList(u);
+      return u;
+    }
+    try {
+      fetchUsers();
 
-    //Call to the custom hook that will fetch the UserData 
-    //from the user management API endpoint
-
-
-
-
-  }, [])
-
-
-
-
-
+    } catch (error) {
+      console.log(error);
+    }
 
 
+  }, []);
 
+  console.log(userList);
 
   //This function maps the social media icons of the user to the appropriate icons
    const socialMediaIcons = (social, socialSitesObject) => {
@@ -38,60 +40,64 @@ const UserProfile = () => {
    }
 
 
-
-
-    return(
-        <div>
-        {Object.values(userData.users).map((user) => (
-            <div key={user.posts} style={styles.userCard}>
-            <img 
-                src={user.picture} 
-                alt={`${user.username}'s profile`} 
-                style={styles.profilePicture} 
-            />
-            <h3>{user.name} (@{user.username})</h3>
-            <p><strong>Bio:</strong> {user.bio}</p>
-            
-            
-
-            
-            { 
-            user.socials && 
-            Object.keys(user.socials[0]).map(social => socialMediaIcons(social, user.socials[0]))
-            }
-            
-            <p><strong>Hobbies:</strong> {user.hobbies.join(', ')}</p>
-            <p><strong>Friends:</strong> {user.friends ? "Yes" : "No"}</p>
-           
-
-            {
-              
-            user.scheduleViewable &&
-
-
-            
+   return (
+    <div>
+        {userList.length > 0 && (
             <div>
-            <hr />
-            <h3>Weekly Schedule</h3>
-            <table>
-              <thead>
-              <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Description</th>
-              </tr>
-              </thead>
-              <tbody>
-              { user.schedule.map((i) => <tr><td>{i.date}</td><td>{i.time}</td><td>{i.description}</td></tr>)}
-              </tbody>
-            </table>
-            
+                {userList.map((user) => (
+                    <div key={user.posts} style={styles.userCard}>
+                        <img 
+                            src={user.picture} 
+                            alt={`${user.username}'s profile`} 
+                            style={styles.profilePicture} 
+                        />
+                        <h3>{user.name} (@{user.username})</h3>
+                        
+                        
+                        {user.user_metadata && Object.values(user.user_metadata).length > 0 && (
+                          
+                            <div>
+                              {user.user_metadata.bio && <p><strong>Bio:</strong> {user.user_metadata.bio}</p> }
+                                
+
+                                {user.user_metadata.socials && Object.keys(user.user_metadata.socials[0]).map((social) => 
+                                    socialMediaIcons(social, user.user_metadata.socials[0])
+                                )}
+                                <p><strong>Hobbies:</strong> {user.user_metadata.hobbies.join(', ')}</p>
+                                <p><strong>Friends:</strong> {user.user_metadata.friends ? "Yes" : "No"}</p>
+                                
+                                <div>
+                                    <hr />
+                                    <h3>Weekly Schedule</h3>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {user.user_metadata.schedule.map((i, index) => (
+                                                <tr key={index}>
+                                                    <td>{i.date}</td>
+                                                    <td>{i.time}</td>
+                                                    <td>{i.description}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                ))}
+                <hr />
             </div>
-            }
-            </div>
-         ))}
-        </div>
-      );
+        )}
+    </div>
+);
+
     
 }
 
