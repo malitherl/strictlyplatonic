@@ -213,7 +213,7 @@ export const MyProfile = ({ user }) => {
                     </div>
                 </div>
 
-                {/* Scheduling Section */}
+                {/* Scheduling */}
                 <Schedule />
             </div>
         </>
