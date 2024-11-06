@@ -3,6 +3,7 @@
         "1" : {
             "posts": 1,
             "username": "tabbycat", 
+            "id": "auth0|89382b838z",
             "bio": "no boat like the shrimp boat",
             "name": "Michaela",
             "hobbies": ["reading", "writing", "drawing", "shrimping"],
@@ -45,6 +46,7 @@
         "2" : {
             "posts": 2, 
             "username": "pinkcat",
+            "id": "auth0|88235b838z",
             "bio": "collecting the cats",
             "name": "Sierra",
             "hobbies": ["coding", "paint", "cat collecting"], 
@@ -88,6 +90,7 @@
         "3" : {
             "posts": 3, 
             "username": "purplcat",
+            "id": "auth0|90175c838t",
             "bio": "i climb buildings :3",
             "name": "Jazmin",
             "hobbies": ["reading", "drawing", "walking", "climbing"],

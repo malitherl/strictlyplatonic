@@ -4,10 +4,10 @@ import './App.css'
 import { MyProfile } from './components/MyProfile'
 import { Home } from './components/Home'
 import  Events  from './components/Events'
-
 import UserProfile from "./components/UserProfile";
 
 function App() {
+
 
   return (
     <BrowserRouter>
