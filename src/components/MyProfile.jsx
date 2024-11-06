@@ -15,9 +15,12 @@ export const MyProfile = ({ user }) => {
     const [name, setName] = useState('type your name here...');
     const [bio, setBio] = useState('type your bio here...');
     const [hobbies, setHobbies] = useState('enter your hobbies here....');
+    const [photos, setPhotos] = useState([]); // for photos to profile
+    const [discussionThreads, setDiscussionThreads] = useState([]); // discussion threads
+    const [newThread, setNewThread] = useState(''); // discussion thread input
     const [errors, setErrors] = useState({}); 
 
-    // On initial render, if there are items that have been changed, then will loaded from the localStorage. 
+    // On initial render, if there are items that have been changed, then will load them from the localStorage. 
     useEffect(() => {
         //Once we have a database, however, this will be changed to an asynchronous call to the database, to retrieve this information. 
         //TO DO: replace this with a try-catch block and async call to the user-information/management database 
@@ -25,6 +28,8 @@ export const MyProfile = ({ user }) => {
         const savedName = localStorage.getItem('name');
         const savedBio = localStorage.getItem('bio');
         const savedHobbies = localStorage.getItem('hobbies');
+        const savedPhotos = JSON.parse(localStorage.getItem('photos') || '[]');
+        const savedThreads = JSON.parse(localStorage.getItem('discussionThreads') || '[]');
 
         if (savedPicture) {
             setProfilePicture(savedPicture);
@@ -40,7 +45,7 @@ export const MyProfile = ({ user }) => {
         }
     }, []);
 
-    const handleFileChange = (event) => {
+    const handelFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -67,7 +72,7 @@ export const MyProfile = ({ user }) => {
         return Object.keys(newErrors).length === 0; 
     };
 
-    const handleEditSubmit = (event) => {
+    const handelEditSubmit = (event) => {
         event.preventDefault();
         if (validateForm()) { // validating form . If it fails, storing should be stopped and prevent unwanted data 
             
@@ -79,6 +84,31 @@ export const MyProfile = ({ user }) => {
         }
     };
 
+    // photo upload
+    const handelPhotoUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const newPhotos = [...photos, e.target.result];
+                setPhotos(newPhotos);
+                localStorage.setItem('photos', JSON.stringify(newPhotos)); 
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    // for thread submission
+    const handelThreadSubmit = (event) => {
+        event.preventDefault();
+        if (newThread.trim() !== '') {
+            const updatedThreads = [...discussionThreads, newThread];
+            setDiscussionThreads(updatedThreads);
+            localStorage.setItem('discussionThreads', JSON.stringify(updatedThreads)); 
+            setNewThread(''); 
+        }
+    };
+
     return (
         <>
             <div className='postContainer'>
@@ -86,13 +116,13 @@ export const MyProfile = ({ user }) => {
                     {profilePicture && (
                         <img id="preview" src={profilePicture} alt="Profile Preview" style={{ display: 'block' }} />
                     )}
-                    <form id="uploadForm" onSubmit={handleEditSubmit}>
+                    <form id="uploadForm" onSubmit={handelEditSubmit}>
                         <label htmlFor="profilePicture">Change profile picture:</label>
                         <input
                             type="file"
                             id="profilePicture"
                             accept="image/*"
-                            onChange={handleFileChange}
+                            onChange={handelFileChange}
                             required
                         />
                         <br /><br />
@@ -100,7 +130,7 @@ export const MyProfile = ({ user }) => {
                     </form>
                 </div>
                 
-                {/* This displays profile content as is without changes applied */}
+                {/* Profile Info */}
                 <div className="profile">
                     <h2>Profile Information</h2>
                     <p><strong>Name:</strong> <span>{name}</span></p>
@@ -109,13 +139,10 @@ export const MyProfile = ({ user }) => {
                     <p><strong>Hobbies:</strong> <span>{hobbies}</span></p>
                 </div>
 
-                {
-                /*  This form allows the user to edit information about their profile. 
-                   Requires: form validation and testing 
-                */}
+                {/* Edit profile form */}
                 <div style={styles.postContainer}>
                     <h1 style={styles.header}>Edit Profile</h1>
-                    <form id="editForm" onSubmit={handleEditSubmit}>
+                    <form id="editForm" onSubmit={handelEditSubmit}>
                         <label htmlFor="name">Name:</label><br />
                         <input
                             type="text"
@@ -123,7 +150,6 @@ export const MyProfile = ({ user }) => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
-                        
                         {errors.name && <p style={{ color: 'red' }}>{errors.name}</p>}
                         <br /><br />
 
@@ -134,7 +160,6 @@ export const MyProfile = ({ user }) => {
                             value={bio}
                             onChange={(e) => setBio(e.target.value)}
                         />
-                        
                         {errors.bio && <p style={{ color: 'red' }}>{errors.bio}</p>}
                         <br /><br />
 
@@ -145,18 +170,55 @@ export const MyProfile = ({ user }) => {
                             value={hobbies}
                             onChange={(e) => setHobbies(e.target.value)}
                         />
-                       
                         {errors.hobbies && <p style={{ color: 'red' }}>{errors.hobbies}</p>}
                         <br /><br />
                         <button type="submit">Save Changes</button>
                     </form>
                 </div>
-                {/* Create Scheduling Input Form Here */}
+
+                {/* Photos  */}
+                <div style={styles.postContainer}>
+                    <h2>Post photos to your profile!</h2>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handelPhotoUpload}
+                    />
+                    <div>
+                        {photos.map((photo, index) => (
+                            <img key={index} src={photo} alt={`Uploaded ${index}`} style={{ width: '100px', margin: '10px' }} />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Discussion Threads  */}
+                <div style={styles.postContainer}>
+                    <h2>What is on your mind?</h2>
+                    <form onSubmit={handelThreadSubmit}>
+                        <textarea
+                            value={newThread}
+                            onChange={(e) => setNewThread(e.target.value)}
+                            placeholder="type whats on your mind here..."
+                            rows="3"
+                            style={{ width: '100%' }}
+                        ></textarea>
+                        <button type="submit">Post Your Thread</button>
+                    </form>
+                    <div>
+                        {discussionThreads.map((thread, index) => (
+                            <div key={index} style={styles.threadContainer}>
+                                <p>{thread}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Scheduling */}
                 <Schedule />
             </div>
         </>
     );
-}
+};
 
 const styles = {
     postContainer: {
@@ -165,11 +227,20 @@ const styles = {
         padding: '3em',
         borderRadius: '5px',
         backgroundColor: '#f9f9f9',
+        background: 'linear-gradient(21deg, #d6c7e5, violet)'
     },
     header: {
         fontSize: '35px',
         marginBottom: '20px',
         fontWeight: 'bold',
         margin: '5px 0'
+    },
+    threadContainer: {
+        border: '1px solid #ddd',
+        padding: '10px',
+        marginBottom: '10px',
+        borderRadius: '5px',
+        color: 'purple',
+        background: 'linear-gradient(21deg, #d6c7e5, violet)'
     }
-}
+};
