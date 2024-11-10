@@ -90,7 +90,7 @@ export const Posts = () => {
       <div style={styles.container}>
         {/* new posts*/}
         <div style={styles.newPostForm}>
-          <h2>Create an Event!</h2>
+          <h2>Create a Post!</h2>
           <form onSubmit={handlePostSubmit}>
             {/* display name */}
             <input
