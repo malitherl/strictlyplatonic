@@ -251,7 +251,7 @@ const styles = {
         padding: '3em',
         borderRadius: '5px',
         backgroundColor: '#f9f9f9',
-        background: 'linear-gradient(21deg, #d6c7e5, violet)'
+        background: 'linear-gradient(21deg, #65558f, #a69ac7)'
     },
     header: {
         fontSize: '35px',
@@ -265,6 +265,6 @@ const styles = {
         marginBottom: '10px',
         borderRadius: '5px',
         color: 'purple',
-        background: 'linear-gradient(21deg, #d6c7e5, violet)'
+        background: 'linear-gradient(21deg, #65558f, #a69ac7)'
     }
 };
