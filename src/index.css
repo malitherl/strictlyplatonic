@@ -123,6 +123,18 @@ button:focus-visible {
 }
 
 /* Edit button styles */
+button.visibility {
+  padding: 5px 10px;
+  background-color: #af85da; 
+  color: #af85da;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button.visibilty:hover {
+  background-color: #8e5fbe;
+}
+
 button.edit {
   padding: 5px 10px;
   background-color: #9966CC; 
@@ -131,7 +143,6 @@ button.edit {
   border-radius: 5px;
   cursor: pointer;
 }
-
 button.edit:hover {
   background-color: #7d4dac;
 }
@@ -145,7 +156,6 @@ button.delete {
   border-radius: 5px;
   cursor: pointer;
 }
-
 button.delete:hover {
   background-color: #784f7b;
 }
