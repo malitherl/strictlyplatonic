@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import LogoutButton from "./LogoutButton";
-import './UserCard.css';  
+import '../UserCard.css';  
     
 
 
@@ -10,6 +10,10 @@ const UserCard = ({ handleClick, user, userInfo }) => {
      const [profilePicture, setProfilePicture] = useState(user.picture);
      const [name, setName] = useState(user.name);
      const [nickname, setNickName] = useState(user.nickname);
+    
+     
+
+
 
     useEffect(() => {
 

@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 
 // Create a single supabase client for interacting with your database
 
-class Bucket {
+export class Bucket {
 
     supabase;
 
@@ -30,6 +30,7 @@ class Bucket {
          */
         
         //first try-catch to upload image 
+        
         try {
             const userAvatar = await this.supabase.storage.from('avatars').upload(filePath, file, {
                 contentType: 'image/jpeg',
