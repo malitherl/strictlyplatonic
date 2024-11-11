@@ -1,7 +1,7 @@
 
-import { useEffect, useState } from "react"
-import { Event } from "../services/firebase"
-import { useProfileData } from "../hooks/userProfileData";
+import { useEffect, useState } from "react";
+import { Event } from "../services/event_services";
+import { useProfileData } from "../hooks/useProfileData";
 
 const Events = ({user}) => {
 
@@ -25,16 +25,10 @@ const Events = ({user}) => {
 
   }, [])
 
-
-
-
-
-
-
-
+  
    const handleSignUp = async (e, p) => {
     //update the events in the database, sends over the user's id to the participants field so that they now are officially signed up for the event
-    const u = await eventsData.updateEvents(e, p, userInfo[0]["user_id"]);
+    const u = await eventsData.eventSignUp(e, p, userInfo[0]["user_id"]);
 
    }
 

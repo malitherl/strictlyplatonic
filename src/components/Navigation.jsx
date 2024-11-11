@@ -6,7 +6,7 @@ import  UserCard  from "./UserCard";
 import { MyProfile } from "./MyProfile";
 import UserProfile from "./UserProfile";
 
-import { useProfileData } from '../hooks/userProfileData';
+import { useProfileData } from '../hooks/useProfileData';
 
 export const Navigation = () => {
     
@@ -48,9 +48,9 @@ export const Navigation = () => {
                     <UserCard handleClick={handleClick} user= {user} userInfo={userInfo}/>
                 </div>
                 <div>
-                    {current == 'posts' && <Posts />}
+                    {current == 'posts' && <Posts user={user} />}
                     {current == 'events' && <Events user={user}/>} 
-                    {current == 'myprofile' && <MyProfile user={user} />}
+                    {current == 'myprofile' && <MyProfile userInfo={userInfo} user={user} />}
                     {current == 'userprofile' && <UserProfile />}
             
                 </div>

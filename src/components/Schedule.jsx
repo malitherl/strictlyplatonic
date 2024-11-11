@@ -5,6 +5,8 @@ import deleteIcon from '../assets/images/icons/delete.svg';
 import visibilityOn from '../assets/images/icons/visibilityOn.svg';
 import visibilityOff from '../assets/images/icons/visibilityOff.svg';
 
+
+
 const daysOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const Schedule = () => {
@@ -19,11 +21,31 @@ const Schedule = () => {
   const [hour, setHour] = useState('');
   const [minute, setMinute] = useState('');
   const [amPm, setAmPm] = useState('');
-  const [description, setDescription] = useState('');
-  const [editingEvent, setEditingEvent] = useState(null);  // Track if an event is being edited
+  const [activity, setActivity] = useState('');
+  const [editingEvent, setEditingEvent] = useState(null);  // To track if an event is being edited
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('Submitting event:', { date, hour, minute, amPm, activity });
+    if (date && hour && minute && amPm && activity) {
+        const newEvent = { 
+          date, 
+          time: `${hour}:${minute.padStart(2, '0')} ${amPm}`, // Ensure minutes are two digits
+          //amPm
+          activity 
+        }; 
+      
+        if (editingEvent) {
+          const updatedSchedule = schedule.map(event =>
+            event === editingEvent ? newEvent : event
+          );
+          setSchedule(updatedSchedule);
+          editSchedule(schedule); // Passing the state to the correct function;
+          setEditingEvent(null); // Clear editing state after saving
+        } else {
+          setSchedule((prevSchedule) => [...prevSchedule, newEvent]);
+        }
 
     if (date && hour && minute && amPm && description) {
       const newEvent = {
@@ -52,7 +74,7 @@ const Schedule = () => {
       setHour('');
       setMinute('');
       setAmPm('');
-      setDescription('');
+      setActivity('');
     } else {
       console.warn('Please fill in all fields before submitting.');
     }
@@ -81,6 +103,7 @@ const Schedule = () => {
   };
 
   const getSortedSchedule = (schedule) => {
+
     return [...schedule].sort((a, b) => {
       const dayDifference = daysOrder.indexOf(a.date) - daysOrder.indexOf(b.date);
       if (dayDifference !== 0) {
@@ -133,9 +156,9 @@ const Schedule = () => {
         </select>
         <input
           type="text"
-          placeholder="Enter description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Enter activity"
+          value={activity}
+          onChange={(e) => setActivity(e.target.value)}
         />
         <button type="submit">{editingEvent !== null ? 'Update Event' : 'Add to Schedule'}</button>
         <hr />
@@ -147,7 +170,7 @@ const Schedule = () => {
         {getSortedSchedule(schedule).map((event) => (
           <li key={event.id} role="listitem">
             <div>
-              <strong>{event.date}</strong> at <em>{event.time}</em>: {event.description}
+              <strong>{event.date}</strong> at <em>{event.time}</em>: {event.activity}
             </div>
             <div className="buttons">
               <button className="visibility" onClick={() => handleToggleIcon(event.id)}>
@@ -165,6 +188,6 @@ const Schedule = () => {
       </ul>
     </div>
   );
-};
+}};
 
 export default Schedule;
