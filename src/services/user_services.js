@@ -31,7 +31,7 @@ export const retrieveUserInfo = async (email_input) => {
    * 
    * This includes the user ID which we persist through the application to 
    * have access to the other API endpoints. 
-   *
+   * 
    * 
    */
   let id; 
@@ -65,6 +65,10 @@ export const retrieveUserInfo = async (email_input) => {
 
 export const retrieveUserList = async () => {
 
+  /** 
+   * This function will retrieve the users from the user management database
+   * 
+   */
 
   try {
 
@@ -90,49 +94,54 @@ export const retrieveUserList = async () => {
  }
 
 
-
-
 }
 
 
 
-
-
-
-export const updateUserInformation = ({id}) => {
+export const updateUserSchedule = async (id, data) => {
   
 /** 
  * This function will take changes that the user makes on their profile 
  * and uploads them through this API endpoint.  
  * 
+ * PARAMETERS: 
  * 
- * TO FINISH next sprint
+ * id: this is identifies the current user, and corresponds to the user_id as saved in the user management database
+ * 
+ * data: this is a mapping object that is taken and modified into a JSON object. Example format: 
+ 
+ *  
+ * 
  */
 
-  var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Accept", "application/json");
-  myHeaders.append("Authorization", `Bearer ${import.meta.env.AUTH_API_KEY}`);
 
-  var raw = JSON.stringify({
-    //Here we will insert information to update the user's info
-    "user_metadata": {
-      "hobbies": {},
-      "schedule": {},
-      "friends": {}
+  try {
+
+    const token = await retrieveToken();
+
+    let config = {
+      method: 'patch',
+      maxBodyLength: Infinity,
+      url: `https://${import.meta.env.VITE_AUTH_DOMAIN_ID}/api/v2/users/${id}`,
+      headers: { 
+        'Accept': 'application/json', 
+        'Authorization': "Bearer " + token["access_token"] 
+      },
+      data: {
+        "user_metadata": {
+        "schedule": [...data]
+      }}
+    };
+
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      }).catch((error) => {
+        console.log(error);
+      });
+
+    } catch (error) {
+      console.log(error)
     }
-  });
-
-  var requestOptions = {
-    method: 'PATCH',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-  };
-
-  fetch(`https://${import.meta.env.VITE_AUTH_DOMAIN_ID}/api/v2/users/${id}`, requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
 
 }

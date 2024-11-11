@@ -82,7 +82,7 @@ const UserProfile = () => {
                                                 <tr key={index}>
                                                     <td>{i.date}</td>
                                                     <td>{i.time}</td>
-                                                    <td>{i.description}</td>
+                                                    <td>{i.activity}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
