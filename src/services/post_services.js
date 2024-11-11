@@ -1,8 +1,7 @@
 import { addDoc } from "firebase/firestore/lite";
 
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDoc, getDocs, updateDoc, doc, arrayUnion } from 'firebase/firestore/lite';
-
+import { getFirestore, query, where, collection, getDoc, getDocs, updateDoc, doc, arrayUnion } from 'firebase/firestore/lite';
 
 export class Post {
 
@@ -31,7 +30,7 @@ export class Post {
         const postsCol = collection(this.db, 'posts');
         const postSnapshot = await getDocs(postsCol);
         const postList = postSnapshot.docs.map(e => e.data());
-        console.log(postList);
+        
         const postIdList = postSnapshot.docs.map(i => i.id);
         return [postIdList, postList];
 
@@ -94,6 +93,28 @@ export class Post {
           });
 
           console.log("Post has been updated.");
+    }
+//creator_id, url
+    async updatePostPictures(creator_id, pic_url) {
+      const postsCol = collection(this.db, 'posts');
+      
+      const q = query(postsCol, where("creator", "==", creator_id))
+
+      const postsSnapshot = await getDocs(q);
+      const p = postsSnapshot.docs;
+      p.forEach(async (doc) => {
+        try {
+          console.log()
+          const newDoc = await updateDoc(doc.ref, {
+            creator_pic: pic_url
+          });
+          console.log(newDoc)
+          console.log("user post profile picture updated");
+        } catch (error) {
+          console.log(error)
+        }
+      })
+      
     }
 
 }

@@ -13,7 +13,6 @@ export const Posts = ({user}) => {
 
   const postsData = new Post();
 
-
   useEffect(() => {
     const fetchPosts = async () => {
       const p = await postsData.getPostsData();
@@ -40,6 +39,12 @@ export const Posts = ({user}) => {
     return <div>Loading...</div>;
  }
 
+ const editModal = (creator_id, user_id) => {
+  console.log(creator_id)
+  console.log(user_id)
+  return creator_id == user_id ? <button onClick={() => handlePostEdit()}><p>edit</p></button> : '';
+ }
+
   const handleCommentSubmit = async (postId, comment) => {
      let index = 0;
      const newPosts = posts.map((post, i) => {
@@ -60,7 +65,14 @@ export const Posts = ({user}) => {
      
   
   };
-  
+
+    const handlePostEdit = () => {
+      console.log('editing')
+    }
+
+
+
+
     // for thread submission
     const handleThreadSubmit = (event) => {
       event.preventDefault();
@@ -78,8 +90,7 @@ export const Posts = ({user}) => {
   return (
     <>
       <div style={styles.container}>
-        {
-          posts ? 
+        {posts ? 
             <div>
               <div style={styles.postContainer}>
                     <h2>What is on your mind?</h2>
@@ -113,7 +124,10 @@ export const Posts = ({user}) => {
               <small><strong>Date:</strong> {post.date}</small>
               <p>{post.desc}</p>
             
-
+              {/**
+               * optional modal for the user to edit their own posts
+               */}
+              {editModal(post.creator, user.sub)}
               {/* of there, showing image with post */}
               {post.image && <img src={post.image} alt="Post" style={styles.postImage} />}
               <Comments comments= {post.comments} /> 
