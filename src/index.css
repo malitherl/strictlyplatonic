@@ -171,3 +171,30 @@ li {
 li.buttons {
   margin-left: 20px; 
 }
+
+.profile-preview {
+  width: 50px; 
+  height: 50px; 
+  border-radius: 50%; 
+  border: 2px solid #ccc; 
+}
+
+.user-header {
+  width: 50%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.follow-button {
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  color:#ccc;
+  padding: 5px;
+}
+
+.follow-button a:hover {
+  color:#1a1a1a;
+}
+

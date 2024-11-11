@@ -3,30 +3,28 @@ import scheduleData from '../assets/data/scheduleEvents.json';
 import editIcon from '../assets/images/icons/edit.svg';
 import deleteIcon from '../assets/images/icons/delete.svg';
 
+
+
 const daysOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const Schedule = () => {
-
-  const [schedule, setSchedule] = useState(scheduleData);
+const Schedule = ({editSchedule, userSchedule}) => {
+  const [schedule, setSchedule] = useState([...userSchedule]);
   const [date, setDate] = useState('');
   const [hour, setHour] = useState('');
   const [minute, setMinute] = useState('');
   const [amPm, setAmPm] = useState('');
-  const [description, setDescription] = useState('');
+  const [activity, setActivity] = useState('');
   const [editingEvent, setEditingEvent] = useState(null);  // To track if an event is being edited
-
-  
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Submitting event:', { date, hour, minute, amPm, description });
-    if (date && hour && minute && amPm && description) {
+    console.log('Submitting event:', { date, hour, minute, amPm, activity });
+    if (date && hour && minute && amPm && activity) {
         const newEvent = { 
           date, 
           time: `${hour}:${minute.padStart(2, '0')} ${amPm}`, // Ensure minutes are two digits
           //amPm
-          description 
+          activity 
         }; 
       
         if (editingEvent) {
@@ -34,6 +32,7 @@ const Schedule = () => {
             event === editingEvent ? newEvent : event
           );
           setSchedule(updatedSchedule);
+          editSchedule(schedule); // Passing the state to the correct function;
           setEditingEvent(null); // Clear editing state after saving
         } else {
           setSchedule((prevSchedule) => [...prevSchedule, newEvent]);
@@ -43,7 +42,7 @@ const Schedule = () => {
       setHour('');
       setMinute('');
       setAmPm('');
-      setDescription('');
+      setActivity('');
     } else {
         console.warn('Please fill in all fields before submitting.');
     }
@@ -59,10 +58,11 @@ const Schedule = () => {
     setHour(eventToEdit.time.split(':')[0]);
     setMinute(eventToEdit.time.split(':')[1].split(' ')[0]);
     setAmPm(eventToEdit.time.split(' ')[1]);
-    setDescription(eventToEdit.description);
+    setActivity(eventToEdit.activity);
   };
 
   const getSortedSchedule = (schedule) => {
+
     return [...schedule].sort((a, b) => {
         // Sort by day first
         const dayDifference = daysOrder.indexOf(a.date) - daysOrder.indexOf(b.date);
@@ -88,8 +88,9 @@ const Schedule = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
      
+      <form onSubmit={handleSubmit}>
+
         <select aria-label="select day" value={date} onChange={(e) => setDate(e.target.value)}>
           <option value=""disabled>Select Day</option>
           {daysOrder.map((day, index) => (
@@ -123,9 +124,9 @@ const Schedule = () => {
       
         <input
           type="text"
-          placeholder="Enter description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Enter activity"
+          value={activity}
+          onChange={(e) => setActivity(e.target.value)}
         />
         
         <button type="submit">Add to Schedule</button>
@@ -138,7 +139,7 @@ const Schedule = () => {
         {getSortedSchedule(schedule).map((event, index) => (
           <li key={index}>
           <div>
-            <strong>{event.date}</strong> at <em>{event.time}</em>: {event.description}
+            <strong>{event.date}</strong> at <em>{event.time}</em>: {event.activity}
           </div>
         
           <div className="buttons">

@@ -1,14 +1,15 @@
 
 import React, { useEffect, useState } from 'react';
+import { updateUserSchedule } from '../services/user_services';
 import Schedule from './Schedule';
 import '../bio.css';
 
-export const MyProfile = ({ user }) => {
+export const MyProfile = ({ user, userInfo }) => {
     // to see if the user is logged into account and has permission
     if (!user || !user.email) {
         return <div>You are not authorized to view this page.</div>;
     }
-
+    
     // Changing this so that if the user logs in and they have a profile picture already 
     // then this picture will be the default state. 
     const [profilePicture, setProfilePicture] = useState(''); 
@@ -16,36 +17,56 @@ export const MyProfile = ({ user }) => {
     const [bio, setBio] = useState('type your bio here...');
     const [hobbies, setHobbies] = useState('enter your hobbies here....');
     const [photos, setPhotos] = useState([]); // for photos to profile
-    const [discussionThreads, setDiscussionThreads] = useState([]); // discussion threads
-    const [newThread, setNewThread] = useState(''); // discussion thread input
     const [errors, setErrors] = useState({}); 
+    const [schedule, setSchedule]= useState([]);
 
     // On initial render, if there are items that have been changed, then will load them from the localStorage. 
     useEffect(() => {
-        //Once we have a database, however, this will be changed to an asynchronous call to the database, to retrieve this information. 
-        //TO DO: replace this with a try-catch block and async call to the user-information/management database 
-        const savedPicture = localStorage.getItem('profilePicture');
-        const savedName = localStorage.getItem('name');
-        const savedBio = localStorage.getItem('bio');
-        const savedHobbies = localStorage.getItem('hobbies');
-        const savedPhotos = JSON.parse(localStorage.getItem('photos') || '[]');
-        const savedThreads = JSON.parse(localStorage.getItem('discussionThreads') || '[]');
+    
+        try {
+            const user_pfp = userInfo[0].user_metadata.picture;
+            const user_name = userInfo[0].name;
+            const user_bio = userInfo[0].user_metadata.bio;
+            const user_hobbies = userInfo[0].user_metadata.hobbies; 
+            const user_schedule = userInfo[0].user_metadata.schedule;
+            setProfilePicture(user_pfp);
+            setName(user_name);
+            setBio(user_bio);
+            setHobbies(user_hobbies.join(", "));
+            setSchedule(user_schedule);
 
-        if (savedPicture) {
-            setProfilePicture(savedPicture);
+        } catch (error) {
+            //If the worst happens, then the 
+            const savedPicture = localStorage.getItem('profilePicture');
+            const savedName = localStorage.getItem('name');
+            const savedBio = localStorage.getItem('bio');
+            const savedHobbies = localStorage.getItem('hobbies');
+            const savedPhotos = JSON.parse(localStorage.getItem('photos') || '[]');
+            const savedThreads = JSON.parse(localStorage.getItem('discussionThreads') || '[]');
+            //TODO: refactor this 
+            if (savedPicture) {
+                setProfilePicture(savedPicture);
+            }
+            if (savedName) {
+                setName(savedName);
+            }
+            if (savedBio) {
+                setBio(savedBio);
+            }
+            if (savedHobbies) {
+                setHobbies(savedHobbies);
+            }
+            if(savedPhotos){
+                setPhotos(savedPhotos);
+            } 
+            if(savedThreads){
+                setPhotos(savedThreads);
+            }
         }
-        if (savedName) {
-            setName(savedName);
-        }
-        if (savedBio) {
-            setBio(savedBio);
-        }
-        if (savedHobbies) {
-            setHobbies(savedHobbies);
-        }
+       
     }, []);
 
-    const handelFileChange = (event) => {
+    const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -55,6 +76,21 @@ export const MyProfile = ({ user }) => {
             reader.readAsDataURL(file);
         }
     };
+
+    const editSchedule = async (schedule) => {
+        console.log(schedule)
+         if(userInfo[0].user_id) {
+             try {
+                const user_schedule = await updateUserSchedule(userInfo[0].user_id, schedule);
+                console.log("Schedule successfully updated.")
+             } catch (error) {
+                console.log(error)
+             }
+         }
+    }
+
+
+
 
     // Vaildation for name, bios, and hobbies and certain requirments must be met.
     const validateForm = () => {
@@ -72,7 +108,7 @@ export const MyProfile = ({ user }) => {
         return Object.keys(newErrors).length === 0; 
     };
 
-    const handelEditSubmit = (event) => {
+    const handleEditSubmit = (event) => {
         event.preventDefault();
         if (validateForm()) { // validating form . If it fails, storing should be stopped and prevent unwanted data 
             
@@ -85,7 +121,7 @@ export const MyProfile = ({ user }) => {
     };
 
     // photo upload
-    const handelPhotoUpload = (event) => {
+    const handlePhotoUpload = (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -98,16 +134,6 @@ export const MyProfile = ({ user }) => {
         }
     };
 
-    // for thread submission
-    const handelThreadSubmit = (event) => {
-        event.preventDefault();
-        if (newThread.trim() !== '') {
-            const updatedThreads = [...discussionThreads, newThread];
-            setDiscussionThreads(updatedThreads);
-            localStorage.setItem('discussionThreads', JSON.stringify(updatedThreads)); 
-            setNewThread(''); 
-        }
-    };
 
     return (
         <>
@@ -116,13 +142,13 @@ export const MyProfile = ({ user }) => {
                     {profilePicture && (
                         <img id="preview" src={profilePicture} alt="Profile Preview" style={{ display: 'block' }} />
                     )}
-                    <form id="uploadForm" onSubmit={handelEditSubmit}>
+                    <form id="uploadForm" onSubmit={handleEditSubmit}>
                         <label htmlFor="profilePicture">Change profile picture:</label>
                         <input
                             type="file"
                             id="profilePicture"
                             accept="image/*"
-                            onChange={handelFileChange}
+                            onChange={handleFileChange}
                             required
                         />
                         <br /><br />
@@ -142,7 +168,7 @@ export const MyProfile = ({ user }) => {
                 {/* Edit profile form */}
                 <div style={styles.postContainer}>
                     <h1 style={styles.header}>Edit Profile</h1>
-                    <form id="editForm" onSubmit={handelEditSubmit}>
+                    <form id="editForm" onSubmit={handleEditSubmit}>
                         <label htmlFor="name">Name:</label><br />
                         <input
                             type="text"
@@ -182,7 +208,7 @@ export const MyProfile = ({ user }) => {
                     <input
                         type="file"
                         accept="image/*"
-                        onChange={handelPhotoUpload}
+                        onChange={handlePhotoUpload}
                     />
                     <div>
                         {photos.map((photo, index) => (
@@ -191,30 +217,11 @@ export const MyProfile = ({ user }) => {
                     </div>
                 </div>
 
-                {/* Discussion Threads  */}
-                <div style={styles.postContainer}>
-                    <h2>What is on your mind?</h2>
-                    <form onSubmit={handelThreadSubmit}>
-                        <textarea
-                            value={newThread}
-                            onChange={(e) => setNewThread(e.target.value)}
-                            placeholder="type whats on your mind here..."
-                            rows="3"
-                            style={{ width: '100%' }}
-                        ></textarea>
-                        <button type="submit">Post Your Thread</button>
-                    </form>
-                    <div>
-                        {discussionThreads.map((thread, index) => (
-                            <div key={index} style={styles.threadContainer}>
-                                <p>{thread}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
 
                 {/* Scheduling */}
-                <Schedule />
+                                           
+                <Schedule editSchedule={(s)=>editSchedule(s)} userSchedule= {schedule}/>
+                
             </div>
         </>
     );
