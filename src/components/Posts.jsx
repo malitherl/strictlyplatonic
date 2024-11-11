@@ -3,6 +3,7 @@ import { Post } from '../services/post_services';
 import { Comments } from './Comments';
 import { CommentForm } from './CommentForm';
 
+// Removed duplicate styles declaration
 export const Posts = ({user}) => {
   const [posts, setPosts] = useState([]);
   const [index, setIndex] = useState(0);
@@ -234,7 +235,6 @@ const styles = {
     maxHeight: '100px',
     borderRadius: '8px',
     
-
   },
 };
 
