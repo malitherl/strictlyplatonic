@@ -1,7 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
-import { updateUserSchedule } from '../services/user_services';
+import { updateUserPicture, updateUserSchedule } from '../services/user_services';
 import Schedule from './Schedule';
+
+import {Bucket} from '../services/bucket_services'
 import '../bio.css';
 
 export const MyProfile = ({ user, userInfo }) => {
@@ -20,6 +22,7 @@ export const MyProfile = ({ user, userInfo }) => {
     const [errors, setErrors] = useState({}); 
     const [schedule, setSchedule]= useState([]);
 
+    const b = new Bucket();
     // On initial render, if there are items that have been changed, then will load them from the localStorage. 
     useEffect(() => {
     
@@ -36,7 +39,7 @@ export const MyProfile = ({ user, userInfo }) => {
             setSchedule(user_schedule);
 
         } catch (error) {
-            //If the worst happens, then the 
+            //If the worst happens, then the localStorage will take what is in memory and render it
             const savedPicture = localStorage.getItem('profilePicture');
             const savedName = localStorage.getItem('name');
             const savedBio = localStorage.getItem('bio');
@@ -66,14 +69,25 @@ export const MyProfile = ({ user, userInfo }) => {
        
     }, []);
 
-    const handleFileChange = (event) => {
+    const handleFileChange = async (event) => {
+        
         const file = event.target.files[0];
+        
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 setProfilePicture(e.target.result);
             };
             reader.readAsDataURL(file);
+            const url= await b.uploadUserAvatar(file.name, file);
+            //add functionality to push this to the user profile. 
+            try {
+                console.log(url)
+                const user_photo= await updateUserPicture(userInfo[0].user_id, `${url}`);
+                console.log("send to user management")
+            } catch (error) {
+                console.log(error)
+            }
         }
     };
 
@@ -131,6 +145,9 @@ export const MyProfile = ({ user, userInfo }) => {
                 localStorage.setItem('photos', JSON.stringify(newPhotos)); 
             };
             reader.readAsDataURL(file);
+            
+            
+
         }
     };
 
