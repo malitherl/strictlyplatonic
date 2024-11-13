@@ -7,6 +7,8 @@ import  UserCard  from "./UserCard";
 import { MyProfile } from "./MyProfile";
 import UserProfile from "./UserProfile";
 import { useProfileData } from '../hooks/useProfileData';
+import homeIcon from '../assets/images/icons/home.svg';
+import eventIcon from '../assets/images/icons/event.svg';
 
 export const Navigation = () => {
     
@@ -33,6 +35,8 @@ export const Navigation = () => {
             setCurrent("myprofile")
           } else if (value == "userprofile") {
             setCurrent("userprofile")
+          } else if (value == "inbox") {
+            setCurrent("inbox")
           }
            else {
             setCurrent("posts")
@@ -46,9 +50,15 @@ export const Navigation = () => {
         <UserProvider>
             {isAuthenticated &&
             <div className="dashboardContainer">              
-            <nav> 
-                <button onClick={() => handleClick("posts")}>Posts</button>
-                <button onClick={() => handleClick("events")}>Events</button>
+            <nav className="dashboardNav"> 
+                <button onClick={() => handleClick("posts")}>
+                  <img style={{width: "30px", height: "30px"}} src={homeIcon}></img> 
+                  <p>Home</p>
+                </button>
+                <button onClick={() => handleClick("events")}>
+                  <img style={{width: "30px", height: "30px"}} src={eventIcon} alt="" />
+                  <p>Events</p>
+                </button>
               </nav>
              <main className="mainContentContainer">
                 <div className= "userCard">
@@ -59,7 +69,7 @@ export const Navigation = () => {
                     {current == 'events' && <Events user={user}/>} 
                     {current == 'myprofile' && <MyProfile userInfo={userInfo} user={user} />}
                     {current == 'userprofile' && <UserProfile />}
-            
+                    {current == 'inbox' && <Inbox />}
                 </div>
 
              </main>

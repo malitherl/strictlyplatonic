@@ -12,12 +12,13 @@ const UserCard = ({ handleClick, user, userInfo }) => {
      const [name, setName] = useState(user.name);
      const [nickname, setNickName] = useState(user.nickname);
     
-     const { userPicture } = useUserInfo();
-
+     const { userPicture, setUserPicture } = useUserInfo();
+     
 
     useEffect(() => {
 
         if(Object.values(userInfo).length > 0){
+            setUserPicture(userInfo[0]["user_metadata"]["picture"])
             setProfilePicture(userPicture)
             setName(userInfo[0]["name"])
             setNickName(userInfo[0]["nickname"])
@@ -37,6 +38,9 @@ const UserCard = ({ handleClick, user, userInfo }) => {
             <img src={profilePicture} alt={user.name} />
             <h2>{name}</h2>
             <p>@{nickname}</p>
+            <div onClick={() => {handleClick("inbox")}} >
+                <h3>Inbox</h3>
+            </div>
             <hr />
             <div onClick={() => {handleClick("myprofile")}} >
                 <h3>Edit Profile</h3>

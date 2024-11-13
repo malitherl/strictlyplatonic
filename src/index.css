@@ -108,6 +108,22 @@ button:focus-visible {
   border-top: solid 1px #747bff ; 
 } 
 
+.dashboardNav {
+  display: flex; 
+  justify-content: space-evenly;
+  width: 50%;
+}
+
+.dashboardNav button {
+  display: flex; 
+  justify-content: space-around;
+  align-items: center;  
+}
+
+.dashboardNav p {
+  margin: 0 15px;
+}
+
 .postContainer {
     border: 2px solid #ddd;
     padding: 10px;
