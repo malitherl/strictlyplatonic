@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import LogoutButton from "./LogoutButton";
 import '../UserCard.css';  
+import { useUserInfo } from '../utils/userContext';
     
 
 
@@ -11,21 +12,20 @@ const UserCard = ({ handleClick, user, userInfo }) => {
      const [name, setName] = useState(user.name);
      const [nickname, setNickName] = useState(user.nickname);
     
-     
-
+     const { userPicture } = useUserInfo();
 
 
     useEffect(() => {
 
         if(Object.values(userInfo).length > 0){
-            setProfilePicture(userInfo[0]["user_metadata"].picture)
+            setProfilePicture(userPicture)
             setName(userInfo[0]["name"])
             setNickName(userInfo[0]["nickname"])
         }
 
 
     //this determines if the api has updated the user information, and will re-render this component
-    }, [userInfo])
+    }, [userPicture])
 
 
 

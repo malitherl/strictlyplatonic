@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import './App.css'
 import { MyProfile } from './components/MyProfile'
@@ -6,9 +5,11 @@ import { Home } from './components/Home'
 import  Events  from './components/Events'
 import UserProfile from "./components/UserProfile";
 
+
 function App() {
 
-
+  
+  
   return (
     <BrowserRouter>
       <Routes>

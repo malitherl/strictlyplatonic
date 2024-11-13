@@ -4,7 +4,6 @@ import mainImage from '../assets/images/mainImage.png';
 import { Navigation } from "./Navigation";
 
 import LoginButton from "./LoginButton";
-import { Outlet } from 'react-router-dom';
 
 
 

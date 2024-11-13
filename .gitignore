@@ -21,3 +21,6 @@ dist-ssr
 
 expo-env.d.ts
 # @end expo-cli
+
+
+ImageUpload.jsx

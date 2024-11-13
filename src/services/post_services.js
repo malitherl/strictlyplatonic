@@ -94,7 +94,7 @@ export class Post {
 
           console.log("Post has been updated.");
     }
-//creator_id, url
+    //creator_id, url
     async updatePostPictures(creator_id, pic_url) {
       const postsCol = collection(this.db, 'posts');
       
@@ -104,11 +104,9 @@ export class Post {
       const p = postsSnapshot.docs;
       p.forEach(async (doc) => {
         try {
-          console.log()
           const newDoc = await updateDoc(doc.ref, {
             creator_pic: pic_url
           });
-          console.log(newDoc)
           console.log("user post profile picture updated");
         } catch (error) {
           console.log(error)
