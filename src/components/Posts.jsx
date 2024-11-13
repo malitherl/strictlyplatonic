@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Post } from '../services/post_services';
 import { Comments } from './Comments';
 import { CommentForm } from './CommentForm';
+import { render } from '@testing-library/react';
 
 // Removed duplicate styles declaration
 export const Posts = ({user}) => {
@@ -9,146 +10,187 @@ export const Posts = ({user}) => {
   const [index, setIndex] = useState(0);
   const [postIds, setPostIds] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [discussionThreads, setDiscussionThreads] = useState([]); // discussion threads
-  const [newThread, setNewThread] = useState(''); // discussion thread input
+
+  // creating new post
+  const [newPostTitle, setNewPostTitle] = useState('');
+  const [newPostDesc, setNewPostDesc] = useState('');
+  const [newPostImage, setNewPostImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const postsData = new Post();
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const p = await postsData.getPostsData();
-      
+      const savedPosts = localStorage.getItem('posts'); //get posts if found
+      if (savedPosts) {
+        setPosts(JSON.parse(savedPosts));
+        return;
+      }
+      const p = await postsData.getPostsData(); /// get posts data
       setPostIds(p[0]);
       setPosts(p[1]);
-    }
+    };
     try {
-      fetchPosts(); 
+      fetchPosts();
       console.log('Posts fetched!');
       console.log(posts);
       console.log(postIds);
     } catch (error) {
       console.log(error)
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   }, []);
 
-
-
-
- if (loading) {
-    return <div>Loading...</div>;
- }
-
- const editModal = (creator_id, user_id) => {
-  console.log(creator_id)
-  console.log(user_id)
-  return creator_id == user_id ? <button onClick={() => handlePostEdit()}><p>edit</p></button> : '';
- }
-
-  const handleCommentSubmit = async (postId, comment) => {
-     let index = 0;
-     const newPosts = posts.map((post, i) => {
-       if (postIds[i] === postId) {
-         setIndex(i);
-         return {
-           ...post,
-           comments: [...post.comments, comment],
-         };
-       }
-       
-       return post;
-     });
-     setPosts(newPosts);  
-     console.log(comment);
-     postsData.addComment(postId, comment);
-     postsData.updatePosts(newPosts[0], postId, user.sub)
-     
-  
-  };
-
-    const handlePostEdit = () => {
-      console.log('editing')
+  const handlePostSubmit = async (e) => {
+    e.preventDefault();
+    if (newPostTitle.trim() === '' || newPostDesc.trim() === '') {
+      alert('Please put in a title and a description.');
+      return;
+    }
+    const editModal = (creator_id, user_id) => {
+      console.log(creator_id)
+      console.log(user_id)
+      return creator_id == user_id ? <button onClick={() => handlePostEdit()}><p>edit</p></button> : '';
     }
 
+    const newPost = {
+      title: newPostTitle,
+      desc: newPostDesc,
+      creator: user.sub,
+      creator_pic: user.picture, 
+      date: new Date().toLocaleString(),
+      image: newPostImage ? URL.createObjectURL(newPostImage) : '',
+      comments: [],
+    };
 
+    const newPostIds = [...postIds, newPost];
+    setPosts([...posts, newPost]);
+    setPostIds(newPostIds);
+    const updatedPosts = [...posts, newPost];
+    localStorage.setItem('posts', JSON.stringify(updatedPosts)); // save to local storage
 
+    // reset form
+    setNewPostTitle('');
+    setNewPostDesc('');
+    setNewPostImage(null);
+    setImagePreview(null);
 
-    // for thread submission
-    const handleThreadSubmit = (event) => {
-      event.preventDefault();
-      if (newThread.trim() !== '') {
-          console.log(newThread);
-          const updatedThreads = [...discussionThreads, newThread];
-          setDiscussionThreads(updatedThreads);
-          localStorage.setItem('discussionThreads', JSON.stringify(updatedThreads)); 
-          setNewThread(''); 
-          //Insert post creation function here;
-          //postData.create
-      }
+    // for to save new post
+    postsData.addPost(newPost); 
   };
 
-  return (
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+   if (file) {
+     setNewPostImage(file);
+     setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleCommentSubmit = async (postId, comment) => {
+    const updatedPosts = posts.map((post) => {
+      if (postIds[posts.indexOf(post)] === postId) {
+        return {
+          ...post,
+          comments: [...post.comments, comment],
+        };
+      }
+       
+      return post;
+    });
+    setPosts(updatedPosts);
+
+    // to save comment
+    postsData.addComment(postId, comment);
+
+    console.log(comment);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  
+return (
     <>
       <div style={styles.container}>
-        {posts ? 
-            <div>
-              <div style={styles.postContainer}>
-                    <h2>What is on your mind?</h2>
-                    <form onSubmit={handleThreadSubmit}>
-                        <textarea
-                            value={newThread}
-                            onChange={(e) => setNewThread(e.target.value)}
-                            placeholder="type whats on your mind here..."
-                            rows="3"
-                            style={{ width: '100%' }}
-                        ></textarea>
-                        <button type="submit">Post Your Thread</button>
-                    </form>
-                    <div>
-                        {discussionThreads.map((thread, index) => (
-                            <div key={index} style={styles.threadContainer}>
-                                <p>{thread}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-          { posts.map((post, index) => (
+        <div style={styles.postContainer}>
+          <h2>create a new post!</h2>
+          <form onSubmit={handlePostSubmit}>
+            <input
+              type="text"
+              value={newPostTitle}
+              onChange={(e) => setNewPostTitle(e.target.value)}
+              placeholder="Post Title"
+              style={styles.input}
+            />
+            <textarea
+              value={newPostDesc}
+              onChange={(e) => setNewPostDesc(e.target.value)}
+              placeholder="What's on your mind?"
+              rows="3"
+              style={styles.textarea}
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={styles.fileInput}
+            />
+            {imagePreview && (
+              <div>
+                <h4>image:</h4>
+                <img src={imagePreview} alt="Preview" style={styles.postImage} />
+              </div>
+            )}
+            <button type="submit" style={styles.button}>
+              Submit Post
+            </button>
+          </form>
+        </div>
+
+        {posts.length > 0 ? (
+          posts.map((post, index) => (
             <div key={postIds[index]} className="postContainer" style={styles.postContainer}>
-              <div className='user-header'>
-                {post.creator_pic && <img className="profile-preview" src={post.creator_pic} alt={post.creator_pic}/>}
+              <div className="user-header">
+                {post.creator_pic && (
+                  <img className="profile-preview" src={post.creator_pic} alt={post.creator_pic} />
+                )}
                 <h4 style={styles.username}>{post.user_name}</h4>
                 <a className='follow-button' href="#">Follow</a>
               </div>
               <hr />
               <h2>{post.title}</h2>
-              <small><strong>Date:</strong> {post.date}</small>
+              {post.image && <img src={post.image} alt="Post" style={styles.postImage} />}
+              <h3>
+              <small style ={styles.date}>
+                <strong>Date:</strong> {post.date}
+              </small>
+              </h3>
               <p>{post.desc}</p>
             
-              {/**
-               * optional modal for the user to edit their own posts
-               */}
-              {editModal(post.creator, user.sub)}
+             
               {/* of there, showing image with post */}
-              {post.image && <img src={post.image} alt="Post" style={styles.postImage} />}
-              <Comments comments= {post.comments} /> 
-              <CommentForm user={user} postId={postIds[index]} handleCommentSubmit={(i, c) => handleCommentSubmit(i, c)} /> 
-          </div>
-          ))}
-        </div> 
-        : 
-        <div>No data found</div>
-        
-
-        }
-               
-                
+              
+              {/* Comments Section */}
+              <div>
+                <Comments comments={post.comments} />
+                <CommentForm
+                  user={user}
+                  postId={postIds[index]}
+                  handleCommentSubmit={handleCommentSubmit}
+                />
+              </div>
+            </div>
+          ))
+        ) : (
+          <div>No data found</div>
+        )}
       </div>
     </>
   );
 };
-
-//trying to figure out the style we want for the comment section i just did, feel free if you want to change it up-Sierra
 
 const styles = {
   container: {
@@ -187,6 +229,7 @@ const styles = {
     outline: 'none',
     transition: 'all 0.3s',
     backgroundColor: '#e6e6fa',
+    marginBottom: '10px',
   },
 
   textarea: {
@@ -236,6 +279,7 @@ const styles = {
     borderRadius: '8px',
     
   },
+  
 };
 
 export default Posts;
