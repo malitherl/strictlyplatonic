@@ -165,7 +165,7 @@ export const updateUserPicture = async (id, url) => {
 
    * 
    */
-
+  console.log(url)
    if(url) {
     console.log(url);
     try {
@@ -188,7 +188,7 @@ export const updateUserPicture = async (id, url) => {
       
       axios.request(config)
         .then((response) => {
-          
+          console.log(response.data)
         }).catch((error) => {
           console.log(error);
         });
@@ -198,7 +198,7 @@ export const updateUserPicture = async (id, url) => {
       const p = new Post();
       try {
         const push_to_posts= await p.updatePostPictures(id, url);
-        console.log(push_to_posts)
+        
       } catch (error) {
         console.log(error);
       }

@@ -1,10 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { updateUserPicture, updateUserSchedule } from '../services/user_services';
+import { useUserInfo } from '../utils/userContext';
 import Schedule from './Schedule';
 
-import {Bucket} from '../services/bucket_services'
 import '../bio.css';
+import axios from "axios";
 
 export const MyProfile = ({ user, userInfo }) => {
     // to see if the user is logged into account and has permission
@@ -19,10 +20,15 @@ export const MyProfile = ({ user, userInfo }) => {
     const [bio, setBio] = useState('type your bio here...');
     const [hobbies, setHobbies] = useState('enter your hobbies here....');
     const [photos, setPhotos] = useState([]); // for photos to profile
+    const [image, setImage] = useState(null); // for the user profile picture-- different from photos!! 
+    const [imageUrl, setImageUrl] = useState("");
     const [errors, setErrors] = useState({}); 
     const [schedule, setSchedule]= useState([]);
 
-    const b = new Bucket();
+    //from the UserContext hook 
+    const { setUserPicture } = useUserInfo() ;
+
+
     // On initial render, if there are items that have been changed, then will load them from the localStorage. 
     useEffect(() => {
     
@@ -69,7 +75,7 @@ export const MyProfile = ({ user, userInfo }) => {
        
     }, []);
 
-    const handleFileChange = async (event) => {
+    const handleFileChange = (event) => {
         
         const file = event.target.files[0];
         
@@ -79,15 +85,9 @@ export const MyProfile = ({ user, userInfo }) => {
                 setProfilePicture(e.target.result);
             };
             reader.readAsDataURL(file);
-            const url= await b.uploadUserAvatar(file.name, file);
-            //add functionality to push this to the user profile. 
-            try {
-                console.log(url)
-                const user_photo= await updateUserPicture(userInfo[0].user_id, `${url}`);
-                console.log("send to user management")
-            } catch (error) {
-                console.log(error)
-            }
+            setImage(file);
+           //add functionality to push this to the user profile. 
+           
         }
     };
 
@@ -135,21 +135,41 @@ export const MyProfile = ({ user, userInfo }) => {
     };
 
     // photo upload
-    const handlePhotoUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const newPhotos = [...photos, e.target.result];
-                setPhotos(newPhotos);
-                localStorage.setItem('photos', JSON.stringify(newPhotos)); 
-            };
-            reader.readAsDataURL(file);
-            
-            
-
+    const handleUpload = async (event) => {
+        event.preventDefault();
+        if (!image) {
+          alert("Please select an image to upload!");
+          return;
         }
-    };
+    
+        const formData = new FormData();
+        formData.append("file", image);
+        formData.append("upload_preset", `${import.meta.env.VITE_CLOUDINARY_PRESET}`); 
+    
+        try {
+          const response = await axios.post(
+            `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+            formData
+          );
+          //Upon receiving the url from cloudinary, we then give this information to the auth0 database 
+          setImageUrl(response.data.secure_url); 
+          
+          alert("Image uploaded successfully!");
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          alert("Failed to upload image");
+        }
+      };
+    
+      useEffect(() => {
+        updateUserPicture(user.sub,  imageUrl);
+        setProfilePicture(imageUrl);
+        setUserPicture(imageUrl); // this line saves the image url to context, allowing us to access it throughout the entire application. 
+      }, [imageUrl]);
+    
+    
+    
+    
 
 
     return (
@@ -159,7 +179,8 @@ export const MyProfile = ({ user, userInfo }) => {
                     {profilePicture && (
                         <img id="preview" src={profilePicture} alt="Profile Preview" style={{ display: 'block' }} />
                     )}
-                    <form id="uploadForm" onSubmit={handleEditSubmit}>
+
+                    <form id="uploadForm" onSubmit={handleUpload}>
                         <label htmlFor="profilePicture">Change profile picture:</label>
                         <input
                             type="file"
@@ -225,7 +246,7 @@ export const MyProfile = ({ user, userInfo }) => {
                     <input
                         type="file"
                         accept="image/*"
-                        onChange={handlePhotoUpload}
+                        onChange={handleUpload}
                     />
                     <div>
                         {photos.map((photo, index) => (

@@ -1,3 +1,4 @@
+import { UserProvider } from "../utils/userContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import { Posts } from "./Posts"
@@ -5,7 +6,6 @@ import  Events  from './Events'
 import  UserCard  from "./UserCard";
 import { MyProfile } from "./MyProfile";
 import UserProfile from "./UserProfile";
-
 import { useProfileData } from '../hooks/useProfileData';
 
 export const Navigation = () => {
@@ -14,7 +14,15 @@ export const Navigation = () => {
     const {isAuthenticated, user } = useAuth0();
     const [current, setCurrent] = useState('posts');
     const userInfo = useProfileData(user);
-    console.log(userInfo)
+    
+
+    
+
+
+
+
+    
+   
     const handleClick = (value) => {
         if(value != current) {
           if (value == "myprofile") {
@@ -35,10 +43,9 @@ export const Navigation = () => {
     
 
     return( 
-        <>
+        <UserProvider>
             {isAuthenticated &&
-            <div className="dashboardContainer">
-                
+            <div className="dashboardContainer">              
             <nav> 
                 <button onClick={() => handleClick("posts")}>Posts</button>
                 <button onClick={() => handleClick("events")}>Events</button>
@@ -60,7 +67,7 @@ export const Navigation = () => {
              
             </div>
             }
-        </>
+        </UserProvider>
         
     )
 }
