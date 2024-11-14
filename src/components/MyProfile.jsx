@@ -141,7 +141,7 @@ export const MyProfile = ({ user, userInfo }) => {
           alert("Please select an image to upload!");
           return;
         }
-    
+        
         const formData = new FormData();
         formData.append("file", image);
         formData.append("upload_preset", `${import.meta.env.VITE_CLOUDINARY_PRESET}`); 
@@ -153,7 +153,7 @@ export const MyProfile = ({ user, userInfo }) => {
           );
           //Upon receiving the url from cloudinary, we then give this information to the auth0 database 
           setImageUrl(response.data.secure_url); 
-          
+          setUserPicture(response.data.secure_url);
           alert("Image uploaded successfully!");
         } catch (error) {
           console.error("Error uploading image:", error);

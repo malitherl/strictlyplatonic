@@ -81,8 +81,7 @@ export class Event {
   async createEvents() {
 
     const docRef = await addDoc(collection(this.db, "events"), {
-      name: "Tokyo",
-      country: "Japan"
+      
     });
   
     console.log("Document written with ID: ", docRef.id);

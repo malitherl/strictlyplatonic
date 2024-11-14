@@ -40,8 +40,8 @@ export class Post {
       
         const postsCol = collection(this.db, 'posts');
         const postSnapshot = await addDoc(postsCol, newPost);
-        console.log(postSnapshot);
-        console.log("Post Created")
+        console.log("Post Created");
+        return postSnapshot.id;
     }
 
     async updatePosts (updated_post, post_id, user_id) {

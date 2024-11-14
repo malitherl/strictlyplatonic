@@ -1,6 +1,8 @@
-import { UserProvider } from "../utils/userContext";
+
+
+import { useUserInfo } from "../utils/userContext";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Posts } from "./Posts"
 import  Events  from './Events'
 import  UserCard  from "./UserCard";
@@ -16,11 +18,20 @@ export const Navigation = () => {
     const {isAuthenticated, user } = useAuth0();
     const [current, setCurrent] = useState('posts');
     const userInfo = useProfileData(user);
+
+    const { userPicture, setUserPicture } = useUserInfo();
+
+    useEffect(() => {
+      if(Object.values(userInfo).length > 0) {
+        setUserPicture(userInfo[0]["user_metadata"]["picture"])
+
+      }
+      
+
+    }, [userInfo]);
     
 
-    
-
-
+    console.log(userPicture)
 
 
     
@@ -47,7 +58,7 @@ export const Navigation = () => {
     
 
     return( 
-        <UserProvider>
+          <>
             {isAuthenticated &&
             <div className="dashboardContainer">              
             <nav className="dashboardNav"> 
@@ -77,7 +88,6 @@ export const Navigation = () => {
              
             </div>
             }
-        </UserProvider>
-        
+        </>
     )
 }
