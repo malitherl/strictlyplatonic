@@ -225,9 +225,7 @@ export const Posts = ({user}) => {
               <div style={styles.emojiContainer}>
                 {emojiList.map((emoji) => (
                   <button
-                    key={emoji}
-                    onClick={() => handleEmojiClick(postIds[index], emoji)}
-                    style={styles.emojiButton}
+                    key={emoji} onClick={() => handleEmojiClick(postIds[index], emoji)}style={styles.emojiButton}
                   >
                     {emoji}
                   </button>
