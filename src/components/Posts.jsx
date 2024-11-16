@@ -1,21 +1,24 @@
+import axios from "axios";
 import React, { useEffect, useState } from 'react';
 import { Post } from '../services/post_services';
 import { Comments } from './Comments';
 import { CommentForm } from './CommentForm';
-import { render } from '@testing-library/react';
+import { useUserInfo } from '../utils/userContext';
+
 
 // Removed duplicate styles declaration
 export const Posts = ({user}) => {
   const [posts, setPosts] = useState([]);
-  const [index, setIndex] = useState(0);
   const [postIds, setPostIds] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const {userPicture} = useUserInfo();
+  
   // creating new post
   const [newPostTitle, setNewPostTitle] = useState('');
   const [newPostDesc, setNewPostDesc] = useState('');
-  const [newPostImage, setNewPostImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [newPostImage, setNewPostImage] = useState('');
+  const [imagePreview, setImagePreview] = useState('');
 
   const postsData = new Post();
 
@@ -42,42 +45,68 @@ export const Posts = ({user}) => {
     }
   }, []);
 
+  const editModal = (creator_id, user_id) => {
+    
+    return creator_id == user_id ? <button onClick={() => handlePostEdit()}><p>edit</p></button> : '';
+  }
+
+
   const handlePostSubmit = async (e) => {
     e.preventDefault();
     if (newPostTitle.trim() === '' || newPostDesc.trim() === '') {
       alert('Please put in a title and a description.');
       return;
     }
-    const editModal = (creator_id, user_id) => {
-      console.log(creator_id)
-      console.log(user_id)
-      return creator_id == user_id ? <button onClick={() => handlePostEdit()}><p>edit</p></button> : '';
+
+    if( newPostImage|| newPostImage.length > 0) {
+
+      const formData = new FormData();
+      formData.append("file", newPostImage);
+      formData.append("upload_preset", `${import.meta.env.VITE_CLOUDINARY_PRESET}`); 
+
+      try {
+        const response = await axios.post(
+          `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          formData
+        );
+        //Upon receiving the url from cloudinary, we then give this information to the auth0 database 
+        setNewPostImage(response.data.secure_url); 
+        alert("Image uploaded successfully!");
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        alert("Failed to upload image");
+      }
     }
+
+
+
 
     const newPost = {
       title: newPostTitle,
       desc: newPostDesc,
       creator: user.sub,
-      creator_pic: user.picture, 
-      date: new Date().toLocaleString(),
-      image: newPostImage ? URL.createObjectURL(newPostImage) : '',
+      creator_pic: userPicture, 
+      date: new Date().toLocaleString(), //this is for display purposes 
+      time: Date.now(), //this is different from the 'date' field because this determines the exact moment the post was made. 
+      image: newPostImage ? newPostImage : '',
+      type: newPostImage ? 'text/image' : 'text',
       comments: [],
     };
-
-    const newPostIds = [...postIds, newPost];
+   
     setPosts([...posts, newPost]);
-    setPostIds(newPostIds);
+
     const updatedPosts = [...posts, newPost];
     localStorage.setItem('posts', JSON.stringify(updatedPosts)); // save to local storage
 
     // reset form
     setNewPostTitle('');
     setNewPostDesc('');
-    setNewPostImage(null);
-    setImagePreview(null);
+    setNewPostImage('');
+    setImagePreview('');
 
     // for to save new post
-    postsData.addPost(newPost); 
+    const newPostId = await postsData.createPost(newPost); 
+    setPostIds([...postIds, newPostId]);
   };
 
   const handleImageChange = (e) => {
@@ -145,7 +174,7 @@ return (
               </div>
             )}
             <button type="submit" style={styles.button}>
-              Submit Post
+              Post
             </button>
           </form>
         </div>
@@ -169,7 +198,7 @@ return (
               </small>
               </h3>
               <p>{post.desc}</p>
-            
+              {editModal(post.creator, user.sub)}
              
               {/* of there, showing image with post */}
               
