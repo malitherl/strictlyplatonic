@@ -46,7 +46,7 @@ export const Posts = ({user}) => {
   }, []);
 
   const editModal = (creator_id, user_id) => {
-    
+
     return creator_id == user_id ? <button onClick={() => handlePostEdit()}><p>edit</p></button> : '';
   }
 
@@ -62,7 +62,7 @@ export const Posts = ({user}) => {
 
       const formData = new FormData();
       formData.append("file", newPostImage);
-      formData.append("upload_preset", `${import.meta.env.VITE_CLOUDINARY_PRESET}`); 
+      formData.append("upload_preset", `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
 
       try {
         const response = await axios.post(
@@ -70,7 +70,7 @@ export const Posts = ({user}) => {
           formData
         );
         //Upon receiving the url from cloudinary, we then give this information to the auth0 database 
-        setNewPostImage(response.data.secure_url); 
+        setNewPostImage(response.data.secure_url);
         alert("Image uploaded successfully!");
       } catch (error) {
         console.error("Error uploading image:", error);
@@ -85,14 +85,15 @@ export const Posts = ({user}) => {
       title: newPostTitle,
       desc: newPostDesc,
       creator: user.sub,
-      creator_pic: userPicture, 
-      date: new Date().toLocaleString(), //this is for display purposes 
-      time: Date.now(), //this is different from the 'date' field because this determines the exact moment the post was made. 
+      creator_pic: userPicture,
+      date: new Date().toLocaleString(), //this is for display purposes
+      time: Date.now(), //this is different from the 'date' field because this determines the exact moment the post was made.
       image: newPostImage ? newPostImage : '',
       type: newPostImage ? 'text/image' : 'text',
       comments: [],
+      reactions: {},
     };
-   
+
     setPosts([...posts, newPost]);
 
     const updatedPosts = [...posts, newPost];
@@ -105,15 +106,15 @@ export const Posts = ({user}) => {
     setImagePreview('');
 
     // for to save new post
-    const newPostId = await postsData.createPost(newPost); 
+    const newPostId = await postsData.createPost(newPost);
     setPostIds([...postIds, newPostId]);
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-   if (file) {
-     setNewPostImage(file);
-     setImagePreview(URL.createObjectURL(file));
+    if (file) {
+      setNewPostImage(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -125,7 +126,7 @@ export const Posts = ({user}) => {
           comments: [...post.comments, comment],
         };
       }
-       
+
       return post;
     });
     setPosts(updatedPosts);
@@ -136,12 +137,33 @@ export const Posts = ({user}) => {
     console.log(comment);
   };
 
+  // list of emojis feel free to change it up or add 
+  const emojiList = ["👍", "❤️", "😂", "😊"];
+
+  // for clicking emoji
+  const handleEmojiClick = (postId, emoji) => {
+    const updatedPosts = posts.map((post) => {
+      if (postIds[posts.indexOf(post)] === postId) {
+        const updatedReactions = { ...post.reactions };
+        updatedReactions[emoji] = updatedReactions[emoji] ? updatedReactions[emoji] + 1 : 1;
+        return {
+          ...post,
+          reactions: updatedReactions,
+        };
+      }
+      return post;
+    });
+
+    setPosts(updatedPosts);
+    localStorage.setItem('posts', JSON.stringify(updatedPosts));
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  
-return (
+
+  return (
     <>
       <div style={styles.container}>
         <div style={styles.postContainer}>
@@ -193,15 +215,37 @@ return (
               <h2>{post.title}</h2>
               {post.image && <img src={post.image} alt="Post" style={styles.postImage} />}
               <h3>
-              <small style ={styles.date}>
-                <strong>Date:</strong> {post.date}
-              </small>
+                <small style ={styles.date}>
+                  <strong>Date:</strong> {post.date}
+                </small>
               </h3>
               <p>{post.desc}</p>
+
+              {/* For emoji reactions for posts */}
+              <div style={styles.emojiContainer}>
+                {emojiList.map((emoji) => (
+                  <button
+                    key={emoji} onClick={() => handleEmojiClick(postIds[index], emoji)}style={styles.emojiButton}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+
+              {/* Displaying the Reactions */}
+              <div style={styles.reactionsContainer}>
+                {post.reactions &&
+                  Object.entries(post.reactions).map(([emoji, count]) => (
+                    <span key={emoji} style={styles.reaction}>
+                      {emoji} {count}
+                    </span>
+                  ))}
+              </div>
+
               {editModal(post.creator, user.sub)}
-             
+
               {/* of there, showing image with post */}
-              
+
               {/* Comments Section */}
               <div>
                 <Comments comments={post.comments} />
@@ -248,6 +292,23 @@ const styles = {
     background: 'linear-gradient(21deg, #d6c7e5, violet)',
     padding: '3px',
   },
+  emojiContainer: {
+    marginTop: '10px',
+  },
+  emojiButton: {
+    fontSize: '20px',
+    margin: '5px',
+    background: 'linear-gradient(21deg, #d6c7e5, violet)',
+    border: 'none',
+    cursor: 'pointer',
+  },
+  reactionsContainer: {
+    marginTop: '10px',
+    fontSize: '16px',
+  },
+  reaction: {
+    marginRight: '10px',
+  },
   input: {
     fontFamily: 'inherit',
     lineHeight: 'inherit',
@@ -292,15 +353,15 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    
+
   },
   postImage: {
     maxWidth: '100%',
     maxHeight: '300px',
     borderRadius: '15px',
     marginTop: '15px',
-    
-  },
+
+   },
   commentImage: {
     marginTop: '10px',
     maxWidth: '100px',
@@ -312,3 +373,4 @@ const styles = {
 };
 
 export default Posts;
+    
