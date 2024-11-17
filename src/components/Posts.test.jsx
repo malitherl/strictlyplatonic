@@ -1,76 +1,103 @@
-import { render, screen, fireEvent, within} from '@testing-library/react';
-import { Posts } from '../components/Posts';
-import postData from '../assets/data/postData.json';
-import { describe, expect, test } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { Posts } from './Posts';
+import { vi } from 'vitest';
+import { useUserInfo } from '../utils/userContext';
+import axios from 'axios';
+
+// Mocking axios and user context
+vi.mock('axios');
+vi.mock('../utils/userContext', () => ({
+  useUserInfo: vi.fn(),
+}));
+
+const mockUser = {
+  sub: 'user123',
+  name: 'John Doe',
+};
+
+const mockUserPicture = 'https://example.com/john.jpg';
 
 describe('Posts Component', () => {
-  test('renders all posts with correct content of user', () => {
-    render(<Posts />);
-
-    postData.forEach(post => {
-      const postContainer = screen.getByText(post.username).closest('.postContainer');
-
-      // USERNAME
-      expect(within(postContainer).getByText(post.username)).toBeInTheDocument();
-      // INTERESTS
-      expect(within(postContainer).getByText(/Interests:/)).toBeInTheDocument();
-      expect(within(postContainer).getByText(post.interests.join(', '))).toBeInTheDocument(); 
-      // POST STUFF
-      expect(within(postContainer).getByText(post.post)).toBeInTheDocument(); 
-      // DATE
-      expect(within(postContainer).getByText(/Date:/)).toBeInTheDocument();
-      expect(within(postContainer).getByText(post.date)).toBeInTheDocument();
-      // LOCATION
-      expect(within(postContainer).getByText(/Location:/)).toBeInTheDocument();
-      expect(within(postContainer).getByText(post.location)).toBeInTheDocument();
-      // YES OR NO
-      const eventPlannedText = post.event_planned ? 'Yes' : 'No';
-      expect(within(postContainer).getByText(eventPlannedText)).toBeInTheDocument();
-    });
+  beforeEach(() => {
+    useUserInfo.mockReturnValue({ userPicture: mockUserPicture });
+    axios.post.mockResolvedValue({ data: { secure_url: 'https://cloudinary.com/image.jpg' } });
   });
 
-  test('renders initial comments for each post', () => {
-    render(<Posts />);
+  test('renders posts correctly', async () => {
+    // Rendering the Posts component with a mock user prop
+    render(<Posts user={mockUser} />);
 
-    postData.forEach(post => {
-      post.comments.forEach(comment => {
-        expect(screen.getByText(new RegExp(`${comment.username}:`, 'i'))).toBeInTheDocument();
-        expect(screen.getByText(new RegExp(comment.comment, 'i'))).toBeInTheDocument();
-      });
-    });
+    // Check loading state
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+
+    // Simulating posts data fetching
+    await waitFor(() => screen.getByText('create a new post!'));
+
+    // Verify the form fields are rendered
+    expect(screen.getByPlaceholderText("Post Title")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("What's on your mind?")).toBeInTheDocument();
+
+    // Verify that no posts are displayed if there is no data
+    expect(screen.getByText('No data found')).toBeInTheDocument();
   });
 
-  test('allows users to add a new comment to a post', () => {
-    render(<Posts />);
+  test('allows a user to create a post', async () => {
+    // Mock the posts data to be returned from localStorage or the API
+    const mockPosts = [
+      {
+        title: 'Test Post',
+        desc: 'This is a test post description.',
+        creator: 'user123',
+        creator_pic: mockUserPicture,
+        date: '2024-11-15',
+        image: '',
+        comments: [],
+      },
+    ];
+    localStorage.setItem('posts', JSON.stringify(mockPosts));
 
-    const usernameInput = screen.getAllByPlaceholderText('your display name')[0];
-    const commentInput = screen.getAllByPlaceholderText('add your comment here...')[0];
-    const submitButton = screen.getAllByRole('button', { name: /submit/i })[0];
+    render(<Posts user={mockUser} />);
 
-    // Add a new comment
-    fireEvent.change(usernameInput, { target: { value: 'TestUser' } });
-    fireEvent.change(commentInput, { target: { value: 'This is a test comment!' } });
+    // Simulate creating a new post
+    const titleInput = screen.getByPlaceholderText("Post Title");
+    const descInput = screen.getByPlaceholderText("What's on your mind?");
+    const submitButton = screen.getByText('Post');
+
+    // Enter the title and description
+    fireEvent.change(titleInput, { target: { value: 'New Post' } });
+    fireEvent.change(descInput, { target: { value: 'This is a new post.' } });
+
+    // Submit the form
     fireEvent.click(submitButton);
 
-    // Verify the new comment is added to the first post's comments section
-    expect(screen.getByText('Piggy:')).toBeInTheDocument();
-    expect(screen.getByText('I LOVE PIGGIES!')).toBeInTheDocument();
+    // Wait for the new post to be displayed
+    await waitFor(() => screen.getByText('New Post'));
+
+    // Check if the new post has been added
+    expect(screen.getByText('This is a new post.')).toBeInTheDocument();
   });
 
-  test('clears the input fields after submitting a comment', () => {
-    render(<Posts />);
+  test('uploads an image when a file is selected', async () => {
+    const titleInput = screen.getByPlaceholderText("Post Title");
+    const descInput = screen.getByPlaceholderText("What's on your mind?");
+    const fileInput = screen.getByLabelText(/file/i);
+    const submitButton = screen.getByText('Post');
 
-    const usernameInput = screen.getAllByPlaceholderText('your display name')[0];
-    const commentInput = screen.getAllByPlaceholderText('add your comment here...')[0];
-    const submitButton = screen.getAllByRole('button', { name: /submit/i })[0];
+    // Mock selecting an image
+    const file = new File(['image'], 'test.jpg', { type: 'image/jpeg' });
+    fireEvent.change(fileInput, { target: { files: [file] } });
 
-    // Add a new comment
-    fireEvent.change(usernameInput, { target: { value: 'TestUser' } });
-    fireEvent.change(commentInput, { target: { value: 'This is another test comment!' } });
+    // Simulate creating a post with an image
+    fireEvent.change(titleInput, { target: { value: 'Test Image Post' } });
+    fireEvent.change(descInput, { target: { value: 'This post has an image.' } });
+
+    // Submit the form
     fireEvent.click(submitButton);
 
-    // check the goods
-    expect(usernameInput).toHaveValue('');
-    expect(commentInput).toHaveValue('');
+    // Wait for the image upload process to complete
+    await waitFor(() => screen.getByAltText('Preview'));
+
+    // Check if image preview is displayed
+    expect(screen.getByAltText('Preview')).toBeInTheDocument();
   });
 });

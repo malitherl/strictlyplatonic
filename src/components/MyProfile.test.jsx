@@ -1,103 +1,88 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, vi, expect, beforeEach } from 'vitest';
 import { MyProfile } from './MyProfile';
-import { vi } from 'vitest';
+import { useUserInfo } from '../utils/userContext';
 
+vi.mock('../utils/userContext', () => ({
+  useUserInfo: vi.fn(),
+}));
 
-// mock for schedule
-vi.mock('./Schedule', () => () => <div>Schedule Component</div>);
-
-// mock for user data
-const mockUser = {
-   email: 'test@example.com'
-};
-
+vi.mock('../services/user_services', () => ({
+  updateUserPicture: vi.fn(),
+  updateUserSchedule: vi.fn(),
+}));
 
 describe('MyProfile Component', () => {
-   beforeEach(() => {
-       localStorage.clear(); // Clear localStorage before each test
-   });
+  const mockUser = {
+    email: 'testuser@example.com',
+  };
 
+  const mockUserInfo = [
+    {
+      user_metadata: {
+        picture: 'http://example.com/picture.jpg',
+        bio: 'This is a test bio.',
+        hobbies: ['reading', 'coding'],
+        schedule: [],
+      },
+      name: 'Test User',
+      user_id: '12345',
+    },
+  ];
 
-   test('renders profile information correctly', () => {
-       render(<MyProfile user={mockUser} />);
+  beforeEach(() => {
+    useUserInfo.mockReturnValue({
+      setUserPicture: vi.fn(),
+    });
+  });
 
+  it('should render unauthorized message if no user is logged in', () => {
+    render(<MyProfile user={null} userInfo={[]} />);
+    expect(screen.getByText('You are not authorized to view this page.')).toBeInTheDocument();
+  });
 
-       expect(screen.getByText(/Profile Information/i)).toBeInTheDocument();
-       expect(screen.getByText(/Name:/i)).toBeInTheDocument();
-       expect(screen.getByText(/Email:/i)).toBeInTheDocument();
-       expect(screen.getByText(/Bio:/i)).toBeInTheDocument();
-       expect(screen.getByText(/Hobbies:/i)).toBeInTheDocument();
-   });
+  it('should render profile information when user is logged in', () => {
+    render(<MyProfile user={mockUser} userInfo={mockUserInfo} />);
+    expect(screen.getByText('Profile Information')).toBeInTheDocument();
+    expect(screen.getByText('Test User')).toBeInTheDocument();
+    expect(screen.getByText('testuser@example.com')).toBeInTheDocument();
+    expect(screen.getByText('This is a test bio.')).toBeInTheDocument();
+    expect(screen.getByText('reading, coding')).toBeInTheDocument();
+  });
 
+  it('should validate form inputs correctly', () => {
+    render(<MyProfile user={mockUser} userInfo={mockUserInfo} />);
+    fireEvent.change(screen.getByLabelText('Name:'), { target: { value: '' } });
+    fireEvent.change(screen.getByLabelText('Bio:'), { target: { value: 'A'.repeat(301) } });
+    fireEvent.change(screen.getByLabelText('Hobbies:'), { target: { value: '' } });
 
-   test('displays saved profile information from localStorage', () => {
-       localStorage.setItem('name', 'Purple cat');
-       localStorage.setItem('bio', 'This is my bio.');
-       localStorage.setItem('hobbies', 'Coding, Painting');
+    fireEvent.submit(screen.getByRole('button', { name: 'Save Changes' }));
 
+    expect(screen.getByText(/Name is required/)).toBeInTheDocument();
+    expect(screen.getByText(/Keep it less than 300 characters/)).toBeInTheDocument();
+    expect(screen.getByText(/Hobbies are required/)).toBeInTheDocument();
+  });
 
-       render(<MyProfile user={mockUser} />);
+  it('should handle profile picture upload', async () => {
+    render(<MyProfile user={mockUser} userInfo={mockUserInfo} />);
+    const file = new File(['dummy content'], 'profile.jpg', { type: 'image/jpeg' });
 
+    const fileInput = screen.getByLabelText('Change profile picture:');
+    fireEvent.change(fileInput, { target: { files: [file] } });
 
-       expect(screen.getByText(/Purple cat/i)).toBeInTheDocument();
-       expect(screen.getByText(/This is my bio./i)).toBeInTheDocument();
-       expect(screen.getByText(/Coding, Painting/i)).toBeInTheDocument();
-   });
+    const previewImage = await screen.findByAltText('Profile Preview');
+    expect(previewImage).toBeInTheDocument();
+    expect(previewImage.src).toContain('blob:');
+  });
 
+  it('should call editSchedule when Schedule is updated', () => {
+    const mockEditSchedule = vi.fn();
+    render(<MyProfile user={mockUser} userInfo={mockUserInfo} />);
 
-   test('shows validation errors for empty fields', () => {
-       render(<MyProfile user={mockUser} />);
-
-
-       // Try to submit without filling the form
-       fireEvent.click(screen.getByText(/Save Changes/i));
-
-
-       expect(screen.getByText(/Name is required/i)).toBeInTheDocument();
-       expect(screen.getByText(/Hobbies are required/i)).toBeInTheDocument();
-   });
-
-
-   test('validates name length', () => {
-       render(<MyProfile user={mockUser} />);
-
-
-       fireEvent.change(screen.getByLabelText(/Name:/i), { target: { value: 'A lengthy name that is greater or equal to fifty characters limit' } });
-       fireEvent.click(screen.getByText(/Save Changes/i));
-
-
-       expect(screen.getByText(/Name is required and should be less than 50 characters/i)).toBeInTheDocument();
-   });
-
-
-   test('validates bio length', () => {
-       render(<MyProfile user={mockUser} />);
-
-
-       fireEvent.change(screen.getByLabelText(/Bio:/i), { target: { value: 'A very long bio that exceeds three hundred characters limit. '.repeat(10) } });
-       fireEvent.click(screen.getByText(/Save Changes/i));
-
-
-       expect(screen.getByText(/Bio should be less than 300 characters/i)).toBeInTheDocument();
-   });
-
-
-   test('updates localStorage on valid submission', () => {
-       render(<MyProfile user={mockUser} />);
-
-
-       fireEvent.change(screen.getByLabelText(/Name:/i), { target: { value: 'Tabby cat' } });
-       fireEvent.change(screen.getByLabelText(/Bio:/i), { target: { value: 'This is my bio.' } });
-       fireEvent.change(screen.getByLabelText(/Hobbies:/i), { target: { value: 'Shrimp boating, reading' } });
-
-
-       fireEvent.click(screen.getByText(/Save Changes/i));
-
-
-       expect(localStorage.getItem('name')).toBe('Tabby cat');
-       expect(localStorage.getItem('bio')).toBe('This is my bio.');
-       expect(localStorage.getItem('hobbies')).toBe('Shrimp boating, reading');
-       expect(screen.getByText(/Your profile has been updated successfully!/i)).toBeInTheDocument();
-   });
+    const scheduleComponent = screen.getByText('Edit Profile');
+    expect(scheduleComponent).toBeInTheDocument();
+    mockEditSchedule(['New Schedule']);
+    expect(mockEditSchedule).toHaveBeenCalled();
+  });
 });

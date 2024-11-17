@@ -18,13 +18,12 @@ describe("LoginButton", () => {
 
     render(<LoginButton />);
 
-    // Check if the login button is rendered
+    // login button rendered?
     const button = screen.getByRole("button", { name: /log in/i });
     expect(button).toBeInTheDocument();
   });
 
   it("does not render a button if the user is authenticated", () => {
-    // Mock isAuthenticated as true and loginWithRedirect as a jest function
     useAuth0.mockReturnValue({
       isAuthenticated: true,
       loginWithRedirect: vi.fn(),
@@ -40,7 +39,7 @@ describe("LoginButton", () => {
   it("calls loginWithRedirect when the button is clicked", () => {
     const mockLoginWithRedirect = vi.fn();
 
-    // Mock isAuthenticated as false and provide the mock function for loginWithRedirect
+    // Mock isAuthenticated:false -> loginWithRedirect
     useAuth0.mockReturnValue({
       isAuthenticated: false,
       loginWithRedirect: mockLoginWithRedirect,
@@ -48,7 +47,7 @@ describe("LoginButton", () => {
 
     render(<LoginButton />);
 
-    // Simulate a button click
+    // button click
     const button = screen.getByRole("button", { name: /log in/i });
     fireEvent.click(button);
 
@@ -57,4 +56,4 @@ describe("LoginButton", () => {
   });
 });
 
-
+//
