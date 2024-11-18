@@ -208,6 +208,65 @@ export const updateUserPicture = async (id, url) => {
     }
   }
 
+  export const updateUserInfo = async (id, updated_data) => {
+  
+    /** 
+     * This function will take changes that the user makes on their profile 
+     * and uploads them through this API endpoint.  
+     * 
+     * PARAMETERS: 
+     * 
+     * id: this is identifies the current user, and corresponds to the user_id as saved in the user management database
+     * 
+     * data: this is a mapping object that is taken and modified into a JSON object. Example format: 
+     
+     *  
+     * 
+     */
+     const {name, bio, hobbies} = updated_data;
+     console.log()
+    
+      try {
+    
+        const token = await retrieveToken();
+    
+        let config = {
+          method: 'patch',
+          maxBodyLength: Infinity,
+          url: `https://${import.meta.env.VITE_AUTH_DOMAIN_ID}/api/v2/users/${id}`,
+          headers: { 
+            'Accept': 'application/json', 
+            'Authorization': "Bearer " + token["access_token"] 
+          },
+          data: {
+            "name": name,
+            "user_metadata": { 
+              "bio": bio,
+              "hobbies": hobbies
+            }
+          },
+        };
+    
+        axios.request(config)
+          .then((response) => {
+            console.log(JSON.stringify(response.data));
+          }).catch((error) => {
+            console.log(error);
+          });
+          const p = new Post();
+          try {
+            const push_to_posts= await p.updatePostName(id, name);
+            
+          } catch (error) {
+            console.log(error);
+          }
+        } catch (error) {
+          console.log(error)
+        }
+    
+    }
+    
+
 
 
 

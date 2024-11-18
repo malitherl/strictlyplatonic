@@ -133,8 +133,31 @@ export class Post {
           console.log(error)
         }
       })
-      
     }
+
+    async updatePostName(creator_id, updated_name) {
+      console.log(updated_name)
+      const postsCol = collection(this.db, 'posts');
+      
+      const q = query(postsCol, where("creator", "==", creator_id))
+
+      const postsSnapshot = await getDocs(q);
+      const p = postsSnapshot.docs;
+      p.forEach(async (doc) => {
+        try {
+          const newDoc = await updateDoc(doc.ref, {
+            user_name: updated_name
+          });
+          console.log("user post profile name updated");
+        } catch (error) {
+          console.log(error)
+        }
+      })
+    }
+
+
+
+
 
     async deletePost(post_id) {
       const docRef = doc(this.db, "posts", post_id); //get the post by its id

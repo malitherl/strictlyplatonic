@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from 'react';
-
+import { useUserInfo } from "../utils/userContext";
 export const PostForm = ({user, postsData, createPost}) => { 
     
 
@@ -9,7 +9,7 @@ export const PostForm = ({user, postsData, createPost}) => {
     const [newPostImage, setNewPostImage] = useState('');
     const [imagePreview, setImagePreview] = useState('');
     const [imageUrl, setImageUrl] = useState("");
-
+    const { userPicture } = useUserInfo(); 
 
 
 

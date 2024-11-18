@@ -43,10 +43,10 @@ const UserCard = ({ handleClick, user, userInfo }) => {
             <img src={profilePicture} alt={user.name} />
             <h2>{name}</h2>
             <p>@{nickname}</p>
-            <div onClick={() => {handleClick("inbox")}} >
+            {/* <div onClick={() => {handleClick("inbox")}} >
                 <h3>Inbox</h3>
             </div>
-            <hr />
+            <hr /> */}
             <div onClick={() => {handleClick("myprofile")}} >
                 <h3>Edit Profile</h3>
             </div>

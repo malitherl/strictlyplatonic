@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { updateUserPicture, updateUserSchedule } from '../services/user_services';
+import { updateUserPicture, updateUserInfo, updateUserSchedule } from '../services/user_services';
 import { useUserInfo } from '../utils/userContext';
 import Schedule from './Schedule';
 
@@ -13,6 +13,11 @@ export const MyProfile = ({ user, userInfo }) => {
         return <div>You are not authorized to view this page.</div>;
     }
     
+
+
+
+
+
     // Changing this so that if the user logs in and they have a profile picture already 
     // then this picture will be the default state. 
     const [profilePicture, setProfilePicture] = useState(''); 
@@ -27,7 +32,7 @@ export const MyProfile = ({ user, userInfo }) => {
 
     //from the UserContext hook 
     const { setUserPicture } = useUserInfo() ;
-
+    
 
     // On initial render, if there are items that have been changed, then will load them from the localStorage. 
     useEffect(() => {
@@ -43,6 +48,7 @@ export const MyProfile = ({ user, userInfo }) => {
             setBio(user_bio);
             setHobbies(user_hobbies.join(", "));
             setSchedule(user_schedule);
+
 
         } catch (error) {
             //If the worst happens, then the localStorage will take what is in memory and render it
@@ -93,9 +99,11 @@ export const MyProfile = ({ user, userInfo }) => {
 
     const editSchedule = async (schedule) => {
         console.log(schedule)
-         if(userInfo[0].user_id) {
+         if(user.sub) {
              try {
-                const user_schedule = await updateUserSchedule(userInfo[0].user_id, schedule);
+                console.log(user.sub)
+                const user_schedule = await updateUserSchedule(user.sub, schedule);
+                setSchedule(schedule);
                 console.log("Schedule successfully updated.")
              } catch (error) {
                 console.log(error)
@@ -125,11 +133,14 @@ export const MyProfile = ({ user, userInfo }) => {
     const handleEditSubmit = (event) => {
         event.preventDefault();
         if (validateForm()) { // validating form . If it fails, storing should be stopped and prevent unwanted data 
+        
+            const data = {
+                'name': name,
+                'bio': bio,
+                'hobbies': hobbies == 'enter your hobbies here as comma separated values :-)' ? [] : hobbies.trim().split(', ')
+            }
+            updateUserInfo(user.sub, data);
             
-            localStorage.setItem('profilePicture', profilePicture);
-            localStorage.setItem('name', name);
-            localStorage.setItem('bio', bio);
-            localStorage.setItem('hobbies', hobbies);
             alert('Your profile has been updated successfully!');
         }
     };
@@ -166,7 +177,6 @@ export const MyProfile = ({ user, userInfo }) => {
         setProfilePicture(imageUrl);
         setUserPicture(imageUrl); // this line saves the image url to context, allowing us to access it throughout the entire application. 
       }, [imageUrl]);
-    
     
     
     
@@ -241,7 +251,7 @@ export const MyProfile = ({ user, userInfo }) => {
                 </div>
 
                 {/* Photos  */}
-                <div style={styles.postContainer}>
+                {/* <div style={styles.postContainer}>
                     <h2>Post photos to your profile!</h2>
                     <input
                         type="file"
@@ -253,12 +263,12 @@ export const MyProfile = ({ user, userInfo }) => {
                             <img key={index} src={photo} alt={`Uploaded ${index}`} style={{ width: '100px', margin: '10px' }} />
                         ))}
                     </div>
-                </div>
+                </div> */}
 
 
                 {/* Scheduling */}
                                            
-                <Schedule editSchedule={(s)=>editSchedule(s)} userSchedule= {schedule}/>
+                <Schedule editSchedule={editSchedule} userSchedule= {schedule}/>
                 
             </div>
         </>

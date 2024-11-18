@@ -46,8 +46,8 @@ const UserProfile = () => {
             <div>
                 {userList.map((user) => (
                     <div key={user.posts} style={styles.userCard}>
-                        <img 
-                            src={user.picture} 
+                        <img  
+                            src={user.user_metadata ? user.user_metadata.picture : user.picture} 
                             alt={`${user.username}'s profile`} 
                             style={styles.profilePicture} 
                         />
