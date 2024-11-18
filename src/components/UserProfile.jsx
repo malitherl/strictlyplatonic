@@ -78,7 +78,7 @@ const UserProfile = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {user.user_metadata.schedule.map((i, index) => (
+                                            {user.user_metadata.schedule && user.user_metadata.schedule.map((i, index) => (
                                                 <tr key={index}>
                                                     <td>{i.date}</td>
                                                     <td>{i.time}</td>

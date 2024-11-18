@@ -21,9 +21,15 @@ export const Navigation = () => {
 
     const { userPicture, setUserPicture } = useUserInfo();
 
+
+
     useEffect(() => {
       if(Object.values(userInfo).length > 0) {
-        setUserPicture(userInfo[0]["user_metadata"]["picture"])
+        if(userInfo[0]["user_metadata"]) {
+          setUserPicture(userInfo[0]["user_metadata"]["picture"])
+        } else if(user.picture) {
+          setUserPicture(user.picture);
+        }
 
       }
       

@@ -14,10 +14,6 @@ export const MyProfile = ({ user, userInfo }) => {
     }
     
 
-
-
-
-
     // Changing this so that if the user logs in and they have a profile picture already 
     // then this picture will be the default state. 
     const [profilePicture, setProfilePicture] = useState(''); 
@@ -49,34 +45,34 @@ export const MyProfile = ({ user, userInfo }) => {
             setHobbies(user_hobbies.join(", "));
             setSchedule(user_schedule);
 
-
         } catch (error) {
             //If the worst happens, then the localStorage will take what is in memory and render it
-            const savedPicture = localStorage.getItem('profilePicture');
-            const savedName = localStorage.getItem('name');
-            const savedBio = localStorage.getItem('bio');
-            const savedHobbies = localStorage.getItem('hobbies');
-            const savedPhotos = JSON.parse(localStorage.getItem('photos') || '[]');
-            const savedThreads = JSON.parse(localStorage.getItem('discussionThreads') || '[]');
+            // const savedPicture = localStorage.getItem('profilePicture');
+            // const savedName = localStorage.getItem('name');
+            // const savedBio = localStorage.getItem('bio');
+            // const savedHobbies = localStorage.getItem('hobbies');
+            // const savedPhotos = JSON.parse(localStorage.getItem('photos') || '[]');
+            // const savedThreads = JSON.parse(localStorage.getItem('discussionThreads') || '[]');
             //TODO: refactor this 
-            if (savedPicture) {
-                setProfilePicture(savedPicture);
-            }
-            if (savedName) {
-                setName(savedName);
-            }
-            if (savedBio) {
-                setBio(savedBio);
-            }
-            if (savedHobbies) {
-                setHobbies(savedHobbies);
-            }
-            if(savedPhotos){
-                setPhotos(savedPhotos);
-            } 
-            if(savedThreads){
-                setPhotos(savedThreads);
-            }
+            // if (savedPicture) {
+            //     setProfilePicture(savedPicture);
+            // }
+            // if (savedName) {
+            //     setName(savedName);
+            // }
+            // if (savedBio) {
+            //     setBio(savedBio);
+            // }
+            // if (savedHobbies) {
+            //     setHobbies(savedHobbies);
+            // }
+            // if(savedPhotos){
+            //     setPhotos(savedPhotos);
+            // } 
+            // if(savedThreads){
+            //     setPhotos(savedThreads);
+            // }
+            console.log(error);
         }
        
     }, []);
@@ -97,14 +93,15 @@ export const MyProfile = ({ user, userInfo }) => {
         }
     };
 
-    const editSchedule = async (schedule) => {
+    const editSchedule = async (s) => {
         console.log(schedule)
          if(user.sub) {
              try {
                 console.log(user.sub)
-                const user_schedule = await updateUserSchedule(user.sub, schedule);
-                setSchedule(schedule);
-                console.log("Schedule successfully updated.")
+                const user_schedule = await updateUserSchedule(user.sub, s);
+                setSchedule(s);
+                console.log("Schedule successfully updated.");
+                console.log(schedule);
              } catch (error) {
                 console.log(error)
              }
