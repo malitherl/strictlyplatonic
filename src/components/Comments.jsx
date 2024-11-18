@@ -1,5 +1,18 @@
+import { useState } from "react";
+import { CommentEditForm } from "./CommentEditForm";
 
-export const Comments = ({comments}) => {
+export const Comments = ({id, user, comments, handleCommentEdit}) => {
+
+    const [toggleEdit, setToggleEdit] = useState({});
+
+    const handleEditToggle = (index) => {
+        setToggleEdit((prev) => ({
+            ...prev,
+            [index]: !prev[index],
+          }));
+    }
+
+
     console.log(comments)
     const renderComment = () => {
 
@@ -9,6 +22,9 @@ export const Comments = ({comments}) => {
                   {c.username != '' && c.comment != '' && <p><strong>{c.username}: </strong>{c.comment}</p>}
                   {/* to show image with comment */}
                   {c.image && <img src={c.image} alt="Comment" style={styles.commentImage} />}
+                  {/**to show edit button if the user wrote the comment */}
+                  {c.user_id == user.sub && <button onClick={handleEditToggle}>edit</button>} 
+                  {toggleEdit[index] && <CommentEditForm user={user} id={id} comment={c} handleCommentEdit={handleCommentEdit} />}
                 </div>
               ))
         } else {

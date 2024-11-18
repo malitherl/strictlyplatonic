@@ -34,9 +34,10 @@ export const Posts = ({user}) => {
 
   
   const handleCommentSubmit = async (postId, comment) => {
+    console.log(comment);
     const newPosts = posts.map((post, i) => {
       if (postIds[i] === postId) {
-        setIndex(i);
+        
         return {
           ...post,
           comments: [...post.comments, comment],
@@ -46,39 +47,71 @@ export const Posts = ({user}) => {
       return post;
     });
     setPosts(newPosts);  
-    console.log(comment);
     postsData.addComment(postId, comment);
-
-    console.log(comment);
   };
 
-  // list of emojis feel free to change it up or add 
-  const emojiList = ["👍", "❤️", "😂", "😊"];
+  const handleCommentEdit = async(postId, originalComment, newComment) => {
+    let updatedPost = {};
+    const newPosts = posts.map((post, i) => {
+      if (postIds[i] === postId) {
+        let index = post.comments.indexOf(originalComment);
+        post.comments[index] = newComment;
+        updatedPost = {...post};
+        return updatedPost;
+      }
+      
+      return post;
+    });
+    setPosts(newPosts);  
+    console.log(updatedPost);
+    postsData.updateComment(postId, updatedPost, user.sub);
+  }
+
+  
+ const handleCommentDelete = async (postId, originalComment) => {
+  let updatedPost = {};
+    const newPosts = posts.map((post, i) => {
+      if (postIds[i] === postId) {
+        let indexToRemove = post.comments.indexOf(originalComment);
+        const updatedComments = post.comments.filter((_, index) => index !== indexToRemove);
+        updatedPost = {...post, comments: updatedComments};
+        return updatedPost;
+      }
+      
+      return post;
+    });
+     setPosts(newPosts);  
+     console.log(updatedPost);
+     postsData.updateComment(postId, updatedPost, user.sub);
+ }
+
+
+
 
   // for clicking emoji
-  const handleEmojiClick = (postId, emoji) => {
-    const updatedPosts = posts.map((post) => {
-      if (postIds[posts.indexOf(post)] === postId) {
+  const handleEmojiClick = async (postId, emoji) => {
+    let updatedPost = {};
+    const updatedPosts = posts.map((post, index) => {
+      if (postIds[index] === postId) {
         const updatedReactions = { ...post.reactions };
         updatedReactions[emoji] = updatedReactions[emoji] ? updatedReactions[emoji] + 1 : 1;
-        return {
-          ...post,
-          reactions: updatedReactions,
-        };
+        updatedPost = {...post, reactions: updatedReactions};
+        return updatedPost;
+      
       }
       return post;
     });
-
+    const updateReacts = await postsData.updatePosts(updatedPost, postId, user.sub);
+    console.log(updatedPosts);
     setPosts(updatedPosts);
-    localStorage.setItem('posts', JSON.stringify(updatedPosts));
+
   };
 
   if (loading) {
     return <div>Loading...</div>;
   }
-    postsData.updatePosts(newPosts[0], postId, user.sub);
-    
- };
+
+
 
  const removePost = async (postId) => {
   
@@ -108,7 +141,7 @@ export const Posts = ({user}) => {
         {posts.length > 0 ? (
           posts.map((post, index) => (
             
-            <PostCard key={postIds[index]} post={post} id= {postIds[index]} user={user} handleCommentSubmit={handleCommentSubmit} postsData={postsData} removePost={removePost} />
+            <PostCard key={postIds[index]} post={post} id= {postIds[index]} user={user} handleCommentSubmit={handleCommentSubmit} postsData={postsData} removePost={removePost} handleEmojiClick={handleEmojiClick} handleCommentEdit={handleCommentEdit} handleCommentDelete={handleCommentDelete} />
             
           ))
         ) : (
@@ -118,6 +151,8 @@ export const Posts = ({user}) => {
     </>
   );
 };
+
+
 
 const styles = {
   container: {

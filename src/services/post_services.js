@@ -76,6 +76,7 @@ export class Post {
           * 
           * 
         */
+          console.log(comment);
           const docRef = doc(this.db, "posts", post_id); //get the post by its id
           const docSnap = await getDoc(docRef);
         
@@ -92,6 +93,28 @@ export class Post {
 
           console.log("Post has been updated.");
     }
+
+    async updateComment (post_id, updated_post) {  
+      const docRef = doc(this.db, "posts", post_id); //get the post by its id
+      
+      const newDoc = await updateDoc(docRef, updated_post);
+
+      console.log("Post has been updated.");
+
+    }
+
+    async deleteComment (post_id) {  
+      const docRef = doc(this.db, "posts", post_id); //get the post by its id
+      
+      const newDoc = await updateDoc(docRef, updated_post);
+
+      console.log("Post has been updated.");
+
+    }
+
+
+
+
     //creator_id, url
     async updatePostPictures(creator_id, pic_url) {
       const postsCol = collection(this.db, 'posts');

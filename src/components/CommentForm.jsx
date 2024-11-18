@@ -5,16 +5,16 @@ export const CommentForm = ({ user, postId, handleCommentSubmit }) => {
     const [comment, setComment] = useState('');
     const [image, setImage] = useState('');
 
-    console.log(postId);
-
     const onCommentSubmit = (e) => {
       e.preventDefault();
       if (user.name && comment) {
         let username = user.name
         const newComment = {
+          user_id: user.sub,
           username,
           comment,
-          image: image ? image : '' // Handle the image if it exists
+          image: image ? image : '', // Handle the image if it exists
+          time: new Date().toLocaleString(), 
         };
         
         console.log(user.name);
