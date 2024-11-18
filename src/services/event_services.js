@@ -1,8 +1,8 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { query, where, deleteDoc } from "firebase/firestore";  
-import { getFirestore, collection, getDoc, getDocs, updateDoc, doc } from 'firebase/firestore/lite';
+import { query, where } from "firebase/firestore";  
+import { getFirestore, collection, addDoc, deleteDoc, getDocs, updateDoc, doc } from 'firebase/firestore/lite';
 
 
 export class Event {
@@ -78,42 +78,33 @@ export class Event {
 
   } 
 
-  async createEvents() {
-
-    const docRef = await addDoc(collection(this.db, "events"), {
-      
-    });
-  
-    console.log("Document written with ID: ", docRef.id);
-
+  async createEvents(newEventData) {
+    const docRef = await addDoc(collection(this.db, "events"), newEventData);
+    return docRef.id;
   }
 
 
-  async updateEvent (updated_event, user_id) {
+  async updateEvent (updated_event, event_id, user_id) {
 
-    if(user_id == updated_event.user_id) {
+    if(user_id == updated_event.hostId) {
 
       const docRef = doc(this.db, "events", event_id);
-      const docSnap = await getDoc(docRef);
-    
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-      } else {
-        console.log("No such document!");
-      }
-      const newDoc = await updateDoc(docRef, {
-        updated_event
-      });
+      
+      const newDoc = await updateDoc(docRef, updated_event);
       console.log("Event has been updated.");
     }
   }
 
 
 
+  async deleteEvent(event_id) {
+      const docRef = doc(this.db, "events", event_id);
+      const newDoc = await deleteDoc(docRef);
+      console.log("Event has been deleted!");
+  }
 
 
-
-  async eventSignUp (event_id, participants, user_id) {
+  async eventSignUp (updatedEvent, event_id) {
     /**
      * This function is NOT for the event creator to edit their event. 
      * This function instead is for the user to sign up for events. 
@@ -122,22 +113,8 @@ export class Event {
      */
 
     const docRef = doc(this.db, "events", event_id);
-    const docSnap = await getDoc(docRef);
-    
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-    } else {
-      console.log("No such document!");
-    }
-
-    const newParticipants = [...participants, user_id];
-
-    const newDoc = await updateDoc(docRef, {
-      participants: newParticipants
-    });
-
-    console.log("User added to event attendees");
-
+    const newDoc = await updateDoc(docRef, updatedEvent);
+    return "User has signed up for event";
   } 
 
 }

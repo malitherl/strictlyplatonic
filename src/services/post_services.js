@@ -1,7 +1,8 @@
 import { addDoc } from "firebase/firestore/lite";
 
 import { initializeApp } from "firebase/app";
-import { getFirestore, query, where, collection, getDoc, getDocs, updateDoc, doc, arrayUnion } from 'firebase/firestore/lite';
+import { getFirestore, query, where, collection, getDoc, getDocs, deleteDoc, updateDoc, doc, arrayUnion } from 'firebase/firestore/lite';
+
 
 export class Post {
 
@@ -37,7 +38,6 @@ export class Post {
     }    
 
     async createPost(newPost) {
-      
         const postsCol = collection(this.db, 'posts');
         const postSnapshot = await addDoc(postsCol, newPost);
         console.log("Post Created");
@@ -56,9 +56,7 @@ export class Post {
           } else {
             console.log("No such document!");
           }
-          const newDoc = await updateDoc(docRef, {
-            updated_post
-          });
+          const newDoc = await updateDoc(docRef, updated_post);
           console.log("Post has been updated.");
         }
       }
@@ -114,5 +112,18 @@ export class Post {
       })
       
     }
+
+    async deletePost(post_id) {
+      const docRef = doc(this.db, "posts", post_id); //get the post by its id
+      const deletedDoc = await deleteDoc(docRef)
+       
+
+
+    }
+
+
+
+
+
 
 }

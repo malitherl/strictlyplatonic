@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Event } from "../services/event_services";
-import { useProfileData } from "../hooks/useProfileData";
+import { EventCard } from "./EventCard";
 
 
 const Events = ({ user }) => {
@@ -11,15 +11,17 @@ const Events = ({ user }) => {
    description: '',
    location: '',
    time: '',
+   time_created: '', //this is different from the time field because this ensures events are shown in chronological order. 
    participants: [],
-   host: user,
+   host: user.name,
+   hostId: user.sub,
    isRecurring: false,
    recurrenceInterval: 'weekly',
+   signedUp: false,
  });
 
-
+ 
  const eventsData = new Event();
- const userInfo = useProfileData(user);
 
 
  useEffect(() => {
@@ -33,49 +35,84 @@ const Events = ({ user }) => {
 
 
  // Handle Sign Up for a specific event
- const handleSignUp = (eventId) => {
-   setEvents((prevEvents) =>
-     prevEvents.map((event) =>
-       event.id === eventId
-         ? {
-             ...event, // copy current event
-             participants: [...event.participants, userInfo[0]["user_id"]], 
-             signedUp: true,  // Mark this event as signed up
-           }
-         : event // trying to make it to where it only RSVPS for that one event 
-     )
-   );
- };
+ const handleSignUp = async (e) => {
+    /** 
+     * -How this works is: 
+      - this function will take the event.id which is 'e' here in the parameters, and the participants array. 
+      - this event id is unique to each event, so the user should only be signed up for this one event. 
 
+    **/ 
+
+      let updatedEvent = {};
+      let updatedId = ""
+      const updatedEvents = events.map((event, index) => {
+
+          if(eventsIds[index] === e) {
+
+            const participants = event?.participants || [];
+
+            // Check if user_id is already in the participants list
+            if (participants.includes(user.sub) || event.host_id == user.sub) {
+              //this is purely for an edge-case where the user attempts to sign up again for an event. 
+              return "User has already signed up for the event.";
+            } else {
+
+              updatedEvent = {
+                ...event, // copy current event
+                time_created: Date.now(),
+                participants: [...event.participants, user.sub], 
+                signedUp: true,  // Mark this event as signed up
+              } 
+              updatedId = eventsIds[index]
+
+              return updatedEvent;
+            }
+          } else {
+            return event;
+          }  
+      });
+     
+      setEvents(updatedEvents);
+      const u = await eventsData.eventSignUp(updatedEvent, updatedId);
+      console.log(u)
+      
+    };
+
+ 
 
  // new event
  const handleCreateEvent = async (e) => {
    e.preventDefault();
-
-
    const eventData = {
      ...newEvent,
-     host: userInfo[0]["user_id"],  // host is user
-     id: new Date().toISOString(),  // event id 
+     host: user.name,
+     hostId: user.sub
+    //Removed the id field here because firebase generates one upon document creation
    };
 
+   //in the event_services, the createEvent function can return an Id for us. 
+   //Which we set here. 
+   //newEventData is set to the new document id once its created and stored in the database. 
 
-   // so that the new event is at the top of the feed
+   const newEventData = await eventsData.createEvents(eventData);
+
+
+   setEventIds((prevIds) => [newEventData, ...prevIds]);
    setEvents((prevEvents) => [eventData, ...prevEvents]);
-   setEventIds((prevIds) => [eventData.id, ...prevIds]);
-
-
   
    setNewEvent({
-     title: '',
-     description: '',
-     location: '',
-     time: '',
-     participants: [],
-     host: user,
-     isRecurring: false,
-     recurrenceInterval: 'weekly',
-   });//reset form
+    title: '',
+    description: '',
+    location: '',
+    time: '',
+    time_created: 0, 
+    participants: [],
+    host: user.name,
+    hostId: user.sub,
+    isRecurring: false,
+    recurrenceInterval: 'weekly',
+    signedUp: false,
+   });
  };
 
 
@@ -88,14 +125,22 @@ const Events = ({ user }) => {
    });
  };
 
-
- 
  const handleRecurringChange = (e) => {
    setNewEvent({
      ...newEvent,
      isRecurring: e.target.checked,
    });
  };
+
+
+ const handleEditEvent = async (edited_event, id) => {
+  const e = await eventsData.updateEvent(edited_event, id, user.sub);
+ }
+
+ const handleDeleteEvent = async (id) => {
+  const e = await eventsData.deleteEvent(id, user.sub);
+ }
+
 
 
  return (
@@ -108,7 +153,7 @@ const Events = ({ user }) => {
 
      {/* event creation form --purple? */}
      <div style={styles.createEventBox}>
-       <form onSubmit={handleCreateEvent}>
+       <form name="createForm" onSubmit={handleCreateEvent}>
          <h3>Create a new event!</h3>
          <label>
            Title:
@@ -190,29 +235,9 @@ const Events = ({ user }) => {
 
 
      {/* showing events */}
-     {events.map((event) => (
-       <div key={event.id} style={styles.userCard}>
-         <h3>{event.title} by ({event.host})</h3>
-         <p><strong>Description:</strong> {event.description}</p>
-         <p><strong>Location:</strong> {event.location}</p>
-         <p><strong>Date & Time:</strong> {event.time}</p>
-         <p><strong>RSVP: {event.participants.length}</strong></p>
-         <p><strong>Recurring Event: {event.isRecurring ? `This event happens every ${event.recurrenceInterval}` : "No"}</strong></p>
-
-
-    
-         {!event.signedUp && (
-           <button onClick={() => handleSignUp(event.id)}>Sign Up</button>
-         )}
-
-         {event.signedUp && event.participants.includes(userInfo[0]["user_id"]) && (
-           <p>Yay! You are signed up for this event!</p>
-         )}
-
-
-         <hr />
-       </div>
-     ))}
+     {events.map((event, index) => (
+        <EventCard key={eventsIds[index]} event={event} id= {eventsIds[index]} user={user} handleSignUp= {handleSignUp} handleEditEvent={handleEditEvent} handleDeleteEvent= {handleDeleteEvent}/>
+     ))}  
    </div>
  );
 };

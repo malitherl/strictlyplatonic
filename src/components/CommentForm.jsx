@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 export const CommentForm = ({ user, postId, handleCommentSubmit }) => {
 
     const [comment, setComment] = useState('');
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState('');
 
-
+    console.log(postId);
 
     const onCommentSubmit = (e) => {
       e.preventDefault();
@@ -14,11 +14,12 @@ export const CommentForm = ({ user, postId, handleCommentSubmit }) => {
         const newComment = {
           username,
           comment,
-          image: image ? URL.createObjectURL(image) : null // Handle the image if it exists
+          image: image ? image : '' // Handle the image if it exists
         };
         
         console.log(user.name);
         console.log(postId);
+        console.log(newComment);
         handleCommentSubmit(postId, newComment);
         setComment('');
         setImage(null); 
@@ -33,7 +34,7 @@ export const CommentForm = ({ user, postId, handleCommentSubmit }) => {
     };
   
     return (
-      <form onSubmit={(e)=> onCommentSubmit(e)} style={styles.form}>
+      <form onSubmit={onCommentSubmit} style={styles.form}>
         {/** Removing this div because we can use the logged in user's name here instead */}
         <p>Commenting as <strong>{user.name}</strong></p>
         

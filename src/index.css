@@ -132,6 +132,7 @@ button:focus-visible {
     background-color: #f9f9f9;
 }
 
+
 .buttons {
   display: flex;
   gap: 10px; /* Space between the edit and delete buttons */
