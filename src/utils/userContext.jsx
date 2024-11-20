@@ -14,17 +14,16 @@ export const UserProvider = ({ children }) => {
   
   //for now, this manages how the user's profile picture will render, but this can be extended to other variables. 
   const [userInfo, setUserInfo] = useState(null);
-  const { isAuthenticated, user } = useAuth0()
+  const { isAuthenticated, user } = useAuth0();
 
+  const fetchData = async() => {
+    const userInfo = await retrieveUserInfo(user.email);  
+    setUserInfo(userInfo);
+    console.log('fetched from database');
+  }
 
   useEffect(() => {
-    const fetchData = async() => {
-      const userInfo = await retrieveUserInfo(user.email)  
-      
-      setUserInfo(userInfo)
-  }
-  
-    try {
+      try {
         if( isAuthenticated && user) {
           fetchData();
         }   
@@ -32,15 +31,14 @@ export const UserProvider = ({ children }) => {
       console.log(error);
     }
     }, [isAuthenticated, user]);
-
-  console.log(userInfo)
-
+  
 
   
+
   const [userPicture, setUserPicture] = useState(''); 
 
   return (
-    <UserContext.Provider value={{ userInfo, setUserInfo }}>
+    <UserContext.Provider value={{ userInfo, fetchData, setUserInfo}}>
       {children}
     </UserContext.Provider>
   );

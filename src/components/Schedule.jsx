@@ -99,6 +99,28 @@ export const Schedule = ({editSchedule, userSchedule}) => {
   return (
     <div>
      
+      <h2>Weekly Schedule</h2>
+      
+      <ul>
+        {sortedSchedule.map((event, index) => (
+          <li key={index}>
+          <div>
+            <strong>{event.date}</strong> at <em>{event.time}</em>: {event.activity}
+          </div>
+        
+          <div className="buttons">
+            <button className="edit" onClick={() => handleEdit(event)}>
+              <img src={editIcon} alt="Edit" className="icon" />
+            </button>
+        
+            <button className="delete" onClick={() => handleDelete(event)}>
+              <img src={deleteIcon} alt="Delete" className="icon" />
+            </button>
+          </div>
+        </li>
+        ))}
+      </ul>
+
       <form onSubmit={handleSubmit}>
 
         <select aria-label="select day" value={date} onChange={(e) => setDate(e.target.value)}>
@@ -141,29 +163,7 @@ export const Schedule = ({editSchedule, userSchedule}) => {
         
         <button type="submit">Add to Schedule</button>
         <hr />
-      </form>
-
-      <h2>Weekly Schedule</h2>
-      
-      <ul>
-        {sortedSchedule.map((event, index) => (
-          <li key={index}>
-          <div>
-            <strong>{event.date}</strong> at <em>{event.time}</em>: {event.activity}
-          </div>
-        
-          <div className="buttons">
-            <button className="edit" onClick={() => handleEdit(event)}>
-              <img src={editIcon} alt="Edit" className="icon" />
-            </button>
-        
-            <button className="delete" onClick={() => handleDelete(event)}>
-              <img src={deleteIcon} alt="Delete" className="icon" />
-            </button>
-          </div>
-        </li>
-        ))}
-      </ul>
+      </form>      
     </div>
   );
 };

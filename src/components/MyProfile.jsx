@@ -10,7 +10,7 @@ import UserProfile from './UserProfile';
 
 export const MyProfile = ({ user }) => {
 
-    const {userInfo} = useUserInfo();
+    const {userInfo, fetchData} = useUserInfo();
     // to see if the user is logged into account and has permission
     if (!user || !user.email) {
         return <div>You are not authorized to view this page.</div>;
@@ -35,7 +35,7 @@ export const MyProfile = ({ user }) => {
     useEffect(() => {
     
         try {
-            const user_pfp = userPicture ;
+            const user_pfp = userInfo[0].user_metadata.picture;
             const user_name = userInfo[0].name;
             
             if(userInfo[0].user_metadata) {
@@ -169,7 +169,7 @@ export const MyProfile = ({ user }) => {
           );
           //Upon receiving the url from cloudinary, we then give this information to the auth0 database 
           setImageUrl(response.data.secure_url); 
-          setUserPicture(response.data.secure_url);
+          
           alert("Image uploaded successfully!");
         } catch (error) {
           console.error("Error uploading image:", error);
@@ -179,8 +179,12 @@ export const MyProfile = ({ user }) => {
     
       useEffect(() => {
         if(imageUrl) {
-            const response = updateUserPicture(user.sub,  imageUrl);
-            console.log(response);
+            const update_picture= async () => {
+                const u = await updateUserPicture(user.sub,  imageUrl);
+                const f = await fetchData();
+                console.log('finished');
+            }
+            update_picture();
             setProfilePicture(imageUrl);
         }
       }, [imageUrl]);

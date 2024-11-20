@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditForm } from "./PostEditForm";
 import { Comment } from './Comment';
 import { CommentForm } from './CommentForm'; 
+import { useUserInfo } from "../utils/userContext";
+import { updateUserFriends } from '../services/user_services';
 import '../index.css'
 
 
@@ -11,34 +13,87 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
     const [title, setTitle] = useState(post.title);
     const [desc, setDesc] = useState(post.desc);
     const [image, setImage] = useState(post.image); 
+    const [follow, setFollow] = useState(post.creator)
     const [toggleEdit, setToggleEdit] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const {userInfo, fetchData} = useUserInfo();
 
-    console.log(post.comments);
+    const PostCardLoadingModal = () => {
+      return (
+          <div className='postContainer'>
+              <div className='loader'>
+              </div>
+          </div>
+      )
+  }
+
+
+
+    const toggleFollowModal = ()=> {
+      if(isFollowing) {
+        console.log('Unfollowing user');
+        setIsFollowing(false);
+        const update_friends = userInfo[0]["user_metadata"]["friends"].filter(u => u !== follow);
+        console.log(update_friends);
+        updateUserFriends(user.sub, update_friends);
+        fetchData();
+        
+      } else {
+        setIsFollowing(true);
+        const friends = userInfo[0]["user_metadata"]["friends"];
+        const new_friends = [...friends, follow];
+        updateUserFriends(user.sub, new_friends);
+        fetchData();
+        console.log(userInfo);
+        
+      }
+      
+    }
 
     const toggleEditingModal = () => {
-      console.log('toggling editing')
       let e = !toggleEdit;
       setToggleEdit(e);
     }
 
     const toggleDeletion = () => {
-      removePost(id)
+      removePost(id);
     }
 
     // list of emojis feel free to change it up or add 
     const emojiList = ["👍", "❤️", "😂", "😊"];
 
+    useEffect(() => {
+      if(userInfo){
+        setIsLoading(false);
+        if(userInfo[0]["user_metadata"].friends.includes(post.creator)) {
+          setIsFollowing(true);
+        }
+      }
+    }, [userInfo]);
+
+
+
+
+
+
 
 
     return (
+      <>
+        {isLoading ? <PostCardLoadingModal /> : 
 
-        <div key={id} className="postContainer" style={styles.postContainer}>
+          <div key={id} className="postContainer" style={styles.postContainer}>
               <div className="user-header">
                 {post.creator_pic && (
                   <img className="profile-preview" src={post.creator_pic} alt={post.creator_pic} />
                 )}
                 <h4>{post.user_name}</h4>
-                <a className='follow-button' href="#">Follow</a>
+                {isFollowing ? 
+                  <a className='follow-button' onClick={toggleFollowModal}>Unfollow</a>
+                  : 
+                  <a className='follow-button' onClick={toggleFollowModal}>Follow</a>
+                }
               </div>
               <hr />
               <h2>{title}</h2>
@@ -97,6 +152,10 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
               </div>
             </div>
 
+
+        }
+        
+        </>
     )
 
 }

@@ -1,6 +1,4 @@
 
-
-import { useUserInfo } from "../utils/userContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
 import { Posts } from "./Posts"
@@ -8,7 +6,6 @@ import  Events  from './Events'
 import  UserCard  from "./UserCard";
 import { MyProfile } from "./MyProfile";
 import UserProfile from "./UserProfile";
-import { useProfileData } from '../hooks/useProfileData';
 import homeIcon from '../assets/images/icons/home.svg';
 import eventIcon from '../assets/images/icons/event.svg';
 
@@ -16,16 +13,7 @@ export const Navigation = () => {
      
 
     const {isAuthenticated, user } = useAuth0();
-    const [current, setCurrent] = useState('posts');
-    
-    const [isLoading, setIsLoading] = useState(true);
-    const { userInfo } = useUserInfo();
-
-
-
-    
-
-    
+    const [current, setCurrent] = useState('posts');    
    
     const handleClick = (value) => {
         if(value != current) {
