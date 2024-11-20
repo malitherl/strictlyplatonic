@@ -2,6 +2,9 @@ import { useState } from "react";
 import { EditForm } from "./PostEditForm";
 import { Comment } from './Comment';
 import { CommentForm } from './CommentForm'; 
+import '../index.css'
+
+
 
 export const PostCard = ({post, id, user, handleCommentSubmit, postsData, removePost, handleEmojiClick, handleCommentEdit, handleCommentDelete}) => {
 
@@ -34,7 +37,7 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
                 {post.creator_pic && (
                   <img className="profile-preview" src={post.creator_pic} alt={post.creator_pic} />
                 )}
-                <h4 style={styles.username}>{post.user_name}</h4>
+                <h4>{post.user_name}</h4>
                 <a className='follow-button' href="#">Follow</a>
               </div>
               <hr />
@@ -117,12 +120,7 @@ const styles = {
     borderRadius: '5px',
     backgroundColor: '#f9f9f9',
   },
-  username: {
-    fontSize: '35px',
-    fontWeight: 'bold',
-    color: '#000000',
-    margin: '0 5px',
-  },
+  
   form: {
     display: 'flex',
     flexDirection: 'column',

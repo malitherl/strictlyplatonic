@@ -13,32 +13,17 @@ import homeIcon from '../assets/images/icons/home.svg';
 import eventIcon from '../assets/images/icons/event.svg';
 
 export const Navigation = () => {
-    
+     
 
     const {isAuthenticated, user } = useAuth0();
     const [current, setCurrent] = useState('posts');
-    const userInfo = useProfileData(user);
-
-    const { userPicture, setUserPicture } = useUserInfo();
-
-
-
-    useEffect(() => {
-      if(Object.values(userInfo).length > 0) {
-        if(userInfo[0]["user_metadata"]) {
-          setUserPicture(userInfo[0]["user_metadata"]["picture"])
-        } else if(user.picture) {
-          setUserPicture(user.picture);
-        }
-
-      }
-      
-
-    }, [userInfo]);
     
+    const [isLoading, setIsLoading] = useState(true);
+    const { userInfo } = useUserInfo();
 
-    console.log(userPicture)
 
+
+    
 
     
    
@@ -79,12 +64,12 @@ export const Navigation = () => {
               </nav>
              <main className="mainContentContainer">
                 <div className= "userCard">
-                    <UserCard handleClick={handleClick} user= {user} userInfo={userInfo}/>
+                    <UserCard handleClick={handleClick} user= {user}/>
                 </div>
-                <div>
+                <div className="content">
                     {current == 'posts' && <Posts user={user} />}
                     {current == 'events' && <Events user={user}/>} 
-                    {current == 'myprofile' && <MyProfile userInfo={userInfo} user={user} />}
+                    {current == 'myprofile' && <MyProfile  user={user} />}
                     {current == 'userprofile' && <UserProfile />}
                     {current == 'inbox' && <Inbox />}
                 </div>

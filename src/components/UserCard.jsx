@@ -1,28 +1,33 @@
 
 import React, { useEffect, useState } from 'react';
 import LogoutButton from "./LogoutButton";
-import '../UserCard.css';  
+import '../index.css';
 import { useUserInfo } from '../utils/userContext';
     
 
 
-const UserCard = ({ handleClick, user, userInfo }) => {
+const UserCard = ({ handleClick, user }) => {
 
-    const { userPicture, setUserPicture } = useUserInfo();
-    const [profilePicture, setProfilePicture] = useState(user.picture);
+    
 
     const [name, setName] = useState(user.name);
     const [nickname, setNickName] = useState(user.nickname);
+    const [profilePicture, setProfilePicture] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     
-    console.log(user);
+    const {userInfo} = useUserInfo();
+    console.log(userInfo)
     
     useEffect(() => {
+        console.log("user information updated")
+        if(userInfo && Object.values(userInfo).length > 0){
 
-        if(Object.values(userInfo).length > 0){
-
-            setUserPicture(user.picture);
-            setProfilePicture(userPicture);
+            if(userInfo[0]["user_metadata"]["picture"]){
+                setProfilePicture(userInfo[0]["user_metadata"]["picture"])
+            } else {
+                setProfilePicture(user.picture)
+            }
+            
             setName(userInfo[0]["name"]);
             setNickName(userInfo[0]["nickname"]);
             setIsLoading(false);
@@ -30,15 +35,31 @@ const UserCard = ({ handleClick, user, userInfo }) => {
 
 
     //this determines if the api has updated the user information, and will re-render this component
-    }, [userPicture, userInfo, user])
+    }, [userInfo])
 
 
+
+
+
+
+
+
+
+
+    const UserCardLoadingModal = () => {
+        return (
+            <div className='userCardContainer'>
+                <div className='loader'>
+                </div>
+            </div>
+        )
+    }
 
 
 
     return (
         <>        
-        {isLoading ? <p>Loading</p> :
+        {isLoading ? <UserCardLoadingModal /> :
         <div className="userCardContainer">
             
             <img src={profilePicture} alt={user.name} />
@@ -62,9 +83,6 @@ const UserCard = ({ handleClick, user, userInfo }) => {
         }</>
 
 
-    )
-
-
-}
+    )}
 
     export default UserCard; 

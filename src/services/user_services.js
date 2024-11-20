@@ -1,7 +1,6 @@
 import axios from "axios";
 import {Post} from './post_services';
 
-
 const retrieveToken = async () => {
   
   const body = {
@@ -137,7 +136,7 @@ export const updateUserSchedule = async (id, data) => {
 
     axios.request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
+        return response.data;
       }).catch((error) => {
         console.log(error);
       });
@@ -161,11 +160,8 @@ export const updateUserPicture = async (id, url) => {
    * id: this is identifies the current user, and corresponds to the user_id as saved in the user management database
    * 
    * data: this is a mapping object that is taken and modified into a JSON object. Example format: 
-   
-
    * 
    */
-  console.log(url)
    if(url) {
     console.log(url);
     try {
@@ -188,20 +184,14 @@ export const updateUserPicture = async (id, url) => {
       
       axios.request(config)
         .then((response) => {
-          console.log(response.data)
+          return response.data;
         }).catch((error) => {
           console.log(error);
         });
       //after this, we also need to create a function that will change 
       //post profile pictures as well. which means we will have to make 
       //a call to the posts_services and go by user_id there as well 
-      const p = new Post();
-      try {
-        const push_to_posts= await p.updatePostPictures(id, url);
-        
-      } catch (error) {
-        console.log(error);
-      }
+      
     } catch (error) {
       console.log(error);
     }

@@ -6,8 +6,11 @@ import Schedule from './Schedule';
 
 import '../bio.css';
 import axios from "axios";
+import UserProfile from './UserProfile';
 
-export const MyProfile = ({ user, userInfo }) => {
+export const MyProfile = ({ user }) => {
+
+    const {userInfo} = useUserInfo();
     // to see if the user is logged into account and has permission
     if (!user || !user.email) {
         return <div>You are not authorized to view this page.</div>;
@@ -20,30 +23,35 @@ export const MyProfile = ({ user, userInfo }) => {
     const [name, setName] = useState('type your name here...');
     const [bio, setBio] = useState('type your bio here...');
     const [hobbies, setHobbies] = useState('enter your hobbies here....');
-    const [photos, setPhotos] = useState([]); // for photos to profile
-    const [image, setImage] = useState(null); // for the user profile picture-- different from photos!! 
+    const [image, setImage] = useState(''); // for the user profile picture-- different from photos!! 
     const [imageUrl, setImageUrl] = useState("");
     const [errors, setErrors] = useState({}); 
     const [schedule, setSchedule]= useState([]);
 
     //from the UserContext hook 
-    const { setUserPicture } = useUserInfo() ;
     
 
     // On initial render, if there are items that have been changed, then will load them from the localStorage. 
     useEffect(() => {
     
         try {
-            const user_pfp = userInfo[0].user_metadata.picture;
+            const user_pfp = userPicture ;
             const user_name = userInfo[0].name;
-            const user_bio = userInfo[0].user_metadata.bio;
-            const user_hobbies = userInfo[0].user_metadata.hobbies; 
-            const user_schedule = userInfo[0].user_metadata.schedule;
+            
+            if(userInfo[0].user_metadata) {
+                const user_bio = userInfo[0].user_metadata.bio;
+                const user_hobbies = userInfo[0].user_metadata.hobbies; 
+                const user_schedule = userInfo[0].user_metadata.schedule;
+                
+                setBio(user_bio);
+                setHobbies(user_hobbies.join(", "));
+                setSchedule(user_schedule);
+            }
+            
+            
             setProfilePicture(user_pfp);
             setName(user_name);
-            setBio(user_bio);
-            setHobbies(user_hobbies.join(", "));
-            setSchedule(user_schedule);
+            
 
         } catch (error) {
             //If the worst happens, then the localStorage will take what is in memory and render it
@@ -88,7 +96,6 @@ export const MyProfile = ({ user, userInfo }) => {
             };
             reader.readAsDataURL(file);
             setImage(file);
-           //add functionality to push this to the user profile. 
            
         }
     };
@@ -142,6 +149,7 @@ export const MyProfile = ({ user, userInfo }) => {
         }
     };
 
+
     // photo upload
     const handleUpload = async (event) => {
         event.preventDefault();
@@ -170,14 +178,14 @@ export const MyProfile = ({ user, userInfo }) => {
       };
     
       useEffect(() => {
-        updateUserPicture(user.sub,  imageUrl);
-        setProfilePicture(imageUrl);
-        setUserPicture(imageUrl); // this line saves the image url to context, allowing us to access it throughout the entire application. 
+        if(imageUrl) {
+            const response = updateUserPicture(user.sub,  imageUrl);
+            console.log(response);
+            setProfilePicture(imageUrl);
+        }
       }, [imageUrl]);
     
-    
-    
-
+      
 
     return (
         <>

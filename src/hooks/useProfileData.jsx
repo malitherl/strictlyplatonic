@@ -26,7 +26,7 @@ export const useProfileData = (user) => {
         } catch (error) {
             console.log(error);
         }
-    //array remains empty as it runs only on initial render. 
+        
     }, [user]);
     return userInfo;
 }

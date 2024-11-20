@@ -107,7 +107,7 @@ export const PostForm = ({user, postsData, createPost}) => {
 
 
     return (
-        <div style={styles.postContainer}>
+        <div style={styles.postCreator}>
           <h2>create a new post!</h2>
           <form style={styles.postContainerForm} onSubmit={handlePostSubmit}>
             <input
@@ -141,14 +141,7 @@ export const PostForm = ({user, postsData, createPost}) => {
             </button>
           </form>
         </div>
-
-
-    )
-
-
-
-
-}
+      )}
 
 
 const styles = {
@@ -156,7 +149,7 @@ const styles = {
       margin: '0 auto',
       maxWidth: '800px',
     },
-    postContainer: {
+    postCreator: {
       border: '2px solid #ddd',
       padding: '10px',
       marginBottom: '20px',
@@ -166,8 +159,9 @@ const styles = {
   
     postContainerForm: {
       display: "block",
-      width: "30%",
       margin: "0 auto",
+      width: "50%",
+
     },
   
     username: {
