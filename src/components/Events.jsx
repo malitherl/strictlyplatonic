@@ -263,48 +263,77 @@ export const Events = () => {
 
 
      {/* showing events */}
+     <div style={styles.eventsList}>
      {events.map((event, index) => (
         <EventCard key={eventsIds[index]} event={event} id= {eventsIds[index]} user={user} handleSignUp= {handleSignUp} handleEditEvent={handleEditEvent} handleDeleteEvent= {handleDeleteEvent}/>
      ))}  
-   </div>
- );
+    </div>
+  </div>
+  );
 };
 
 
 const styles = {
- userCard: {
-   border: '1px solid #ddd',
-   padding: '10px',
-   marginBottom: '20px',
-   borderRadius: '5px',
-   backgroundColor: '#f9f9f9',
-   background:'linear-gradient(21deg, #65558f, #a69ac7)',
-  
- },
- createEventBox: {
-   backgroundColor: 'white',
-   padding: '20px',
-   borderRadius: '8px',
-   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-   marginBottom: '30px',
-   maxWidth: '600px',
-   marginLeft: 'auto',
-   marginRight: 'auto',
-   background:'linear-gradient(21deg, #65558f, #a69ac7)',
-
-
- },
- eventsBox: {
-   background:'linear-gradient(21deg, #65558f, #a69ac7)',
-   padding: '20px',
-   borderRadius: '8px',
-   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-   marginBottom: '30px',
-   maxWidth: '600px',
-   marginLeft: 'auto',
-   marginRight: 'auto',
- },
-};
+  userCard: {
+    border: '1px solid #ddd',
+    padding: '10px',
+    marginBottom: '20px',
+    borderRadius: '5px',
+    backgroundColor: '#f9f9f9',
+    background:'linear-gradient(21deg, #65558f, #a69ac7)',
+ 
+ 
+  },
+  createEventBox: {
+    backgroundColor: 'white',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    marginBottom: '30px',
+    maxWidth: '600px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    background:'linear-gradient(21deg, #65558f, #a69ac7)',
+    textAlign: 'center', 
+ 
+ 
+  },
+  eventsBox: {
+    background:'linear-gradient(21deg, #65558f, #a69ac7)',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    marginBottom: '10px',
+    maxWidth: '600px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    textAlign: 'center', 
+  },
+  eventsTitle: {
+    fontSize: '2em',
+    marginBottom: '10px',
+    color: '#fff', 
+  },
+  goBackButton: {
+    display: 'inline-block',
+    marginTop: '10px',
+    padding: '10px 20px',
+    fontSize: '1.2em',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    borderRadius: '5px',
+    textDecoration: 'none',
+    textAlign: 'center',
+  },
+  eventsList: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: '50px',
+    marginTop:"20px" 
+  },
+  };
 
 
 export default Events;

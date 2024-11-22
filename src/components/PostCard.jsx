@@ -185,32 +185,49 @@ const styles = {
     marginTop: '10px',
     //below is for writing in comments, i had to play around with it alot so we can remove some stuff if need be- sierra
   },
+  
   postContainer: {
     border: '2px solid #ddd',
-    padding: '10px',
+    padding: '20px', 
     marginBottom: '20px',
     borderRadius: '5px',
     backgroundColor: '#f9f9f9',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    textAlign: 'center', 
   },
-  
+
   form: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center', 
     marginTop: '10px',
+    width: '100%',
   },
+  
   inputContainer: {
     background: 'linear-gradient(21deg, #d6c7e5, violet)',
     padding: '3px',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center', 
   },
+
   emojiContainer: {
     marginTop: '10px',
+    display: 'flex',
+    justifyContent: 'center', 
   },
+
   emojiButton: {
     fontSize: '20px',
     margin: '5px',
     background: 'linear-gradient(21deg, #d6c7e5, violet)',
     border: 'none',
     cursor: 'pointer',
+    display: 'inline-block',
+    textAlign: 'center',
   },
   reactionsContainer: {
     marginTop: '10px',
@@ -231,6 +248,7 @@ const styles = {
     transition: 'all 0.3s',
     backgroundColor: '#e6e6fa',
     marginBottom: '10px',
+    width: '100%', 
   },
 
   textarea: {
@@ -241,6 +259,7 @@ const styles = {
     minHeight: '60px',
     background: 'linear-gradient(21deg, #d6c7e5, violet)',
     color: '#000000',
+    width: '100%', 
   },
   button: {
     backgroundColor: '#9966CC',
@@ -249,10 +268,16 @@ const styles = {
     borderRadius: '4px',
     padding: '10px',
     cursor: 'pointer',
+    width: '100%', 
+    maxWidth: '200px', 
+    margin: '10px auto', 
   },
   fileInput: {
     marginTop: '10px',
     padding: '5px',
+    display: 'block', 
+    marginLeft: 'auto', 
+    marginRight: 'auto', 
   },
   imagePreview: {
     marginTop: '10px',
@@ -271,14 +296,18 @@ const styles = {
     maxHeight: '300px',
     borderRadius: '15px',
     marginTop: '15px',
-
-   },
+    display: 'block', 
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
   commentImage: {
     marginTop: '10px',
     maxWidth: '100px',
     maxHeight: '100px',
     borderRadius: '8px',
-    
+    display: 'block', 
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   
 };
