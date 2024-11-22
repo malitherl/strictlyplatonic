@@ -144,99 +144,112 @@ export const PostForm = ({user, postsData, createPost}) => {
       )}
 
 
-const styles = {
-    container: {
-      margin: '0 auto',
-      maxWidth: '800px',
-    },
-    postCreator: {
-      border: '2px solid #ddd',
-      padding: '10px',
-      marginBottom: '20px',
-      borderRadius: '5px',
-      backgroundColor: '#f9f9f9',
-    },
-  
-    postContainerForm: {
-      display: "block",
-      margin: "0 auto",
-      width: "50%",
-
-    },
-  
-    username: {
-      fontSize: '35px',
-      fontWeight: 'bold',
-      color: '#000000',
-      margin: '0 5px',
-    },
-    form: {
-      display: 'flex',
-      flexDirection: 'column',
-      marginTop: '10px',
-    },
-    inputContainer: {
-      background: 'linear-gradient(21deg, #d6c7e5, violet)',
-      padding: '3px',
-    },
-    input: {
-      fontFamily: 'inherit',
-      lineHeight: 'inherit',
-      color: '#000000',
-      minWidth: '12em',
-      padding: '0.325em',
-      border: 'none',
-      outline: 'none',
-      transition: 'all 0.3s',
-      backgroundColor: '#e6e6fa',
-      marginBottom: '10px',
-    },
-  
-    textarea: {
-      padding: '10px',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-      marginBottom: '10px',
-      minHeight: '60px',
-      background: 'linear-gradient(21deg, #d6c7e5, violet)',
-      color: '#000000',
-    },
-    button: {
-      backgroundColor: '#9966CC',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '4px',
-      padding: '10px',
-      cursor: 'pointer',
-    },
-    fileInput: {
-      marginTop: '10px',
-      padding: '5px',
-    },
-    imagePreview: {
-      marginTop: '10px',
-      maxWidth: '100%',
-      maxHeight: '200px',
-      borderRadius: '8px',
-    },
-    imageUploadContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
+      const styles = {
+        container: {
+          margin: '0 auto',
+          maxWidth: '800px',
+        },
+        postCreator: {
+          border: '2px solid #ddd',
+          padding: '10px',
+          marginBottom: '20px',
+          borderRadius: '5px',
+          backgroundColor: '#f9f9f9',
+          textAlign: 'center', 
+        },
       
-    },
-    postImage: {
-      maxWidth: '100%',
-      maxHeight: '300px',
-      borderRadius: '15px',
-      marginTop: '15px',
+        postContainerForm: {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',  
+          margin: '0 auto',
+          width: '50%',
+          padding: '20px',
+          borderRadius: '5px',
+          backgroundColor: '#f9f9f9',
+        },
       
-    },
-    commentImage: {
-      marginTop: '10px',
-      maxWidth: '100px',
-      maxHeight: '100px',
-      borderRadius: '8px',
+        username: {
+          fontSize: '35px',
+          fontWeight: 'bold',
+          color: '#000000',
+          margin: '0 5px',
+        },
+        form: {
+          display: 'flex',
+          flexDirection: 'column',
+          marginTop: '10px',
+        },
+        inputContainer: {
+          background: 'linear-gradient(21deg, #d6c7e5, violet)',
+          padding: '3px',
+        },
+        input: {
+          fontFamily: 'inherit',
+          lineHeight: 'inherit',
+          color: '#000000',
+          minWidth: '12em',
+          padding: '0.325em',
+          border: 'none',
+          outline: 'none',
+          transition: 'all 0.3s',
+          backgroundColor: '#e6e6fa',
+          marginBottom: '10px',
+          textAlign: 'center', 
+        },
+      
+        textarea: {
+          padding: '10px',
+          border: '1px solid #ccc',
+          borderRadius: '4px',
+          marginBottom: '10px',
+          minHeight: '60px',
+          background: 'linear-gradient(21deg, #d6c7e5, violet)',
+          color: '#000000',
+          width: '100%',
+          textAlign: 'center', 
+        },
+        button: {
+          backgroundColor: '#9966CC',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '4px',
+          padding: '10px',
+          cursor: 'pointer',
+          marginTop: '10px',
+        },
+        fileInput: {
+          marginTop: '10px',
+          padding: '5px',
+        },
+        imagePreviewContainer: {
+          marginTop: '10px',
+          textAlign: 'center', 
+        },
+        imagePreview: {
+          marginTop: '10px',
+          maxWidth: '100%',
+          maxHeight: '200px',
+          borderRadius: '8px',
+        },
+        imageUploadContainer: {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+      
+        },
+        postImage: {
+          maxWidth: '100%',
+          maxHeight: '300px',
+          borderRadius: '15px',
+          marginTop: '15px',
+      
+        },
+        commentImage: {
+          marginTop: '10px',
+          maxWidth: '100px',
+          maxHeight: '100px',
+          borderRadius: '8px',
       
     },
     

@@ -98,28 +98,30 @@ export const Schedule = ({editSchedule, userSchedule}) => {
       
   return (
     <div>
-     
-      <h2>Weekly Schedule</h2>
+     <div style={styles.scheduleContainer}>
+  <h2>Weekly Schedule</h2>
+  
+  <ul style={styles.scheduleList}>
+    {sortedSchedule.map((event, index) => (
+      <li key={index} style={styles.scheduleItem}>
+        <div style={styles.eventDetails}>
+          <strong>{event.date}</strong> at <em>{event.time}</em>: {event.activity}
+        </div>
       
-      <ul>
-        {sortedSchedule.map((event, index) => (
-          <li key={index}>
-          <div>
-            <strong>{event.date}</strong> at <em>{event.time}</em>: {event.activity}
-          </div>
+        <div className="buttons" style={styles.buttonContainer}>
+          <button className="edit" onClick={() => handleEdit(event)} style={styles.button}>
+            <img src={editIcon} alt="Edit" className="icon" />
+          </button>
         
-          <div className="buttons">
-            <button className="edit" onClick={() => handleEdit(event)}>
-              <img src={editIcon} alt="Edit" className="icon" />
-            </button>
-        
-            <button className="delete" onClick={() => handleDelete(event)}>
-              <img src={deleteIcon} alt="Delete" className="icon" />
-            </button>
-          </div>
-        </li>
-        ))}
-      </ul>
+          <button className="delete" onClick={() => handleDelete(event)} style={styles.button}>
+            <img src={deleteIcon} alt="Delete" className="icon" />
+          </button>
+        </div>
+      </li>
+    ))}
+  </ul>
+</div>
+
 
       <form onSubmit={handleSubmit}>
 
@@ -166,6 +168,53 @@ export const Schedule = ({editSchedule, userSchedule}) => {
       </form>      
     </div>
   );
+};
+const styles = {
+  scheduleContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    textAlign: 'center', 
+    margin: '0 auto',
+    maxWidth: '800px', // just to ensure it doesn't get too wide
+  },
+  scheduleList: {
+    listStyleType: 'none', 
+    padding: '0', 
+    margin: '20px 0', 
+    width: '100%', 
+  },
+  scheduleItem: {
+    padding: '10px',
+    marginBottom: '10px',
+    border: '1px solid #ddd', 
+    borderRadius: '5px', 
+    backgroundColor: '#f9f9f9', 
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', 
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    display: 'flex',
+    gap: '10px',
+    marginTop: '10px',
+  },
+  button: {
+    display: 'flex',
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    padding: '4px 8px', 
+    fontSize: '10px', 
+    borderRadius: '4px',
+    border: '1px solid #ddd', 
+    cursor: 'pointer', 
+    width: 'auto', 
+    height: '24px',
+     
+  },
+  
 };
 
 export default Schedule;
