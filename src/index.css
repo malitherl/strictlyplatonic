@@ -5,8 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background: linear-gradient(rgba(22, 22, 22, 0.801) 90%, rgba(115, 122, 255, 0.521) ) 20%;
-
+  background-image: linear-gradient(to left bottom, #65558f, #6c64a0, #7273b1, #7883c2, #7e93d2, #7c96dc, #7998e6, #759bf0, #6b91f6, #6486fa, #6279fd, #646cff);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -26,9 +25,14 @@ body {
   min-width: 320px;
   min-height: 100vh;
   width: 60%;
-  background-color:#1a1a1a;
+  background-color:rgb(26, 26, 26);
   margin: 0 auto;
 }
+
+body h1 {
+  color: rgb(100, 108, 255);
+}
+
 
 @font-face {
   font-family: 'Grandstander-Light';
@@ -42,6 +46,61 @@ body {
   height: auto;
 }
 
+#login {
+  width: 50%;
+  margin: 0 auto;
+  background-color: #646cff;
+  text-align: center;
+  display: block;
+  box-shadow: 1px 3px 1px #5359c4;
+  
+  text-shadow: 1px 1px 1px #5359c4;
+  text-transform: uppercase;
+  position: relative;
+}
+
+#login:hover {
+  background-color: plum;
+  border: none;
+  box-shadow: 1px 3px 1px rgb(238, 172, 238);
+  color: #1a1a1a;
+  text-shadow: 1px 1px 1px #353535;
+}
+
+#login::after {
+  font: small-caps;
+  font-size: x-small;
+  color: #ccc;
+  margin: 10px 20px 0 0;
+  content: "Authentication provided by Auth0 x Okta";
+  text-shadow: 1px 1px 1px transparent;
+  position: absolute;
+  top: 100%;
+  left: 12%;
+}
+
+#login::after:hover {
+  text-shadow: 1px 1px 1px transparent;
+}
+
+#auth0logo {
+  text-align: center;
+}
+
+#auth0logo img {
+  height: 25px;
+  margin: 30px auto;
+}
+
+.loginPanel {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  padding: 20px;
+}
 
 h1 {
   margin: 5px;
@@ -50,6 +109,27 @@ h1 {
   font-size: 4em;
   line-height: 1.5;
 }
+
+.logo {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.intro {
+	color: #a287e5;
+	text-align: center;
+}
+
+.intro h3 {
+  text-align: center;
+}
+
+
+.intro ul li {
+  list-style-type: disc;
+}
+
+
 .Posts {
   font-size: 3em;
 }
@@ -263,14 +343,25 @@ li.buttons {
 }
 
 .user-header {
-  width: 50%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  margin: 10px 0;
-  font-size: large;
+	width: 40%;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	margin: 15px;
+	font-size: large;
 }
 
+.user-header h4 {
+  margin: 0 10px;
+}
+
+.postMainContent {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+}
 
 
 @media screen and (width <= 1300px) {

@@ -3,13 +3,15 @@ import React, { useEffect, useState } from 'react';
 import { updateUserPicture, updateUserInfo, updateUserSchedule } from '../services/user_services';
 import { useUserInfo } from '../utils/userContext';
 import Schedule from './Schedule';
-
 import '../bio.css';
 import axios from "axios";
-import UserProfile from './UserProfile';
+import BackButton from './BackButton';
+import { useLocation } from 'react-router-dom';
 
-export const MyProfile = ({ user }) => {
-
+export const MyProfile = () => {
+    
+    const location = useLocation();
+    const { user } = location.state || {};
     const {userInfo, fetchData} = useUserInfo();
     // to see if the user is logged into account and has permission
     if (!user || !user.email) {
@@ -194,6 +196,7 @@ export const MyProfile = ({ user }) => {
     return (
         <>
             <div className='postContainer'>
+                <BackButton />
                 <div>
                     {profilePicture && (
                         <img id="preview" src={profilePicture} alt="Profile Preview" style={{ display: 'block' }} />

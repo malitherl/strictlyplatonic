@@ -1,12 +1,24 @@
 import { useState, useEffect } from "react"
-import userData from "../assets/data/users.json"
 import { retrieveUserList } from "../services/user_services";
+import BackButton from "./BackButton";
 
 const UserProfile = () => {
 
-
+  
   const [userList, setUserList] = useState([]);
-  //To do: make another custom hook to persist this data through the entire application and not just here. 
+  const [isLoading, setIsLoading] = useState(true);
+
+  
+  const UserProfileLoadingModal = () => {
+    return (
+        <div className='userCard'>
+            <div className='loader' style={{margin: "0 auto"}}>
+            </div>
+        </div>
+    )
+}
+
+
   useEffect(() => {
 
     const fetchUsers = async() => {
@@ -16,15 +28,17 @@ const UserProfile = () => {
     }
     try {
       fetchUsers();
-
     } catch (error) {
       console.log(error);
     }
 
-
   }, []);
 
-  console.log(userList);
+  useEffect(()=> {
+    if(userList.length > 0) {
+      setIsLoading(false);
+    }
+  }, [userList]);
 
   //This function maps the social media icons of the user to the appropriate icons
    const socialMediaIcons = (social, socialSitesObject) => {
@@ -42,7 +56,9 @@ const UserProfile = () => {
 
    return (
     <div>
-        {userList.length > 0 && (
+        <BackButton />
+        {isLoading ? <UserProfileLoadingModal/> : 
+        userList.length > 0 && (
             <div>
                 {userList.map((user) => (
                     <div key={user.posts} style={styles.userCard}>
@@ -63,8 +79,8 @@ const UserProfile = () => {
                                 {user.user_metadata.socials && Object.keys(user.user_metadata.socials[0]).map((social) => 
                                     socialMediaIcons(social, user.user_metadata.socials[0])
                                 )}
-                                <p><strong>Hobbies:</strong> {user.user_metadata.hobbies.join(', ')}</p>
-                                <p><strong>Friends:</strong> {user.user_metadata.friends ? "Yes" : "No"}</p>
+                                {user.user_metadata.hobbies && <p><strong>Hobbies:</strong> {user.user_metadata.hobbies.join(', ')}</p>}
+                                {user.user_metadata.hobbies && <p><strong>Friends:</strong> {user.user_metadata.friends ? "Yes" : "No"}</p>}
                                 
                                 <div>
                                     <hr />

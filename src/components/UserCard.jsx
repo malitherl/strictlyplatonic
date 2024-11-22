@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import LogoutButton from "./LogoutButton";
 import '../index.css';
 import { useUserInfo } from '../utils/userContext';
+import { Link } from 'react-router-dom';
     
 
 
-const UserCard = ({ handleClick, user }) => {
+const UserCard = ({ user }) => {
 
     
 
@@ -69,13 +70,15 @@ const UserCard = ({ handleClick, user }) => {
                 <h3>Inbox</h3>
             </div>
             <hr /> */}
-            <div onClick={() => {handleClick("myprofile")}} >
+            <div>
+            <Link to='/my_profile' state={{user: user}}> 
                 <h3>Edit Profile</h3>
+            </Link>
             </div>
             <hr />
-            <div onClick={() => {handleClick("userprofile")}}>
+            <Link to='/users' state={{user: user}}> 
                 <h3>Friends</h3>
-            </div>
+            </Link>
     
             <hr />
             <LogoutButton />

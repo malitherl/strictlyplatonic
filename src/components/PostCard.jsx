@@ -5,6 +5,7 @@ import { CommentForm } from './CommentForm';
 import { useUserInfo } from "../utils/userContext";
 import { updateUserFriends } from '../services/user_services';
 import '../index.css'
+import { text } from "@cloudinary/url-gen/qualifiers/source";
 
 
 
@@ -66,7 +67,7 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
     useEffect(() => {
       if(userInfo){
         setIsLoading(false);
-        if(userInfo[0]["user_metadata"].friends.includes(post.creator)) {
+        if(userInfo[0]["user_metadata"].friends && userInfo[0]["user_metadata"].friends.includes(post.creator)) {
           setIsFollowing(true);
         }
       }
@@ -95,6 +96,7 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
                   <a className='follow-button' onClick={toggleFollowModal}>Follow</a>
                 }
               </div>
+              <div className="postMainContent">
               <hr />
               <h2>{title}</h2>
               {image && <img src={image} alt="Post" style={styles.postImage} />}
@@ -150,6 +152,7 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
                 
                 
               </div>
+              </div>
             </div>
 
 
@@ -202,6 +205,7 @@ const styles = {
   reactionsContainer: {
     marginTop: '10px',
     fontSize: '16px',
+    textAlign: 'center'
   },
   reaction: {
     marginRight: '10px',

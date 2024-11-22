@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { Event } from "../services/event_services";
 import { EventCard } from "./EventCard";
+import { useLocation } from 'react-router-dom';
+import BackButton from "./BackButton";
 
 
-const Events = ({ user }) => {
+export const Events = () => {
+ const location = useLocation();
+ const { user } = location.state || {};
  const [events, setEvents] = useState([]);
  const [eventsIds, setEventIds] = useState([]);
  const [newEvent, setNewEvent] = useState({
@@ -145,9 +149,14 @@ const Events = ({ user }) => {
 
  return (
    <div>
-    
+     <hr />
      <div style={styles.eventsBox}>
        <h2>Events</h2>
+
+      <BackButton />
+
+
+
      </div>
 
 
