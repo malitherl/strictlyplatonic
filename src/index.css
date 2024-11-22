@@ -221,6 +221,43 @@ button:focus-visible {
   color: #747bff;
 }
 
+.userSnackContainer {
+  width: 30%;
+  height:fit-content;
+  position: fixed; 
+  top: 10%;
+  right: 36%; 
+  z-index: 1000;
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: block; 
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+#exit_button {
+  background-color: transparent;
+  height: 50px;
+  width: 50px;
+  padding: 5px;
+  color: #ccc;
+  border: none;
+  transform: none;
+  cursor: pointer;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+
+#exit_button:hover {
+  background-color: transparent;
+  
+}
+
+
+
 
 .userCard {
   margin: 0 1em 0 0 ;

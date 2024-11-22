@@ -37,6 +37,12 @@ export const Events = () => {
    fetchEvents();
  }, []);
 
+ useEffect(() => {
+  console.log("events changed");
+ }, [events])
+
+
+
 
  // Handle Sign Up for a specific event
  const handleSignUp = async (e) => {
@@ -44,6 +50,8 @@ export const Events = () => {
      * -How this works is: 
       - this function will take the event.id which is 'e' here in the parameters, and the participants array. 
       - this event id is unique to each event, so the user should only be signed up for this one event. 
+      - depending on whether the user is already signed up or not, the function will either add them to the participants array or drop them from the event. 
+      - this way, you cannot sign up for an event more than once. 
 
     **/ 
 
@@ -51,14 +59,25 @@ export const Events = () => {
       let updatedId = ""
       const updatedEvents = events.map((event, index) => {
 
-          if(eventsIds[index] === e) {
+          if(eventsIds[index] == e) {
 
             const participants = event?.participants || [];
 
             // Check if user_id is already in the participants list
             if (participants.includes(user.sub) || event.host_id == user.sub) {
-              //this is purely for an edge-case where the user attempts to sign up again for an event. 
-              return "User has already signed up for the event.";
+              //this will drop the user from the event 
+             
+              const updated_participants = participants.filter(p => p != user.sub);
+              console.log(updated_participants);
+              updatedEvent = {
+                ...event, // copy current event
+                time_created: Date.now(),
+                participants: updated_participants, 
+                signedUp: false,  // Marks this event as not signed up because the user is dropping out of the event
+              } 
+              updatedId = eventsIds[index];
+
+              return updatedEvent;
             } else {
 
               updatedEvent = {
@@ -244,48 +263,77 @@ export const Events = () => {
 
 
      {/* showing events */}
+     <div style={styles.eventsList}>
      {events.map((event, index) => (
         <EventCard key={eventsIds[index]} event={event} id= {eventsIds[index]} user={user} handleSignUp= {handleSignUp} handleEditEvent={handleEditEvent} handleDeleteEvent= {handleDeleteEvent}/>
      ))}  
-   </div>
- );
+    </div>
+  </div>
+  );
 };
 
 
 const styles = {
- userCard: {
-   border: '1px solid #ddd',
-   padding: '10px',
-   marginBottom: '20px',
-   borderRadius: '5px',
-   backgroundColor: '#f9f9f9',
-   background:'linear-gradient(21deg, #65558f, #a69ac7)',
-  
- },
- createEventBox: {
-   backgroundColor: 'white',
-   padding: '20px',
-   borderRadius: '8px',
-   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-   marginBottom: '30px',
-   maxWidth: '600px',
-   marginLeft: 'auto',
-   marginRight: 'auto',
-   background:'linear-gradient(21deg, #65558f, #a69ac7)',
-
-
- },
- eventsBox: {
-   background:'linear-gradient(21deg, #65558f, #a69ac7)',
-   padding: '20px',
-   borderRadius: '8px',
-   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-   marginBottom: '30px',
-   maxWidth: '600px',
-   marginLeft: 'auto',
-   marginRight: 'auto',
- },
-};
+  userCard: {
+    border: '1px solid #ddd',
+    padding: '10px',
+    marginBottom: '20px',
+    borderRadius: '5px',
+    backgroundColor: '#f9f9f9',
+    background:'linear-gradient(21deg, #65558f, #a69ac7)',
+ 
+ 
+  },
+  createEventBox: {
+    backgroundColor: 'white',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    marginBottom: '30px',
+    maxWidth: '600px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    background:'linear-gradient(21deg, #65558f, #a69ac7)',
+    textAlign: 'center', 
+ 
+ 
+  },
+  eventsBox: {
+    background:'linear-gradient(21deg, #65558f, #a69ac7)',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    marginBottom: '10px',
+    maxWidth: '600px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    textAlign: 'center', 
+  },
+  eventsTitle: {
+    fontSize: '2em',
+    marginBottom: '10px',
+    color: '#fff', 
+  },
+  goBackButton: {
+    display: 'inline-block',
+    marginTop: '10px',
+    padding: '10px 20px',
+    fontSize: '1.2em',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    borderRadius: '5px',
+    textDecoration: 'none',
+    textAlign: 'center',
+  },
+  eventsList: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: '50px',
+    marginTop:"20px" 
+  },
+  };
 
 
 export default Events;
