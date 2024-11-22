@@ -310,4 +310,37 @@ export const updateUserPicture = async (id, url) => {
       
       }
       
+     export const fetchDataById = async (id) => {
+        /** 
+         * This function takes the user's id and retrieves relevant information 
+         * about their profile through the GET user API endpoint. 
+         * 
+         */
+        
+      
+        try {
+          const token = await retrieveToken();
+       
+          let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: `https://${import.meta.env.VITE_AUTH_DOMAIN_ID}/api/v2/users/${id}`,
+            headers: { 
+              'Accept': 'application/json', 
+              'Authorization': "Bearer " + token["access_token"] 
+            }
+          };
+      
+       
+          const response = await axios.request(config)
+      
+          return response.data;
+          
+         } catch (error){
+            console.log(error);
+            return null;
+         }
+      } 
 
+
+     

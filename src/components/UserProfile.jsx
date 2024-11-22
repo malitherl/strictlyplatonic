@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { retrieveUserList } from "../services/user_services";
+import { useUserInfo } from "../utils/userContext";
 import BackButton from "./BackButton";
 
 const UserProfile = () => {
@@ -7,8 +8,10 @@ const UserProfile = () => {
   
   const [userList, setUserList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const { userInfo } = useUserInfo();
   
+  
+  console.log(userInfo);
   const UserProfileLoadingModal = () => {
     return (
         <div className='userCard'>
@@ -23,7 +26,12 @@ const UserProfile = () => {
 
     const fetchUsers = async() => {
       const u = await retrieveUserList();
-      setUserList(u);
+      if(userInfo[0].user_metadata.friends) {
+        const friends = userInfo[0].user_metadata.friends;
+        const friends_list = u.filter(fetched_user => friends.includes(fetched_user.user_id));
+        setUserList(friends_list);
+      }
+        
       return u;
     }
     try {
@@ -61,7 +69,7 @@ const UserProfile = () => {
         userList.length > 0 && (
             <div>
                 {userList.map((user) => (
-                    <div key={user.posts} style={styles.userCard}>
+                    <div key={user.sub} style={styles.userCard}>
                         <img  
                             src={user.user_metadata ? user.user_metadata.picture : user.picture} 
                             alt={`${user.username}'s profile`} 
@@ -124,7 +132,9 @@ const styles = {
       padding: '10px',
       marginBottom: '20px',
       borderRadius: '5px',
-      backgroundColor: '#f9f9f9'
+      backgroundColor: '#f9f9f9',
+      textAlign: 'center'
+      
     },
     profilePicture: {
       width: '80px',

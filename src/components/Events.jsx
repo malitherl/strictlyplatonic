@@ -37,6 +37,12 @@ export const Events = () => {
    fetchEvents();
  }, []);
 
+ useEffect(() => {
+  console.log("events changed");
+ }, [events])
+
+
+
 
  // Handle Sign Up for a specific event
  const handleSignUp = async (e) => {
@@ -44,6 +50,8 @@ export const Events = () => {
      * -How this works is: 
       - this function will take the event.id which is 'e' here in the parameters, and the participants array. 
       - this event id is unique to each event, so the user should only be signed up for this one event. 
+      - depending on whether the user is already signed up or not, the function will either add them to the participants array or drop them from the event. 
+      - this way, you cannot sign up for an event more than once. 
 
     **/ 
 
@@ -51,14 +59,25 @@ export const Events = () => {
       let updatedId = ""
       const updatedEvents = events.map((event, index) => {
 
-          if(eventsIds[index] === e) {
+          if(eventsIds[index] == e) {
 
             const participants = event?.participants || [];
 
             // Check if user_id is already in the participants list
             if (participants.includes(user.sub) || event.host_id == user.sub) {
-              //this is purely for an edge-case where the user attempts to sign up again for an event. 
-              return "User has already signed up for the event.";
+              //this will drop the user from the event 
+             
+              const updated_participants = participants.filter(p => p != user.sub);
+              console.log(updated_participants);
+              updatedEvent = {
+                ...event, // copy current event
+                time_created: Date.now(),
+                participants: updated_participants, 
+                signedUp: false,  // Marks this event as not signed up because the user is dropping out of the event
+              } 
+              updatedId = eventsIds[index];
+
+              return updatedEvent;
             } else {
 
               updatedEvent = {

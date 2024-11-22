@@ -35,9 +35,7 @@ export const CommentForm = ({ user, postId, handleCommentSubmit }) => {
   
     return (
       <form onSubmit={onCommentSubmit} style={styles.form}>
-        {/** Removing this div because we can use the logged in user's name here instead */}
         <p>Commenting as <strong>{user.name}</strong></p>
-        
         
         <textarea
           placeholder="add your comment here..."
@@ -46,18 +44,6 @@ export const CommentForm = ({ user, postId, handleCommentSubmit }) => {
           required
           style={styles.textarea}
         />
-  
-        {/* upload input for image */}
-        <div style={styles.imageUploadContainer}>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            style={styles.fileInput}
-          />
-          {/*  preview of image */}
-          {image && <img src={URL.createObjectURL(image)} alt="Preview" style={styles.imagePreview} />}
-        </div>
   
         <button type="submit" style={styles.button}>Submit</button>
       </form>

@@ -66,10 +66,6 @@ const UserCard = ({ user }) => {
             <img src={profilePicture} alt={user.name} />
             <h2>{name}</h2>
             <p>@{nickname}</p>
-            {/* <div onClick={() => {handleClick("inbox")}} >
-                <h3>Inbox</h3>
-            </div>
-            <hr /> */}
             <div>
             <Link to='/my_profile' state={{user: user}}> 
                 <h3>Edit Profile</h3>

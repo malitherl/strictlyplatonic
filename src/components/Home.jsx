@@ -1,7 +1,7 @@
 
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState } from "react";
-import { useNavigate, redirect, Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { Posts } from "./Posts"
 import  Events  from './Events'
 import  UserCard  from "./UserCard";

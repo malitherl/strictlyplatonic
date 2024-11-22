@@ -36,7 +36,8 @@ const toggleDeletion = (e) => {
            </div> : 
           event.signedUp ? 
             <div>
-              <p>Yay! You are signed up for this event!</p> <button></button>
+              <p>Yay! You are signed up for this event!</p> 
+              <button onClick={() => handleSignUp(id, event.participants)}>Cancel</button>
             </div> : 
             <button onClick={() => handleSignUp(id, event.participants)}>Sign Up</button> }
           

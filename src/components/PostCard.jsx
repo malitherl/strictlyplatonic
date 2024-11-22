@@ -5,7 +5,7 @@ import { CommentForm } from './CommentForm';
 import { useUserInfo } from "../utils/userContext";
 import { updateUserFriends } from '../services/user_services';
 import '../index.css'
-import { text } from "@cloudinary/url-gen/qualifiers/source";
+import { UserSnack } from "./UserSnack";
 
 
 
@@ -18,6 +18,7 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
     const [toggleEdit, setToggleEdit] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [showSnack, setShowSnack] = useState(false);
     const {userInfo, fetchData} = useUserInfo();
 
     const PostCardLoadingModal = () => {
@@ -61,6 +62,12 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
       removePost(id);
     }
 
+    const toggleUserSnack = () => {
+      let e = !showSnack; 
+      setShowSnack(e);
+    }
+
+
     // list of emojis feel free to change it up or add 
     const emojiList = ["👍", "❤️", "😂", "😊"];
 
@@ -86,10 +93,13 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
 
           <div key={id} className="postContainer" style={styles.postContainer}>
               <div className="user-header">
-                {post.creator_pic && (
-                  <img className="profile-preview" src={post.creator_pic} alt={post.creator_pic} />
-                )}
-                <h4>{post.user_name}</h4>
+                <div onClick={toggleUserSnack}>
+                  {post.creator_pic && (
+                    <img className="profile-preview" src={post.creator_pic} alt={post.creator_pic} />
+                  )}
+                  <h4>{post.user_name}</h4>
+                </div>
+                {showSnack && <UserSnack userId= {post.creator} toggleUserSnack= {toggleUserSnack}/>}
                 {isFollowing ? 
                   <a className='follow-button' onClick={toggleFollowModal}>Unfollow</a>
                   : 
