@@ -19,35 +19,27 @@ With StrictlyPlatonic, you can:
 
 ## Built with: 
 - [React](https://react.dev/) -> used its JavaScript library to build user interfaces and to create a dynamic and responsive frontend experience.
-- [Firebase Firestore](https://firebase.google.com/docs/firestore) –> A flexible, scalable database for storing and syncing data across clients in real-time, used for managing groups, events, and more. 
-- Okta –> A secure identity management service for user authentication and access control. Okta handles the sign-ups, logins, and session management for users.
+- [Vite](https://vite.dev/guide/) -> Our build tool that not only bundled our JavaScript code, but it also handles the server-side rendering. 
+- [Firebase Firestore](https://firebase.google.com/docs/firestore) –> Firebase SDK allowed us to use JavaScript to access API endpoints. Firestore was our NoSQL document-based database service which stores our application's posts and events. 
+- [Auth0 by Okta](https://auth0.com/) –> Handles our authentication and access control. Okta handles the sign-ups, logins, and session management for users. Furthermore, Auth0 handles our user management endpoints, allowing us to store some user information. 
+- [Cloudinary](https://cloudinary.com/) -> An image and video API platform that allows for app image hosting services.
+- [React Router v.6](https://reactrouter.com/) -> Our routing library which handles navigation and some user management.
+
 
 # Get Started
+
+1. After cloning the repository, please use to acquire the needed dependencies: 
 ```
-npm install
+npm install 
 ```
+2. To run the application itself, please use: 
 ```
 npm run dev
 ```
-when done:
+The application will be hosted on localhost:5173 and a relevant link will be provided within the terminal. 
+
+When done:
 ```
 ctrl + c
 ```
 
-
-
-
-
-
-
-
-
-
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
