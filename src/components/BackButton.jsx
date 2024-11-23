@@ -6,7 +6,7 @@ const BackButton = () => {
   const navigate = useNavigate();
 
   const goBack = () => {
-    navigate(-1); // Navigate back one page
+    navigate(-1); 
   };
 
   return (

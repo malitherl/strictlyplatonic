@@ -9,7 +9,7 @@ export const PostForm = ({user, postsData, createPost}) => {
     const [newPostImage, setNewPostImage] = useState('');
     const [imagePreview, setImagePreview] = useState('');
     const [imageUrl, setImageUrl] = useState("");
-    const { userPicture } = useUserInfo(); 
+    const { userInfo } = useUserInfo(); 
 
 
 
@@ -49,8 +49,8 @@ export const PostForm = ({user, postsData, createPost}) => {
           title: newPostTitle,
           desc: newPostDesc,
           creator: user.sub,
-          creator_pic: userPicture, 
-          user_name: user.name,
+          creator_pic: userInfo[0].user_metadata ? userInfo[0].user_metadata.picture : user.picture, 
+          user_name: userInfo[0].name ? userInfo[0].name : user.name,
           date: new Date().toLocaleString(), //this is for display purposes 
           time: Date.now(), //this is different from the 'date' field because this determines the exact moment the post was made. 
           image: imageUrl ? imageUrl : '',
@@ -59,10 +59,6 @@ export const PostForm = ({user, postsData, createPost}) => {
           reactions: {},
         };
        
-        //setPosts([...posts, newPost]);
-    
-        //const updatedPosts = [...posts, newPost];
-        //localStorage.setItem('posts', JSON.stringify(updatedPosts)); // save to local storage
     
         // reset form
         setNewPostTitle('');

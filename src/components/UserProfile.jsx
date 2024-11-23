@@ -2,13 +2,13 @@ import { useState, useEffect } from "react"
 import { retrieveUserList } from "../services/user_services";
 import { useUserInfo } from "../utils/userContext";
 import BackButton from "./BackButton";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const UserProfile = () => {
 
   
-  const [userList, setUserList] = useState([]);
+  const [userList, setUserList] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { userInfo } = useUserInfo();
   const {isAuthenticated} = useAuth0();
@@ -16,7 +16,7 @@ const UserProfile = () => {
   console.log(userInfo);
   const UserProfileLoadingModal = () => {
     return (
-        <div className='userCard'>
+        <div>
             <div className='loader' style={{margin: "0 auto"}}>
             </div>
         </div>
@@ -28,10 +28,21 @@ const UserProfile = () => {
 
     const fetchUsers = async() => {
       const u = await retrieveUserList();
-      if(userInfo[0].user_metadata.friends) {
+      if(userInfo[0].user_metadata && userInfo[0].user_metadata.friends) {
         const friends = userInfo[0].user_metadata.friends;
-        const friends_list = u.filter(fetched_user => friends.includes(fetched_user.user_id));
-        setUserList(friends_list);
+        if(friends.length > 0) {
+          const friends_list = u.filter(fetched_user => friends.includes(fetched_user.user_id));
+          setUserList(friends_list);
+          
+          setIsLoading(false);
+        } else {
+          setUserList([]);
+          setIsLoading(false);
+        }
+        
+      } else {
+        setUserList([]);
+        setIsLoading(false);
       }
         
       return u;
@@ -44,11 +55,7 @@ const UserProfile = () => {
 
   }, []);
 
-  useEffect(()=> {
-    if(userList.length > 0) {
-      setIsLoading(false);
-    }
-  }, [userList]);
+  
 
   //This function maps the social media icons of the user to the appropriate icons
    const socialMediaIcons = (social, socialSitesObject) => {
@@ -68,10 +75,11 @@ const UserProfile = () => {
     <>
     {isAuthenticated ?
 
-            <div>
+            <div style={{backgroundColor: "#f9f9f9", padding: "5px"}}>
+
             <BackButton />
             {isLoading ? <UserProfileLoadingModal/> : 
-            userList.length > 0 && (
+             userList.length > 0 ? 
                 <div>
                     {userList.map((user) => (
                         <div key={user.sub} style={styles.userCard}>
@@ -123,7 +131,16 @@ const UserProfile = () => {
                     ))}
                     <hr />
                 </div>
-            )}
+                : 
+                <div className="userCard" style={{margin: "0"}} >
+
+                  <p>When you follow people on the Home page, they will show up here :-)</p>
+                  
+
+                </div>
+
+
+            }
             </div>
     :
     <Navigate to="/" replace={true}/>   

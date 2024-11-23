@@ -32,22 +32,32 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
 
 
 
-    const toggleFollowModal = ()=> {
+    const toggleFollowModal = async ()=> {
       if(isFollowing) {
         console.log('Unfollowing user');
         setIsFollowing(false);
         const update_friends = userInfo[0]["user_metadata"]["friends"].filter(u => u !== follow);
         console.log(update_friends);
-        updateUserFriends(user.sub, update_friends);
-        fetchData();
+        const u = await updateUserFriends(user.sub, update_friends);
+        const f = await fetchData();
         
       } else {
         setIsFollowing(true);
-        const friends = userInfo[0]["user_metadata"]["friends"];
-        const new_friends = [...friends, follow];
-        updateUserFriends(user.sub, new_friends);
-        fetchData();
-        console.log(userInfo);
+
+        if(userInfo[0]["user_metadata"]["friends"]) {
+          const friends = userInfo[0]["user_metadata"]["friends"];
+          const new_friends = [...friends, follow]; 
+          const u = await updateUserFriends(user.sub, new_friends);
+          const f = await fetchData();
+          console.log(userInfo);
+        } else {
+          //if the user is new and does not have friends yet, this is how they add their very first friend. 
+          const u = await updateUserFriends(user.sub, [follow]);
+          const f = await fetchData();
+          console.log(userInfo);
+        }
+
+        
         
       }
       
@@ -74,7 +84,7 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
     useEffect(() => {
       if(userInfo){
         setIsLoading(false);
-        if(userInfo[0]["user_metadata"].friends && userInfo[0]["user_metadata"].friends.includes(post.creator)) {
+        if(userInfo[0]["user_metadata"] && userInfo[0]["user_metadata"].friends && userInfo[0]["user_metadata"].friends.includes(post.creator)) {
           setIsFollowing(true);
         }
       }

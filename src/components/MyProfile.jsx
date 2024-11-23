@@ -19,18 +19,15 @@ export const MyProfile = () => {
     return <Navigate to='/' replace={true} />
    }
 
-
-
    const {userInfo, fetchData} = useUserInfo();
 
-  
 
    // Changing this so that if the user logs in and they have a profile picture already
    // then this picture will be the default state.
    const [profilePicture, setProfilePicture] = useState('');
-   const [name, setName] = useState('type your name here...');
-   const [bio, setBio] = useState('type your bio here...');
-   const [hobbies, setHobbies] = useState('enter your hobbies here....');
+   const [name, setName] = useState('');
+   const [bio, setBio] = useState('');
+   const [hobbies, setHobbies] = useState([]);
    const [image, setImage] = useState(''); // for the user profile picture-- different from photos!!
    const [imageUrl, setImageUrl] = useState("");
    const [errors, setErrors] = useState({});
@@ -43,51 +40,29 @@ export const MyProfile = () => {
    useEffect(() => {
   
        try {
-           const user_pfp = userInfo[0].user_metadata.picture;
+           
            const user_name = userInfo[0].name;
           
            if(userInfo[0].user_metadata) {
-               const user_bio = userInfo[0].user_metadata.bio;
-               const user_hobbies = userInfo[0].user_metadata.hobbies;
-               const user_schedule = userInfo[0].user_metadata.schedule;
-              
+               const user_pfp = userInfo[0].user_metadata.picture;
+               const user_bio = userInfo[0].user_metadata.bio || ''
+               const user_hobbies = userInfo[0].user_metadata.hobbies || [];
+               const user_schedule = userInfo[0].user_metadata.schedule || [];
+               setProfilePicture(user_pfp);
                setBio(user_bio);
                setHobbies(user_hobbies.join(", "));
                setSchedule(user_schedule);
+           } else {
+             setProfilePicture(userInfo[0].picture);
            }
           
           
-           setProfilePicture(user_pfp);
+           
            setName(user_name);
           
 
        } catch (error) {
-           //If the worst happens, then the localStorage will take what is in memory and render it
-           // const savedPicture = localStorage.getItem('profilePicture');
-           // const savedName = localStorage.getItem('name');
-           // const savedBio = localStorage.getItem('bio');
-           // const savedHobbies = localStorage.getItem('hobbies');
-           // const savedPhotos = JSON.parse(localStorage.getItem('photos') || '[]');
-           // const savedThreads = JSON.parse(localStorage.getItem('discussionThreads') || '[]');
-           //TODO: refactor this
-           // if (savedPicture) {
-           //     setProfilePicture(savedPicture);
-           // }
-           // if (savedName) {
-           //     setName(savedName);
-           // }
-           // if (savedBio) {
-           //     setBio(savedBio);
-           // }
-           // if (savedHobbies) {
-           //     setHobbies(savedHobbies);
-           // }
-           // if(savedPhotos){
-           //     setPhotos(savedPhotos);
-           // }
-           // if(savedThreads){
-           //     setPhotos(savedThreads);
-           // }
+          
            console.log(error);
        }
      
@@ -109,22 +84,19 @@ export const MyProfile = () => {
    };
 
    const editSchedule = async (s) => {
-       console.log(schedule)
         if(user.sub) {
             try {
-               console.log(user.sub)
+               console.log(s);
                const user_schedule = await updateUserSchedule(user.sub, s);
+               const f = fetchData();
                setSchedule(s);
                console.log("Schedule successfully updated.");
-               console.log(schedule);
+               
             } catch (error) {
                console.log(error)
             }
         }
    }
-
-
-
 
    // Vaildation for name, bios, and hobbies and certain requirments must be met.
    const validateForm = () => {
@@ -142,7 +114,7 @@ export const MyProfile = () => {
        return Object.keys(newErrors).length === 0;
    };
 
-   const handleEditSubmit = (event) => {
+   const handleEditSubmit = async (event) => {
        event.preventDefault();
        if (validateForm()) { // validating form . If it fails, storing should be stopped and prevent unwanted data
       
@@ -151,8 +123,8 @@ export const MyProfile = () => {
                'bio': bio,
                'hobbies': hobbies == 'enter your hobbies here as comma separated values :-)' ? [] : hobbies.trim().split(', ')
            }
-           updateUserInfo(user.sub, data);
-          
+           const u = await updateUserInfo(user.sub, data);
+           const f = await fetchData();
            alert('Your profile has been updated successfully!');
        }
    };
@@ -196,7 +168,8 @@ export const MyProfile = () => {
            setProfilePicture(imageUrl);
        }
      }, [imageUrl]);
-  
+     
+
     
 
      return (

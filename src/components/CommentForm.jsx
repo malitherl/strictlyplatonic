@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useUserInfo } from "../utils/userContext";
 
 export const CommentForm = ({ user, postId, handleCommentSubmit }) => {
 
     const [comment, setComment] = useState('');
     const [image, setImage] = useState('');
+    const { userInfo } = useUserInfo(); 
 
     const onCommentSubmit = (e) => {
       e.preventDefault();
       if (user.name && comment) {
-        let username = user.name
+        let username = userInfo[0].name ? userInfo[0].name : user.name
         const newComment = {
           user_id: user.sub,
           username,
@@ -17,25 +19,16 @@ export const CommentForm = ({ user, postId, handleCommentSubmit }) => {
           time: new Date().toLocaleString(), 
         };
         
-        console.log(user.name);
-        console.log(postId);
-        console.log(newComment);
         handleCommentSubmit(postId, newComment);
         setComment('');
         setImage(null); 
       }
     };
   
-    const handleImageChange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        setImage(file); 
-      }
-    };
   
     return (
       <form onSubmit={onCommentSubmit} style={styles.form}>
-        <p>Commenting as <strong>{user.name}</strong></p>
+        <p>Commenting as <strong>{userInfo[0].name ? userInfo[0].name : user.name}</strong></p>
         
         <textarea
           placeholder="add your comment here..."

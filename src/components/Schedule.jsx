@@ -51,9 +51,8 @@ export const Schedule = ({editSchedule, userSchedule}) => {
   };
 
   const handleDelete = (eventToDelete) => {
-
     setSchedule(schedule.filter(event => event != eventToDelete));
-    editSchedule(schedule);
+    editSchedule(schedule.filter(event => event != eventToDelete));
   };
 
   const handleEdit = (eventToEdit) => {

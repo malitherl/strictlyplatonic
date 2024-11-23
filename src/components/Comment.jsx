@@ -3,10 +3,10 @@ import { CommentEditForm } from './CommentEditForm';
 
 export const Comment = ({user, id, comment, handleCommentEdit, handleCommentDelete}) => {
 
-    console.log(comment)
+
 
     const [toggleEdit, setToggleEdit] = useState(false);
-
+    
     const handleEditToggle = () => {
         setToggleEdit(!toggleEdit);
     }

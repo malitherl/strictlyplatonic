@@ -23,7 +23,7 @@ const UserCard = ({ user }) => {
         console.log("user information updated")
         if(userInfo && Object.values(userInfo).length > 0){
 
-            if(userInfo[0]["user_metadata"]["picture"]){
+            if(userInfo[0]["user_metadata"] &&  userInfo[0]["user_metadata"]["picture"]){
                 setProfilePicture(userInfo[0]["user_metadata"]["picture"])
             } else {
                 setProfilePicture(user.picture)

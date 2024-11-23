@@ -3,21 +3,19 @@ import { Event } from "../services/event_services";
 import { EventCard } from "./EventCard";
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
-
+import { useUserInfo } from "../utils/userContext";
 import BackButton from "./BackButton";
 
 
 export const Events = () => {
  const location = useLocation();
  const { user } = location.state || {};
+ const { userInfo } = useUserInfo(); 
  const { isAuthenticated} = useAuth0();
 
  if(isAuthenticated == false) {
   return <Navigate to='/' replace={true} />
  }
- if (!user || !user.email) {
-  return
-}
 
  const [events, setEvents] = useState([]);
  const [eventsIds, setEventIds] = useState([]);
@@ -28,14 +26,15 @@ export const Events = () => {
    time: '',
    time_created: '', //this is different from the time field because this ensures events are shown in chronological order. 
    participants: [],
-   host: user.name,
+   host: userInfo[0].name ? userInfo[0].name : user.name,
    hostId: user.sub,
    isRecurring: false,
    recurrenceInterval: 'weekly',
    signedUp: false,
  });
 
- 
+ console.log(userInfo[0].name)
+
  const eventsData = new Event();
 
 
@@ -119,7 +118,7 @@ export const Events = () => {
    e.preventDefault();
    const eventData = {
      ...newEvent,
-     host: user.name,
+     host: userInfo[0].name ? userInfo[0].name : user.name,
      hostId: user.sub
     //Removed the id field here because firebase generates one upon document creation
    };
@@ -134,6 +133,7 @@ export const Events = () => {
    setEventIds((prevIds) => [newEventData, ...prevIds]);
    setEvents((prevEvents) => [eventData, ...prevEvents]);
   
+   //this resets the event creation form
    setNewEvent({
     title: '',
     description: '',
@@ -141,7 +141,7 @@ export const Events = () => {
     time: '',
     time_created: 0, 
     participants: [],
-    host: user.name,
+    host: userInfo[0].name ? userInfo[0].name : user.name,
     hostId: user.sub,
     isRecurring: false,
     recurrenceInterval: 'weekly',
