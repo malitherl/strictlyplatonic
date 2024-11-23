@@ -43,20 +43,20 @@ When done:
 ctrl + c
 ```
 
-#Sign up
+# Sign up
 To get started using StrictlyPlatonic:
 - Click login
 - Click Sign up if you have never created an account
 - Enter in your email address and create a password
 - If you are creating an account, you will get an email to verify your account
 - After you are verified, login!
-#Profile
+# Profile
 - Click edit profile to the left hand side on the home page
 - Here, you can change your profile picture
 - Select your file for your image, and click upload
 - You can also update your name, bio, and hobbies. After this, you will notice your profile is updated3
 - There is also a weekly schedule you can edit at the bottom of the page
-#Posts
+# Posts
 - On the home page, there is a section of posts and a create a post feature
 - To create a post, fill in the blanks and you can even upload a photo with your post if you want to
 - Then click post
@@ -64,7 +64,7 @@ To get started using StrictlyPlatonic:
 - You can also click the emojis to react to other posts!
 - If you do not want your post there anymore, there is a delete option
 - If need to edit your post, there is an edit option as well 
-#Events
+# Events
 - To get to events, click the events icon in the top left section of the page
 - To create an event, fill in all the blanks and click create event
 - Scroll down and you will see all the events, and you can even sign up for certain events that are posted
