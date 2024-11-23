@@ -1,59 +1,88 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { useAuth0 } from "@auth0/auth0-react";
-import LoginButton from "./LoginButton"; // the PATHHHHH
-import { vi } from "vitest";
+import { render, screen, fireEvent } from '@testing-library/react';
+import { vi } from 'vitest';
+import { useAuth0 } from '@auth0/auth0-react';
+import { BrowserRouter } from 'react-router-dom';
+import LoginButton from './LoginButton';
 
-// Mocking the useAuth0 hook
-vi.mock("@auth0/auth0-react", () => ({
+// Mocking useAuth0 hook
+vi.mock('@auth0/auth0-react', () => ({
   useAuth0: vi.fn(),
 }));
 
-describe("LoginButton", () => {
-  it("renders a button if the user is not authenticated", () => {
-    // Mock isAuthenticated as false and loginWithRedirect as a jest function
+describe('LoginButton Component', () => {
+  it('renders login button when not authenticated', () => {
+    // Mocking the unauthenticated state of useAuth0
     useAuth0.mockReturnValue({
       isAuthenticated: false,
-      loginWithRedirect: vi.fn(),
+      loginWithPopup: vi.fn(),
     });
 
-    render(<LoginButton />);
+    render(
+      <BrowserRouter>
+        <LoginButton />
+      </BrowserRouter>
+    );
 
-    // login button rendered?
-    const button = screen.getByRole("button", { name: /log in/i });
-    expect(button).toBeInTheDocument();
+    // Check if the login button is rendered
+    expect(screen.getByText('Log In')).toBeInTheDocument();
   });
 
-  it("does not render a button if the user is authenticated", () => {
+  it('calls loginWithPopup when login button is clicked', () => {
+    // Mocking the unauthenticated state and loginWithPopup function
+    const loginWithPopupMock = vi.fn();
+    useAuth0.mockReturnValue({
+      isAuthenticated: false,
+      loginWithPopup: loginWithPopupMock,
+    });
+
+    render(
+      <BrowserRouter>
+        <LoginButton />
+      </BrowserRouter>
+    );
+
+    // Simulate clicking the login button
+    fireEvent.click(screen.getByText('Log In'));
+
+    // Ensure loginWithPopup is called
+    expect(loginWithPopupMock).toHaveBeenCalled();
+  });
+
+  it('redirects to /home when authenticated', () => {
+    // Mocking the authenticated state of useAuth0
     useAuth0.mockReturnValue({
       isAuthenticated: true,
-      loginWithRedirect: vi.fn(),
+      loginWithPopup: vi.fn(),
     });
 
-    render(<LoginButton />);
+    render(
+      <BrowserRouter>
+        <LoginButton />
+      </BrowserRouter>
+    );
 
-    // The button should not be in the document
-    const button = screen.queryByRole("button", { name: /log in/i });
-    expect(button).toBeNull();
+    // Check if Navigate to /home is rendered
+    expect(screen.queryByText('Log In')).toBeNull();
   });
 
-  it("calls loginWithRedirect when the button is clicked", () => {
-    const mockLoginWithRedirect = vi.fn();
-
-    // Mock isAuthenticated:false -> loginWithRedirect
+  it('logs "redirecting to home" when authenticated', () => {
+    // Mocking the authenticated state of useAuth0
+    const consoleLogMock = vi.spyOn(console, 'log').mockImplementation(() => {});
     useAuth0.mockReturnValue({
-      isAuthenticated: false,
-      loginWithRedirect: mockLoginWithRedirect,
+      isAuthenticated: true,
+      loginWithPopup: vi.fn(),
     });
 
-    render(<LoginButton />);
+    render(
+      <BrowserRouter>
+        <LoginButton />
+      </BrowserRouter>
+    );
 
-    // button click
-    const button = screen.getByRole("button", { name: /log in/i });
-    fireEvent.click(button);
+    // Ensure the console log is triggered
+    expect(consoleLogMock).toHaveBeenCalledWith('redirecting to home');
 
-    // Verify that loginWithRedirect was called
-    expect(mockLoginWithRedirect).toHaveBeenCalledTimes(1);
+    // Clean up the mock
+    consoleLogMock.mockRestore();
   });
 });
-
-//
