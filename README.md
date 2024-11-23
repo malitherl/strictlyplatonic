@@ -29,6 +29,10 @@ npm install
 ```
 npm run dev
 ```
+```
+o
+```
+after 'o', enter
 when done:
 ```
 ctrl + c
