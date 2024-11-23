@@ -1,88 +1,48 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import UserCard from './UserCard';
-import { UserProvider, useUserInfo } from '../utils/userContext';
-import { useAuth0 } from '@auth0/auth0-react';
 
-// Mocking useAuth0 to simulate authenticated user
-vi.mock('@auth0/auth0-react', () => ({
-  useAuth0: vi.fn(),
-}));
-
-// Mocking useUserInfo context hook
+// Mocking the `useUserInfo` hook
 vi.mock('../utils/userContext', () => ({
-  useUserInfo: vi.fn(),
-  UserProvider: ({ children }) => <div>{children}</div>
+  useUserInfo: vi.fn(() => ({
+    userInfo: [
+      {
+        user_metadata: {
+          picture: 'https://example.com/image.jpg',
+        },
+        name: 'Mock User',
+        nickname: 'mockuser',
+      },
+    ],
+  })),
 }));
-
-// Test data
-const mockUser = {
-    name: 'Test User',
-    nickname: 'testuser123',
-    picture: 'https://example.com/profile.jpg',
-  };
-  
-
-const mockUserInfo = [
-  {
-    name: 'Updated Name',
-    nickname: 'updatedNickname',
-    user_metadata: {
-      picture: 'https://example.com/updated-profile.jpg',
-    },
-  },
-];
 
 describe('UserCard Component', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+  it('renders user data correctly', async () => {
+    // Mock user prop
+    const mockUser = {
+      name: 'Test User',
+      nickname: 'testuser',
+      picture: 'https://example.com/default.jpg',
+    };
 
-    useUserInfo.mockReturnValue({
-  userPicture: 'https://example.com/profile.jpg', // Ensure this matches
-  setUserPicture: vi.fn(),
-});
-
-useAuth0.mockReturnValue({
-  user: {
-    name: 'Test User',
-    nickname: 'testuser123',
-    picture: 'https://example.com/profile.jpg',
-  },
-  isAuthenticated: true,
-});
-
-  });
-
-test('renders user details correctly', () => {
+    // Render the component within a MemoryRouter to provide routing context
     render(
-      <UserProvider>
-        <UserCard handleClick={vi.fn()} user={mockUser} userInfo={mockUserInfo} />
-      </UserProvider>
+      <MemoryRouter>
+        <UserCard user={mockUser} />
+      </MemoryRouter>
     );
 
-    // Check if the profile picture, name, and nickname are rendered
-    expect(screen.getByAltText('Test User')).toHaveAttribute('src', mockUser.picture);
-  
-// Match the correct name and nickname
-  expect(screen.getByText('Updated Name')).toBeInTheDocument();
-  expect(screen.getByText('@updatedNickname')).toBeInTheDocument();
-});
- 
+    await waitFor(() => screen.getByText(/Mock User/i)); // Wait for mock user data to be rendered
 
-test('updates profile details when userInfo changes', () => {
-    // Render the UserCard with the required props
-    render(
-      <UserCard
-        user={mockUser}
-        handleClick={vi.fn()}
-        userInfo={{}}
-      />
-    );
-  
-    // Assertions for initial render
-    expect(screen.getByAltText('Test User')).toHaveAttribute('src', mockUser.picture);
-    expect(screen.getByText('Test User')).toBeInTheDocument();
-    expect(screen.getByText('@testuser123')).toBeInTheDocument();
+    // Check if the user's name, nickname, and profile picture are rendered
+    expect(screen.getByText(/Mock User/i)).toBeInTheDocument();
+    expect(screen.getByText(/@mockuser/i)).toBeInTheDocument();
+    expect(screen.getByAltText('Test User')).toHaveAttribute('src', 'https://example.com/image.jpg');
+
+    // Verify the presence of routing elements
+    expect(screen.getByText(/Edit Profile/i)).toBeInTheDocument();
+    expect(screen.getByText(/Friends/i)).toBeInTheDocument();
   });
-  
 });

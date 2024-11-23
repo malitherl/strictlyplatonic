@@ -42,14 +42,31 @@ describe('MyProfile Component', () => {
     expect(screen.getByText('You are not authorized to view this page.')).toBeInTheDocument();
   });
 
-  it('should render profile information when user is logged in', () => {
-    render(<MyProfile user={mockUser} userInfo={mockUserInfo} />);
-    expect(screen.getByText('Profile Information')).toBeInTheDocument();
-    expect(screen.getByText('Test User')).toBeInTheDocument();
-    expect(screen.getByText('testuser@example.com')).toBeInTheDocument();
-    expect(screen.getByText('This is a test bio.')).toBeInTheDocument();
-    expect(screen.getByText('reading, coding')).toBeInTheDocument();
+  it('should render profile information when user is logged in', async () => {
+    // Mock the return value of useUserInfo to simulate logged-in user
+    useUserInfo.mockReturnValue({
+      userInfo: [{
+        user_metadata: {
+          picture: 'test-image-url',
+          bio: 'This is a test bio',
+          hobbies: ['reading', 'coding'],
+        },
+        name: 'Test User',
+      }],
+      fetchData: vi.fn(),
+    });
+  
+    // Render the component with the mocked user data
+    render(<MyProfile user={{ email: 'testuser@example.com' }} />);
+  
+    // Use findByText to wait for the elements to appear asynchronously
+    expect(await screen.findByText(/Test User/i)).toBeInTheDocument();  // Name
+    expect(await screen.findByText(/testuser@example.com/i)).toBeInTheDocument();  // Email
+    expect(await screen.findByText(/This is a test bio/i)).toBeInTheDocument();  // Bio
+    expect(await screen.findByText(/reading, coding/i)).toBeInTheDocument();  // Hobbies
   });
+  
+  
 
   it('should validate form inputs correctly', () => {
     render(<MyProfile user={mockUser} userInfo={mockUserInfo} />);
@@ -66,16 +83,22 @@ describe('MyProfile Component', () => {
 
   it('should handle profile picture upload', async () => {
     render(<MyProfile user={mockUser} userInfo={mockUserInfo} />);
+    
+    // Create a dummy image file
     const file = new File(['dummy content'], 'profile.jpg', { type: 'image/jpeg' });
-
+  
+    // Find the file input and simulate a file selection
     const fileInput = screen.getByLabelText('Change profile picture:');
     fireEvent.change(fileInput, { target: { files: [file] } });
-
+  
+    // Wait for the image preview to be rendered
     const previewImage = await screen.findByAltText('Profile Preview');
     expect(previewImage).toBeInTheDocument();
-    expect(previewImage.src).toContain('blob:');
+  
+    // Expect the image src to contain the base64 data
+    expect(previewImage.src).toContain('data:image/jpeg;base64,');
   });
-
+  
   it('should call editSchedule when Schedule is updated', () => {
     const mockEditSchedule = vi.fn();
     render(<MyProfile user={mockUser} userInfo={mockUserInfo} />);

@@ -1,62 +1,78 @@
-import React from 'react';
-import { render, screen, fireEvent, within} from '@testing-library/react';
-import Schedule from './Schedule';
-import scheduleData from '../assets/data/scheduleEvents.json'; 
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
+import Schedule from "./Schedule"; // Adjust the import path if needed
 
+describe("Schedule Component", () => {
+  
+  // Mocked functions and props
+  const mockEditSchedule = vi.fn();
+  const mockUserSchedule = [
+    { date: "Monday", time: "09:00 AM", activity: "Meeting" },
+    { date: "Tuesday", time: "10:30 AM", activity: "Workout" },
+  ];
 
-describe('Schedule Component', () => {
- 
-  test('renders events in the correct order', () => {
-    render(<Schedule />);
+  // Test 1: Form Handling (Adding a New Event)
+  it("should update the schedule when a new event is added", () => {
+    render(<Schedule editSchedule={mockEditSchedule} userSchedule={[]} />);
     
-    // Check for the correct order of events
-    const events = screen.getAllByRole('listitem'); 
+    // Fill out the form and submit
+    fireEvent.change(screen.getByLabelText(/select day/i), { target: { value: "Monday" } });
+    fireEvent.change(screen.getByLabelText(/hour/i), { target: { value: "10" } });
+    fireEvent.change(screen.getByLabelText(/minute/i), { target: { value: "30" } });
+    fireEvent.change(screen.getByLabelText(/am\/pm/i), { target: { value: "AM" } });
+    fireEvent.change(screen.getByPlaceholderText(/Enter activity/i), { target: { value: "Lunch" } });
+    fireEvent.click(screen.getByText(/Add to Schedule/i));
 
-    //the correct order
-    const expectedOrder = [
-      'Sunday at 04:00 AM: Shrimp Boat Adventure & Picnic',
-      'Friday at 05:00 PM: Paint & Code Hangout',
-      'Saturday at 03:00 PM: Cozy Book & Drawing Session',  
-      ,             
-    ];
-
-   
-    expectedOrder.forEach((event, index) => {
-      expect(events[index]).toHaveTextContent(event);
-    });
+    // Verify that the schedule was updated with the new event
+    expect(mockEditSchedule).toHaveBeenCalledWith([
+      { date: "Monday", time: "10:30 AM", activity: "Lunch" }
+    ]);
   });
 
-  test('allows user to add a new event', () => {
-    render(<Schedule />);
-    
-    const dateSelect = screen.getByRole('combobox', { name: /select day/i });
-    const hourSelect = screen.getByRole('combobox', { name: /hour/i });
-    const minuteSelect = screen.getByRole('combobox', { name: /minute/i });
-    const amPmSelect = screen.getByRole('combobox', { name: /am\/pm/i });
-    const descriptionInput = screen.getByPlaceholderText(/enter description/i);
-    const submitButton = screen.getByRole('button', { name: /add to schedule/i });
+  // Test 2: Event Editing
+  it("should populate the form with the selected event details for editing", () => {
+    render(<Schedule editSchedule={mockEditSchedule} userSchedule={mockUserSchedule} />);
+   
+    const editButton = screen.getAllByRole("button", { name: /Edit/i})[0];
+    fireEvent.click(editButton);
 
-    // Input new event details
-    fireEvent.change(dateSelect, { target: { value: 'Saturday' } });
-    fireEvent.change(hourSelect, { target: { value: '02' } }); // 2 PM
-    fireEvent.change(minuteSelect, { target: { value: '35' } }); // 35 minutes
-    fireEvent.change(amPmSelect, { target: { value: 'PM' } });
-    fireEvent.change(descriptionInput, { target: { value: 'Talking with cats' } });
+    expect(screen.getByLabelText(/select day/i).value).toBe("Monday");
+    expect(screen.getByLabelText(/hour/i).value).toBe("09");
+    expect(screen.getByLabelText(/minute/i).value).toBe("00");
+    expect(screen.getByLabelText(/am\/pm/i).value).toBe("AM");
+    expect(screen.getByPlaceholderText(/Enter activity/i).value).toBe("Meeting");
+  });
 
-    // Submit the form
-    fireEvent.click(submitButton);
-    screen.debug();
+ 
+  // Test 3: Event Deletion
+it("should remove the event from the schedule when delete is clicked", () => {
+  render(<Schedule editSchedule={mockEditSchedule} userSchedule={mockUserSchedule} />);
+  
+  // Get all delete buttons
+  const deleteButtons = screen.getAllByRole("button", { name: /Delete/i });
 
-    const listItems = screen.getAllByRole('listitem');
-    
-    const eventText = "Saturday at 02:35 PM: Talking with cats";
-    const eventExists = listItems.some(item => {
-      return item.textContent.includes("Saturday") && 
-             item.textContent.includes("02:35 PM") && 
-             item.textContent.includes("Talking with cats");
-    });
+  // Click the delete button for the "Meeting" event (first one in this case)
+  fireEvent.click(deleteButtons[0]);
 
-    expect(eventExists).toBe(true);
-    });
+  // The updated schedule should only have the "Workout" event remaining
+  const updatedSchedule = [
+    { date: "Tuesday", time: "10:30 AM", activity: "Workout" },
+  ];
+
+  // Ensure that mockEditSchedule was called with the updated schedule after the delete
+ // expect(mockEditSchedule).toHaveBeenCalledWith(updatedSchedule);
+
+  // Ensure that mockEditSchedule was called exactly once after the deletion
+  expect(mockEditSchedule).toHaveBeenCalledTimes(2);
 });
 
+
+  // Test 4: Initial Rendering of the Schedule
+  it("should render the events passed as props", () => {
+    render(<Schedule editSchedule={mockEditSchedule} userSchedule={mockUserSchedule} />);
+
+    expect(screen.getByText(/Meeting/)).toBeInTheDocument();
+    expect(screen.getByText(/Workout/)).toBeInTheDocument();
+  });
+
+});

@@ -1,103 +1,94 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { Posts } from './Posts';
+import { render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
+import Posts from './Posts';  // Adjust path if necessary
+import { Post } from '../services/post_services';
 import { useUserInfo } from '../utils/userContext';
-import axios from 'axios';
 
-// Mocking axios and user context
-vi.mock('axios');
+// Mocking the Post service and useUserInfo hook
+vi.mock('../services/post_services', () => ({
+  Post: vi.fn().mockImplementation(() => ({
+    getPostsData: vi.fn().mockResolvedValue([
+      ['postId1', 'postId2'],  // Mock postIds
+      [                         // Mock post data
+        { id: 'postId1', comments: [], reactions: {} },
+        { id: 'postId2', comments: [], reactions: {} },
+      ],
+    ]),
+  })),
+
+  
+    addComment: vi.fn(),
+    updateComment: vi.fn(),
+    deletePost: vi.fn(),
+    updatePosts: vi.fn(),
+  })),
+
 vi.mock('../utils/userContext', () => ({
-  useUserInfo: vi.fn(),
+  useUserInfo: vi.fn().mockReturnValue({
+    userPicture: 'https://example.com/user.jpg',
+  }),
 }));
 
-const mockUser = {
-  sub: 'user123',
-  name: 'John Doe',
-};
-
-const mockUserPicture = 'https://example.com/john.jpg';
-
 describe('Posts Component', () => {
-  beforeEach(() => {
-    useUserInfo.mockReturnValue({ userPicture: mockUserPicture });
-    axios.post.mockResolvedValue({ data: { secure_url: 'https://cloudinary.com/image.jpg' } });
-  });
 
-  test('renders posts correctly', async () => {
-    // Rendering the Posts component with a mock user prop
+  it('fetches and renders posts', async () => {
+    // Given: Mock data setup is already done above
+
+    const mockUser = { sub: '123', username: 'testUser' };
+
+    // Render the Posts component
     render(<Posts user={mockUser} />);
 
-    // Check loading state
+    // Wait for the posts to be fetched and rendered
+    await waitFor(() => screen.getByText('postId1')); // Ensure postId1 is rendered
+
+    // Assert: Check if the posts are rendered
+    expect(screen.getByText('postId1')).toBeInTheDocument();
+    expect(screen.getByText('postId2')).toBeInTheDocument();
+
+    // Check that the loading state is initially rendered
     expect(screen.getByText('Loading...')).toBeInTheDocument();
 
-    // Simulating posts data fetching
-    await waitFor(() => screen.getByText('create a new post!'));
-
-    // Verify the form fields are rendered
-    expect(screen.getByPlaceholderText("Post Title")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("What's on your mind?")).toBeInTheDocument();
-
-    // Verify that no posts are displayed if there is no data
-    expect(screen.getByText('No data found')).toBeInTheDocument();
+    // Check if the loading message is replaced with posts after fetching
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
   });
 
-  test('allows a user to create a post', async () => {
-    // Mock the posts data to be returned from localStorage or the API
-    const mockPosts = [
-      {
-        title: 'Test Post',
-        desc: 'This is a test post description.',
-        creator: 'user123',
-        creator_pic: mockUserPicture,
-        date: '2024-11-15',
-        image: '',
-        comments: [],
-      },
-    ];
-    localStorage.setItem('posts', JSON.stringify(mockPosts));
+  it('handles comment submission', async () => {
+    const mockUser = { sub: '123', username: 'testUser' };
 
     render(<Posts user={mockUser} />);
 
-    // Simulate creating a new post
-    const titleInput = screen.getByPlaceholderText("Post Title");
-    const descInput = screen.getByPlaceholderText("What's on your mind?");
-    const submitButton = screen.getByText('Post');
+    // Wait for posts to load
+    await waitFor(() => screen.getByText('postId1'));
 
-    // Enter the title and description
-    fireEvent.change(titleInput, { target: { value: 'New Post' } });
-    fireEvent.change(descInput, { target: { value: 'This is a new post.' } });
+    // Simulate adding a comment
+    const commentInput = screen.getByRole('textbox');
+    const comment = 'This is a test comment';
+    commentInput.value = comment;
 
-    // Submit the form
-    fireEvent.click(submitButton);
+    // Call the comment submit handler
+    const submitButton = screen.getByText(/Submit/i);
+    submitButton.click();
 
-    // Wait for the new post to be displayed
-    await waitFor(() => screen.getByText('New Post'));
-
-    // Check if the new post has been added
-    expect(screen.getByText('This is a new post.')).toBeInTheDocument();
+    // Check if the comment was added
+    await waitFor(() => expect(screen.getByText(comment)).toBeInTheDocument());
   });
 
-  test('uploads an image when a file is selected', async () => {
-    const titleInput = screen.getByPlaceholderText("Post Title");
-    const descInput = screen.getByPlaceholderText("What's on your mind?");
-    const fileInput = screen.getByLabelText(/file/i);
-    const submitButton = screen.getByText('Post');
+  it('handles emoji reaction click', async () => {
+    const mockUser = { sub: '123', username: 'testUser' };
 
-    // Mock selecting an image
-    const file = new File(['image'], 'test.jpg', { type: 'image/jpeg' });
-    fireEvent.change(fileInput, { target: { files: [file] } });
+    render(<Posts user={mockUser} />);
 
-    // Simulate creating a post with an image
-    fireEvent.change(titleInput, { target: { value: 'Test Image Post' } });
-    fireEvent.change(descInput, { target: { value: 'This post has an image.' } });
+    // Wait for posts to load
+    await waitFor(() => screen.getByText('postId1'));
 
-    // Submit the form
-    fireEvent.click(submitButton);
+    // Simulate emoji reaction
+    const emojiButton = screen.getByText('👍'); // Assuming there's a button with the emoji
+    emojiButton.click();
 
-    // Wait for the image upload process to complete
-    await waitFor(() => screen.getByAltText('Preview'));
-
-    // Check if image preview is displayed
-    expect(screen.getByAltText('Preview')).toBeInTheDocument();
+    // Ensure the emoji reaction was added
+    await waitFor(() => expect(screen.getByText('👍')).toBeInTheDocument());
   });
 });
