@@ -56,6 +56,6 @@ const styles = {
     borderRadius: '5px',
     backgroundColor: '#f9f9f9',
     background:'linear-gradient(21deg, #65558f, #a69ac7)',
-   
+    textAlign: "center"
   }
 }

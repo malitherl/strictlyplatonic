@@ -6,17 +6,23 @@ import Schedule from './Schedule';
 import '../bio.css';
 import axios from "axios";
 import BackButton from './BackButton';
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export const MyProfile = () => {
   
    const location = useLocation();
    const { user } = location.state || {};
-   const {userInfo, fetchData} = useUserInfo();
-   // to see if the user is logged into account and has permission
-   if (!user || !user.email) {
-       return <div>You are not authorized to view this page.</div>;
+   const { isAuthenticated} = useAuth0();
+
+   if(isAuthenticated == false) {
+    return <Navigate to='/' replace={true} />
    }
+
+
+
+   const {userInfo, fetchData} = useUserInfo();
+
   
 
    // Changing this so that if the user logs in and they have a profile picture already
@@ -195,6 +201,7 @@ export const MyProfile = () => {
 
      return (
        <>
+
          <div className='postContainer'>
            <BackButton />
            <div style={styles.profileContainer}>

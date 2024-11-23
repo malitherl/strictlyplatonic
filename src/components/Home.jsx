@@ -1,7 +1,7 @@
 
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { Posts } from "./Posts"
 import  Events  from './Events'
 import  UserCard  from "./UserCard";
@@ -10,12 +10,13 @@ import UserProfile from "./UserProfile";
 import homeIcon from '../assets/images/icons/home.svg';
 import eventIcon from '../assets/images/icons/event.svg';
 
+
 export const Home = () => {
 
   
   const {isAuthenticated, user } = useAuth0();
   const [current, setCurrent] = useState('posts');
-  const navigate = useNavigate();
+ 
 
   const handleClick = (value) => {
         if(value != current) {
@@ -40,14 +41,14 @@ export const Home = () => {
 
     return( 
       <>
-          {isAuthenticated && (
+          {isAuthenticated ? 
               <div className="dashboardContainer">
                   <nav className="dashboardNav">
-                      <Link to='/home' onClick={() => handleClick('posts')} style={styles.navItem}> {/* changed this to help with the home/events*/}
+                      <Link to='/home' style={styles.navItem}> {/* changed this to help with the home/events*/}
                           <img src={homeIcon} alt="Home" style={styles.navIcon} />
                           <p>Home</p>
                       </Link>
-                      <Link to='/events' state={{ user }} onClick={() => handleClick('events')} style={styles.navItem}>
+                      <Link to='/events' state={{ user }} style={styles.navItem}>
                           <img src={eventIcon} alt="Events" style={styles.navIcon} />
                           <p>Events</p>
                       </Link>
@@ -68,7 +69,11 @@ export const Home = () => {
 
 
               </div>
-          )}
+        :
+        <Navigate to="/" replace={true}/>   
+        
+        
+        }
       </>
   );
 };

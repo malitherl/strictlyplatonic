@@ -1,13 +1,24 @@
 import { useEffect, useState } from "react";
 import { Event } from "../services/event_services";
 import { EventCard } from "./EventCard";
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth0 } from "@auth0/auth0-react";
+
 import BackButton from "./BackButton";
 
 
 export const Events = () => {
  const location = useLocation();
  const { user } = location.state || {};
+ const { isAuthenticated} = useAuth0();
+
+ if(isAuthenticated == false) {
+  return <Navigate to='/' replace={true} />
+ }
+ if (!user || !user.email) {
+  return
+}
+
  const [events, setEvents] = useState([]);
  const [eventsIds, setEventIds] = useState([]);
  const [newEvent, setNewEvent] = useState({
@@ -167,110 +178,100 @@ export const Events = () => {
 
 
  return (
-   <div>
-     <hr />
-     <div style={styles.eventsBox}>
-       <h2>Events</h2>
 
+  <>
+   <div style={{backgroundColor: "#f9f9f9"}}>
+    <div style={styles.eventsBox}>
+      <h2>Events</h2>
+      <p>Here is where you can sign up for events, or create your own!</p>
       <BackButton />
-
-
-
      </div>
-
-
-     {/* event creation form --purple? */}
-     <div style={styles.createEventBox}>
-       <form name="createForm" onSubmit={handleCreateEvent}>
-         <h3>Create a new event!</h3>
-         <label>
-           Title:
-           <input
-             type="text"
-             name="title"
-             value={newEvent.title}
-             onChange={handleChange}
-             required
-           />
-         </label>
-         <br />
-         <label>
-           Description:
-           <textarea
-             name="description"
-             value={newEvent.description}
-             onChange={handleChange}
-             required
-           />
-         </label>
-         <br />
-         <label>
-           Location:
-           <input
-             type="text"
-             name="location"
-             value={newEvent.location}
-             onChange={handleChange}
-             required
-           />
-         </label>
-         <br />
-         <label>
-           Date & Time:
-           <input
-             type="datetime-local"
-             name="time"
-             value={newEvent.time}
-             onChange={handleChange}
-             required
-           />
-         </label>
-         <br />
-         <label>
-           Recurring Event:
-           <input
-             type="checkbox"
-             checked={newEvent.isRecurring}
-             onChange={handleRecurringChange}
-           />
-         </label>
-         <br />
-         {newEvent.isRecurring && (
-           <>
-             <label>
-               Recurrence:
-               <select
-                 name="recurrenceInterval"
-                 value={newEvent.recurrenceInterval}
-                 onChange={handleChange}
-                 required
-               >
-                 <option value="everyday">Every day</option>
-                 <option value="weekly">Every week</option>
-                 <option value="biweekly">Every 2 weeks</option>
-                 <option value="monthly">Every month</option>
-               </select>
-             </label>
-             <br />
-           </>
-         )}
-         <button type="submit">Create Event</button>
-       </form>
-     </div>
-
-
-     <hr />
-
-
-     {/* showing events */}
-     <div style={styles.eventsList}>
-     {events.map((event, index) => (
-        <EventCard key={eventsIds[index]} event={event} id= {eventsIds[index]} user={user} handleSignUp= {handleSignUp} handleEditEvent={handleEditEvent} handleDeleteEvent= {handleDeleteEvent}/>
-     ))}  
+    <div style={styles.createEventBox}>
+      <form name="createForm" className="eventsForm" onSubmit={handleCreateEvent}>
+        <h3>Create a new event!</h3>
+        <label>
+          Title:
+          <input
+            type="text"
+            name="title"
+            value={newEvent.title}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Description:
+          <textarea
+            name="description"
+            value={newEvent.description}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Location:
+          <input
+            type="text"
+            name="location"
+            value={newEvent.location}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Date & Time:
+          <input
+            type="datetime-local"
+            name="time"
+            value={newEvent.time}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Recurring Event:
+          <input
+            type="checkbox"
+            checked={newEvent.isRecurring}
+            onChange={handleRecurringChange}
+          />
+        </label>
+        <br />
+        {newEvent.isRecurring && (
+          <>
+            <label>
+              Recurrence:
+              <select
+                name="recurrenceInterval"
+                value={newEvent.recurrenceInterval}
+                onChange={handleChange}
+                required
+              >
+                <option value="everyday">Every day</option>
+                <option value="weekly">Every week</option>
+                <option value="biweekly">Every 2 weeks</option>
+                <option value="monthly">Every month</option>
+              </select>
+            </label>
+            <br />
+          </>
+        )}
+        <button type="submit">Create Event</button>
+      </form>
     </div>
+    {/* showing events */}
+    <div style={styles.eventsList}>
+    {events.map((event, index) => (
+       <EventCard key={eventsIds[index]} event={event} id= {eventsIds[index]} user={user} handleSignUp= {handleSignUp} handleEditEvent={handleEditEvent} handleDeleteEvent= {handleDeleteEvent}/>
+    ))}  
+   </div>
   </div>
-  );
-};
+  </>
+  )};
 
 
 const styles = {
@@ -285,7 +286,6 @@ const styles = {
  
   },
   createEventBox: {
-    backgroundColor: 'white',
     padding: '20px',
     borderRadius: '8px',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -299,7 +299,7 @@ const styles = {
  
   },
   eventsBox: {
-    background:'linear-gradient(21deg, #65558f, #a69ac7)',
+    background:'transparent',
     padding: '20px',
     borderRadius: '8px',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -333,7 +333,12 @@ const styles = {
     paddingBottom: '50px',
     marginTop:"20px" 
   },
-  };
+
+  
+
+
+
+};
 
 
 export default Events;

@@ -93,7 +93,7 @@ export const PostCard = ({post, id, user, handleCommentSubmit, postsData, remove
 
           <div key={id} className="postContainer" style={styles.postContainer}>
               <div className="user-header">
-                <div onClick={toggleUserSnack}>
+                <div style={{display: "flex", alignItems: "center"}} onClick={toggleUserSnack}>
                   {post.creator_pic && (
                     <img className="profile-preview" src={post.creator_pic} alt={post.creator_pic} />
                   )}
